@@ -1379,6 +1379,14 @@
     dom-event-types "^1.0.0"
     lodash "^4.17.4"
 
+"@vuex-orm/core@^0.33.0":
+  version "0.33.0"
+  resolved "https://registry.yarnpkg.com/@vuex-orm/core/-/core-0.33.0.tgz#8daa56114bc3fc22d707d228923ad2ba8b51c425"
+  integrity sha512-1Z9dqPHoVRHE/YfcOGHY2aRF+1uNwzGztIxYWe4eM649ZUF36IE2+rIpGf/CqWHFIZrJtoSh9R0AjCBDzy6s7w==
+  dependencies:
+    normalizr "^3.4.1"
+    vuex "^3.1.1"
+
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.8.5.tgz#51b1c5fe6576a34953bf4b253df9f0d490d9e359"
@@ -6757,6 +6765,11 @@ normalize-url@^3.0.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-3.3.0.tgz#b2e1c4dc4f7c6d57743df733a4f5978d18650559"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
+
+normalizr@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/normalizr/-/normalizr-3.4.1.tgz#cf4f8ac7a4a0dd7fe504b77cbe9dd533cb3e45b5"
+  integrity sha512-gei+tJucERU8vYN6TFQL2k5YMLX2Yh7nlylKMJC65+Uu/LS3xQCDJc8cies72aHouycKYyVgcnyLRbaJsigXKw==
 
 npm-bundled@^1.0.1:
   version "1.0.6"
