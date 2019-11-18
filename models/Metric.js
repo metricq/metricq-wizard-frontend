@@ -1,5 +1,5 @@
 import { Model } from '@vuex-orm/core'
-import Database from './Database'
+import Database from '~/models/Database'
 
 export default class Metric extends Model {
   static entity = 'metric'
