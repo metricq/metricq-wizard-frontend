@@ -12,8 +12,8 @@ export default class Metric extends Model {
       unit: this.string().nullable(),
       source: this.string().nullable(),
       historic: this.boolean(false),
-      database_id: this.string().nullable(),
-      database: this.belongsTo(Database, 'database_id'),
+      databaseId: this.string().nullable(),
+      database: this.belongsTo(Database, 'databaseId'),
       // Client side stat
       selected: this.boolean(false)
     }

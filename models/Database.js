@@ -7,7 +7,7 @@ export default class Database extends Model {
   static fields() {
     return {
       id: this.string().nullable(),
-      metrics: this.hasMany(Metric, 'database_id')
+      metrics: this.hasMany(Metric, 'databaseId')
     }
   }
 }
