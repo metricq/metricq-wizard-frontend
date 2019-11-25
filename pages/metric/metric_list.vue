@@ -36,6 +36,9 @@ export default {
     }
   },
   asyncData({ query }) {},
+  fetch() {
+    Metric.api().get('/metrics')
+  },
   methods: {}
 }
 </script>
