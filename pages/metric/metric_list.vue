@@ -37,7 +37,16 @@ export default {
   },
   asyncData({ query }) {},
   fetch() {
-    Metric.api().get('/metrics')
+    Metric.commit((state) => {
+      state.fetching = true
+    })
+    Metric.api()
+      .get('/metrics')
+      .then(() => {
+        Metric.commit((state) => {
+          state.fetching = false
+        })
+      })
   },
   methods: {}
 }
