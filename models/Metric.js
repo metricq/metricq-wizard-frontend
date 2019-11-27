@@ -6,7 +6,7 @@ export default class Metric extends Model {
 
   static state() {
     return {
-      fetching: true
+      fetching: false
     }
   }
 

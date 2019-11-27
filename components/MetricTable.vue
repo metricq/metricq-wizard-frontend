@@ -7,6 +7,7 @@
           v-model="currentTableItems"
           :items="items"
           :fields="fields"
+          :filter="filter"
           :per-page="perPage"
           :current-page="currentPage"
           @row-clicked="onRowClicked"
@@ -44,6 +45,7 @@ import Metric from '~/models/Metric'
 
 export default {
   name: 'MetricTable',
+  props: ['filter', 'historic'],
   data() {
     return {
       currentTableItems: [],
@@ -65,6 +67,11 @@ export default {
       return this.items.length
     },
     items() {
+      if (this.historic != null) {
+        return Metric.query()
+          .where('historic', this.historic)
+          .get()
+      }
       return Metric.all()
     },
     selected() {
