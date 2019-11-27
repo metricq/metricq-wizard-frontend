@@ -180,6 +180,14 @@ export default {
       } else {
         this.$refs.intervalMaxFormField.setCustomValidity('')
       }
+    },
+    metric(newVal) {
+      Object.assign(this.databaseSettings, {
+        databaseId: newVal.databaseId,
+        intervalMin: newVal.intervalMin,
+        intervalMax: newVal.intervalMax,
+        intervalFactor: newVal.intervalFactor
+      })
     }
   },
   methods: {
