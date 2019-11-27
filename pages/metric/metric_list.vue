@@ -9,7 +9,7 @@
             :to="{
               name: 'metric-database_configuration'
             }"
-            :disabled="selected.length == 0"
+            :disabled="selected.length === 0"
           >
             Configure database
           </b-button>
@@ -52,4 +52,4 @@ export default {
 }
 </script>
 
-<style></style>
+<style />

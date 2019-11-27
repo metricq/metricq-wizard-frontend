@@ -33,7 +33,7 @@
           :total-rows="rows"
           :per-page="perPage"
           align="center"
-        ></b-pagination>
+        />
       </b-col>
     </b-row>
   </div>
@@ -90,4 +90,4 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped />

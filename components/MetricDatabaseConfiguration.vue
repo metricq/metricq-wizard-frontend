@@ -27,7 +27,7 @@
           :disabled="metric.historic"
           required
           placeholder="duration, e.g. 10s"
-        ></b-form-input>
+        />
       </b-form-group>
       <b-form-group class="mr-sm-2">
         <label for="input-2">Maximal aggregation interval:</label>
@@ -51,7 +51,7 @@
           type="number"
           required
           placeholder="10"
-        ></b-form-input>
+        />
       </b-form-group>
       <b-form-group align="right">
         <label>&nbsp;</label>
@@ -163,7 +163,7 @@ export default {
         this.databaseSettings = { ...newVal }
       }
     },
-    intervalMinState(newVal, oldVal) {
+    intervalMinState(newVal) {
       if (!newVal) {
         this.$refs.intervalMinFormField.setCustomValidity(
           'Wrong duration string format'
@@ -172,7 +172,7 @@ export default {
         this.$refs.intervalMinFormField.setCustomValidity('')
       }
     },
-    intervalMaxState(newVal, oldVal) {
+    intervalMaxState(newVal) {
       if (!newVal) {
         this.$refs.intervalMaxFormField.setCustomValidity(
           'Wrong duration string format'
@@ -229,4 +229,4 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped />

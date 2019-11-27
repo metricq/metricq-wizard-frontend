@@ -1,9 +1,9 @@
 <template>
   <div>
     <b-navbar toggleable="lg" sticky fixed="top">
-      <b-navbar-brand href="#">NavBar</b-navbar-brand>
+      <b-navbar-brand :to="{ name: 'index' }">MetricQ</b-navbar-brand>
 
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+      <b-navbar-toggle target="nav-collapse" />
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
@@ -18,12 +18,12 @@
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
-          <b-nav-text class="mr-sm-2" v-if="fetchingMetrics">
-            <b-spinner class="ml-auto" small></b-spinner>
+          <b-nav-text v-if="fetchingMetrics" class="mr-sm-2">
+            <b-spinner class="ml-auto" small />
             <strong>Fetching metrics...</strong>
           </b-nav-text>
-          <b-nav-text class="mr-sm-2" v-if="fetchingDatabases">
-            <b-spinner class="ml-auto" small></b-spinner>
+          <b-nav-text v-if="fetchingDatabases" class="mr-sm-2">
+            <b-spinner class="ml-auto" small />
             <strong>Fetching databases...</strong>
           </b-nav-text>
         </b-navbar-nav>
@@ -49,4 +49,4 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped />
