@@ -8,6 +8,7 @@
           v-model="databaseSettings.databaseId"
           :options="databases"
           :value="null"
+          :disabled="metric.historic"
           class="w-100"
           required
         >
@@ -23,6 +24,7 @@
           ref="intervalMinFormField"
           v-model="databaseSettings.intervalMin"
           :state="intervalMinState"
+          :disabled="metric.historic"
           required
           placeholder="duration, e.g. 10s"
         ></b-form-input>
@@ -34,9 +36,10 @@
           ref="intervalMaxFormField"
           v-model="databaseSettings.intervalMax"
           :state="intervalMaxState"
+          :disabled="metric.historic"
           required
           placeholder="duration, e.g. 365d"
-        ></b-form-input>
+        />
       </b-form-group>
       <b-form-group class="mr-sm-2">
         <label for="input-3">Aggregation interval factor:</label>
@@ -44,6 +47,7 @@
           id="input-3"
           v-model="databaseSettings.intervalFactor"
           :state="intervalFactorState"
+          :disabled="metric.historic"
           type="number"
           required
           placeholder="10"
@@ -51,13 +55,13 @@
       </b-form-group>
       <b-form-group align="right">
         <label>&nbsp;</label>
-        <b-button type="reset" variant="danger">
+        <b-button :disabled="metric.historic" type="reset" variant="danger">
           Reset to defaults
         </b-button>
         <b-button @click="onApplyToAll" variant="primary">
           Apply to all
         </b-button>
-        <b-button @click="save" variant="primary">
+        <b-button @click="save" :disabled="metric.historic" variant="primary">
           Save
         </b-button>
       </b-form-group>
@@ -154,8 +158,10 @@ export default {
     }
   },
   watch: {
-    globalDatabaseSettings(newVal, oldVal) {
-      this.databaseSettings = { ...newVal }
+    globalDatabaseSettings(newVal) {
+      if (!this.metric.historic) {
+        this.databaseSettings = { ...newVal }
+      }
     },
     intervalMinState(newVal, oldVal) {
       if (!newVal) {
