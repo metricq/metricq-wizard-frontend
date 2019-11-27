@@ -202,10 +202,20 @@ export default {
           id: this.metricId,
           ...this.databaseSettings
         }
-        Metric.update({
-          where: this.metricId,
-          data
-        })
+        Metric.api()
+          .post('/metrics/database', data)
+          .then(() => {
+            const metric = Metric.query()
+              .with('database')
+              .whereId(this.metricId)
+              .first()
+            Object.assign(this.databaseSettings, {
+              databaseId: metric.databaseId,
+              intervalMin: metric.intervalMin,
+              intervalMax: metric.intervalMax,
+              intervalFactor: metric.intervalFactor
+            })
+          })
       }
     },
     validate() {
