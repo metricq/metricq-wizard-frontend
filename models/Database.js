@@ -4,6 +4,12 @@ import Metric from '~/models/Metric'
 export default class Database extends Model {
   static entity = 'database'
 
+  static state() {
+    return {
+      fetching: false
+    }
+  }
+
   static fields() {
     return {
       id: this.string().nullable(),

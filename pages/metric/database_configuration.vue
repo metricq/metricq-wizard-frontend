@@ -54,7 +54,16 @@ export default {
     }
   },
   fetch() {
-    Database.api().get('/databases')
+    Database.commit((state) => {
+      state.fetching = true
+    })
+    Database.api()
+      .get('/databases')
+      .then(() => {
+        Database.commit((state) => {
+          state.fetching = false
+        })
+      })
   },
   methods: {
     onMetricDatabaseApplyToAll(databaseSettings) {

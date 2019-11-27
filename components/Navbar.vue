@@ -22,6 +22,10 @@
             <b-spinner class="ml-auto" small></b-spinner>
             <strong>Fetching metrics...</strong>
           </b-nav-text>
+          <b-nav-text class="mr-sm-2" v-if="fetchingDatabases">
+            <b-spinner class="ml-auto" small></b-spinner>
+            <strong>Fetching databases...</strong>
+          </b-nav-text>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
@@ -30,12 +34,16 @@
 
 <script>
 import Metric from '~/models/Metric'
+import Database from '~/models/Database'
 
 export default {
   name: 'Navbar',
   computed: {
     fetchingMetrics() {
       return Metric.store().state.entities.metric.fetching
+    },
+    fetchingDatabases() {
+      return Database.store().state.entities.database.fetching
     }
   }
 }
