@@ -16,4 +16,12 @@ export default class Database extends Model {
       metrics: this.hasMany(Metric, 'databaseId')
     }
   }
+
+  static apiConfig = {
+    actions: {
+      reconfigureById(id) {
+        return this.post(`/database/${id}/reconfigure`)
+      }
+    }
+  }
 }

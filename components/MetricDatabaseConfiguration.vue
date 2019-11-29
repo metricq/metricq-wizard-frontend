@@ -250,6 +250,7 @@ export default {
               intervalMax: metric.intervalMax,
               intervalFactor: metric.intervalFactor
             })
+            this.$emit('metric-database-saved', metric.databaseId)
           })
       }
     },
