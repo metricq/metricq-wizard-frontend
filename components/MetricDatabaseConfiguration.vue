@@ -58,10 +58,11 @@
         <b-button :disabled="metric.historic" type="reset" variant="danger">
           Reset to defaults
         </b-button>
-        <b-button @click="onApplyToAll" variant="primary">
+        <b-button @click="onApplyToAll" variant="primary" v-if="showApplyAll">
           Apply to all
         </b-button>
         <b-button
+          v-if="!hideSave"
           @click="save"
           :disabled="metric.historic || metric.saving"
           variant="primary"
@@ -98,13 +99,26 @@ export default {
           intervalFactor: ''
         }
       }
+    },
+    showApplyAll: {
+      type: Boolean,
+      default() {
+        return false
+      }
+    },
+    hideSave: {
+      type: Boolean,
+      default() {
+        return false
+      }
     }
   },
   data() {
-    const metric = Metric.query()
-      .with('database')
-      .whereId(this.metricId)
-      .first()
+    const metric =
+      Metric.query()
+        .with('database')
+        .whereId(this.metricId)
+        .first() || this.globalDatabaseSettings
     return {
       databaseSettings: {
         databaseId: metric.databaseId,
@@ -116,10 +130,12 @@ export default {
   },
   computed: {
     metric() {
-      return Metric.query()
-        .with('database')
-        .whereId(this.metricId)
-        .first()
+      return (
+        Metric.query()
+          .with('database')
+          .whereId(this.metricId)
+          .first() || this.globalDatabaseSettings
+      )
     },
     intervalMinState() {
       try {
@@ -202,6 +218,9 @@ export default {
       }
     },
     save() {
+      if (this.hideSave) {
+        return
+      }
       if (this.metric.historic) {
         return
       }

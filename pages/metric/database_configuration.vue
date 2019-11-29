@@ -1,5 +1,12 @@
 <template>
   <b-container fluid>
+    <MetricDatabaseConfiguration
+      v-bind:globalDatabaseSettings="databaseSettings"
+      @metric-database-apply-to-all="onMetricDatabaseApplyToAll"
+      v-bind:showApplyAll="true"
+      hide-save="true"
+      class="mb-2"
+    />
     <div v-for="item in selected">
       <MetricDatabaseConfiguration
         ref="dbConfigs"
