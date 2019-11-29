@@ -22,7 +22,12 @@
         </b-col>
         <b-col />
         <b-col cols="2" align="right">
-          <b-button variant="primary" @click="onSaveAllClicked">
+          <b-button
+            variant="primary"
+            @click="onSaveAllClicked"
+            :disabled="saving"
+          >
+            <b-spinner class="ml-auto" small v-if="saving" />
             Save all
           </b-button>
         </b-col>
@@ -51,6 +56,13 @@ export default {
         .with('database')
         .where('selected', true)
         .all()
+    },
+    saving() {
+      return (
+        Metric.query()
+          .where('saving', true)
+          .count() !== 0
+      )
     }
   },
   fetch() {

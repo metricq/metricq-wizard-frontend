@@ -25,7 +25,8 @@ export default class Metric extends Model {
       intervalMax: this.string().nullable(),
       intervalFactor: this.number().nullable(),
       // Client side stat
-      selected: this.boolean(false)
+      selected: this.boolean(false),
+      saving: this.boolean(false)
     }
   }
 }

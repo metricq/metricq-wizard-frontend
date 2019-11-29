@@ -61,7 +61,12 @@
         <b-button @click="onApplyToAll" variant="primary">
           Apply to all
         </b-button>
-        <b-button @click="save" :disabled="metric.historic" variant="primary">
+        <b-button
+          @click="save"
+          :disabled="metric.historic || metric.saving"
+          variant="primary"
+        >
+          <b-spinner class="ml-auto" small v-if="metric.saving" />
           Save
         </b-button>
       </b-form-group>
@@ -197,14 +202,25 @@ export default {
       }
     },
     save() {
+      if (this.metric.historic) {
+        return
+      }
       if (this.validate()) {
         const data = {
           id: this.metricId,
           ...this.databaseSettings
         }
+        Metric.update({
+          where: this.metricId,
+          data: { saving: true }
+        })
         Metric.api()
           .post('/metrics/database', data)
           .then(() => {
+            Metric.update({
+              where: this.metricId,
+              data: { saving: false }
+            })
             const metric = Metric.query()
               .with('database')
               .whereId(this.metricId)
