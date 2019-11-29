@@ -7,7 +7,7 @@
       hide-save="true"
       class="mb-2"
     />
-    <div v-for="item in selected">
+    <div v-for="item in selected" v-bind:key="item.id">
       <MetricDatabaseConfiguration
         ref="dbConfigs"
         v-bind:metricId="item.id"
