@@ -2,6 +2,7 @@
   <b-container fluid>
     <div v-for="item in selected">
       <MetricDatabaseConfiguration
+        ref="dbConfigs"
         v-bind:metricId="item.id"
         v-bind:globalDatabaseSettings="databaseSettings"
         @metric-database-apply-to-all="onMetricDatabaseApplyToAll"
@@ -20,8 +21,11 @@
             Back to overview
           </b-button>
         </b-col>
-        <b-col>
-          {{ databases }}
+        <b-col />
+        <b-col cols="2" align="right">
+          <b-button variant="primary" @click="onSaveAllClicked">
+            Save all
+          </b-button>
         </b-col>
       </b-row>
     </div>
@@ -48,9 +52,6 @@ export default {
         .with('database')
         .where('selected', true)
         .all()
-    },
-    databases() {
-      return []
     }
   },
   fetch() {
@@ -68,6 +69,11 @@ export default {
   methods: {
     onMetricDatabaseApplyToAll(databaseSettings) {
       this.databaseSettings = databaseSettings
+    },
+    onSaveAllClicked() {
+      this.$refs.dbConfigs.forEach(function(child) {
+        child.save()
+      })
     }
   }
 }
