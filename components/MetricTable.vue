@@ -7,7 +7,6 @@
           v-model="currentTableItems"
           :items="items"
           :fields="fields"
-          :filter="filter"
           :per-page="perPage"
           :current-page="currentPage"
           @row-clicked="onRowClicked"
@@ -67,12 +66,16 @@ export default {
       return this.items.length
     },
     items() {
+      let metricQuery = Metric.query()
       if (this.historic != null) {
-        return Metric.query()
-          .where('historic', this.historic)
-          .get()
+        metricQuery = metricQuery.where('historic', this.historic)
       }
-      return Metric.all()
+      if (this.filter) {
+        metricQuery = metricQuery.search(this.filter, {
+          keys: ['id', 'source', 'description']
+        })
+      }
+      return metricQuery.get()
     },
     selected() {
       return Metric.query()

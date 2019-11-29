@@ -1,9 +1,43 @@
 <template>
   <b-container fluid>
     <div>
-      <MetricTable />
       <b-row>
-        <b-col>{{ selected }}</b-col>
+        <b-col />
+        <b-col lg="6" class="my-1">
+          <b-form-group
+            label="Filter"
+            label-cols-sm="3"
+            label-align-sm="right"
+            label-size="sm"
+            label-for="filterInput"
+            class="mb-0"
+          >
+            <b-input-group size="sm">
+              <b-form-input
+                v-model="filterString"
+                type="search"
+                id="filterInput"
+                debounce="100"
+                placeholder="Type to Search"
+              />
+              <b-input-group-append>
+                <b-button :disabled="!filterString" @click="filterString = ''"
+                  >Clear</b-button
+                >
+              </b-input-group-append>
+              <b-form-select
+                id="historicFilter"
+                v-model="filterHistoric"
+                :options="filterHistoricOptions"
+                :value="null"
+              />
+            </b-input-group>
+          </b-form-group>
+        </b-col>
+      </b-row>
+      <MetricTable :filter="filterString" :historic="filterHistoric" />
+      <b-row>
+        <b-col />
         <b-col cols="2" align="right">
           <b-button
             :to="{
@@ -26,6 +60,17 @@ import Metric from '~/models/Metric'
 export default {
   components: {
     MetricTable
+  },
+  data() {
+    return {
+      filterString: '',
+      filterHistoric: null,
+      filterHistoricOptions: [
+        { value: null, text: 'Any' },
+        { value: true, text: 'Saved in DB' },
+        { value: false, text: 'Not in DB' }
+      ]
+    }
   },
   computed: {
     selected() {
