@@ -7,8 +7,7 @@
         v-bind:globalDatabaseSettings="databaseSettings"
         @metric-database-apply-to-all="onMetricDatabaseApplyToAll"
         class="mb-2"
-      >
-      </MetricDatabaseConfiguration>
+      />
     </div>
     <div>
       <b-row>
@@ -79,4 +78,4 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped />
