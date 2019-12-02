@@ -4,6 +4,7 @@
   "description": "A configuration web app for MetricQ",
   "author": "ZIH, Technische Universität Dresden",
   "private": true,
+  "license": "GPL-3.0-only",
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
