@@ -51,7 +51,13 @@ export default {
       perPage: 10,
       currentPage: 1,
       fields: [
-        { key: 'select', sortable: true },
+        {
+          key: 'select',
+          sortable: true,
+          sortByFormatted: (value, key, item) => {
+            return item.selected ? '0Yes' : '1No' // sort selected, than no selected for ascending sorting
+          }
+        },
         { key: 'id', sortable: true },
         { key: 'rate', sortable: true },
         { key: 'description', sortable: true },
