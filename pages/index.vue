@@ -1,68 +1,177 @@
 <template>
-  <div class="container">
+  <b-container fluid>
     <div>
-      <logo />
-      <h1 class="title">
-        metricq-configurator-prototype-frontend
-      </h1>
-      <h2 class="subtitle">
-        A configuration web app for MetricQ
-      </h2>
-      <div class="links">
-        <a href="https://nuxtjs.org/" target="_blank" class="button--green">
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
+      <b-row>
+        <b-col sm="3"></b-col>
+        <b-col align="center">
+          <h1>
+            metricq-&#x1F9D9;-frontend
+          </h1>
+          <p class="lead">
+            A configuration web app for MetricQ
+          </p>
+        </b-col>
+        <b-col sm="3"></b-col>
+      </b-row>
+      <b-row>
+        <b-col
+          ><b-button @click="loadExampleData">
+            Load example data
+          </b-button></b-col
         >
-          GitHub
-        </a>
-      </div>
+      </b-row>
     </div>
-  </div>
+  </b-container>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
+import Metric from '~/models/Metric'
+import Database from '~/models/Database'
 
 export default {
-  components: {
-    Logo
+  components: {},
+  computed: {
+    selected() {
+      return Metric.query()
+        .with('database')
+        .where('selected', true)
+        .get()
+    }
+  },
+  asyncData({ query }) {},
+  methods: {
+    loadExampleData() {
+      const metrics = [
+        {
+          _id: 'metricq.vm.cpu.usage',
+          rate: 1,
+          description: 'CPU usage (100% = 1 logical CPU busy)',
+          unit: '%',
+          source: 'source-sysinfo',
+          historic: true
+        },
+        {
+          _id: 'metricq.vm.mem.active',
+          rate: 1,
+          description:
+            'See https://psutil.readthedocs.io/en/latest/#psutil.virtual_memory',
+          unit: 'B',
+          source: 'source-sysinfo',
+          historic: true
+        },
+        {
+          _id: 'metricq.vm.mem.available',
+          rate: 1,
+          description:
+            'See https://psutil.readthedocs.io/en/latest/#psutil.virtual_memory',
+          unit: 'B',
+          source: 'source-sysinfo',
+          historic: true
+        },
+        {
+          _id: 'metricq.vm.mem.buffers',
+          rate: 1,
+          description:
+            'See https://psutil.readthedocs.io/en/latest/#psutil.virtual_memory',
+          unit: 'B',
+          source: 'source-sysinfo',
+          historic: true
+        },
+        {
+          _id: 'metricq.vm.mem.cached',
+          rate: 1,
+          description:
+            'See https://psutil.readthedocs.io/en/latest/#psutil.virtual_memory',
+          unit: 'B',
+          source: 'source-sysinfo',
+          historic: true
+        },
+        {
+          _id: 'metricq.vm.mem.free',
+          rate: 1,
+          description:
+            'See https://psutil.readthedocs.io/en/latest/#psutil.virtual_memory',
+          unit: 'B',
+          source: 'source-sysinfo',
+          historic: true
+        },
+        {
+          _id: 'metricq.vm.mem.inactive',
+          rate: 1,
+          description:
+            'See https://psutil.readthedocs.io/en/latest/#psutil.virtual_memory',
+          unit: 'B',
+          source: 'source-sysinfo',
+          historic: true
+        },
+        {
+          _id: 'metricq.vm.mem.percent',
+          rate: 1,
+          description:
+            'See https://psutil.readthedocs.io/en/latest/#psutil.virtual_memory',
+          unit: '%',
+          source: 'source-sysinfo',
+          historic: true
+        },
+        {
+          _id: 'metricq.vm.mem.shared',
+          rate: 1,
+          description:
+            'See https://psutil.readthedocs.io/en/latest/#psutil.virtual_memory',
+          unit: 'B',
+          historic: true
+        },
+        {
+          _id: 'metricq.vm.mem.slab',
+          rate: 1,
+          description:
+            'See https://psutil.readthedocs.io/en/latest/#psutil.virtual_memory',
+          unit: 'B',
+          source: 'source-sysinfo',
+          historic: true
+        },
+        {
+          _id: 'metricq.vm.mem.total',
+          rate: 1,
+          description:
+            'See https://psutil.readthedocs.io/en/latest/#psutil.virtual_memory',
+          unit: 'B',
+          source: 'source-sysinfo',
+          historic: true
+        },
+        {
+          _id: 'metricq.vm.mem.used',
+          rate: 1,
+          description:
+            'See https://psutil.readthedocs.io/en/latest/#psutil.virtual_memory',
+          unit: 'B',
+          source: 'source-sysinfo',
+          historic: true
+        }
+      ]
+
+      Database.insertOrUpdate({
+        data: {
+          id: 'db-hta-metricq'
+        }
+      })
+
+      for (const [, item] of Object.entries(metrics)) {
+        const data = {
+          id: item._id,
+          ...item
+        }
+        if (data.historic) {
+          data.databaseId = 'db-hta-metricq'
+        }
+        console.log(data)
+        Metric.insertOrUpdate({
+          data
+        })
+      }
+    }
   }
 }
 </script>
 
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
-</style>
+<style></style>

@@ -1,4 +1,4 @@
-# metricq-configurator-prototype-frontend
+# metricq-wizard-frontend
 
 > A configuration web app for MetricQ
 

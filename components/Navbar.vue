@@ -1,7 +1,9 @@
 <template>
   <div>
     <b-navbar toggleable="lg" sticky fixed="top">
-      <b-navbar-brand :to="{ name: 'index' }">MetricQ</b-navbar-brand>
+      <b-navbar-brand :to="{ name: 'index' }">
+        MetricQ &#x1F9D9; ‍️
+      </b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse" />
 
