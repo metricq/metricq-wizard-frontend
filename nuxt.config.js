@@ -48,7 +48,10 @@ export default {
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {},
+  axios: {
+    prefix: '/api',
+    port: 8000
+  },
   /*
    ** Build configuration
    */
