@@ -9,12 +9,13 @@
           :fields="fields"
           :per-page="perPage"
           :current-page="currentPage"
-          @row-clicked="onRowClicked"
+          small
           primary-key="id"
           responsive="true"
           select-mode="multi"
           striped
           hover
+          @row-clicked="onRowClicked"
         >
           <template v-slot:cell(select)="data">
             <b-checkbox
@@ -48,7 +49,7 @@ export default {
   data() {
     return {
       currentTableItems: [],
-      perPage: 10,
+      perPage: 20,
       currentPage: 1,
       fields: [
         {
