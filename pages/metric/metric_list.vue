@@ -87,7 +87,7 @@ export default {
     })
     Metric.api()
       .get('/metrics')
-      .then(() => {
+      .finally(() => {
         Metric.commit((state) => {
           state.fetching = false
         })

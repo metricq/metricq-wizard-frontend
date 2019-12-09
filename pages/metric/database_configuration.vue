@@ -80,7 +80,7 @@ export default {
     })
     Database.api()
       .get('/databases')
-      .then(() => {
+      .finally(() => {
         Database.commit((state) => {
           state.fetching = false
         })
