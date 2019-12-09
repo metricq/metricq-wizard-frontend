@@ -2,23 +2,17 @@
   <b-container fluid>
     <div>
       <b-row>
-        <b-col sm="3"></b-col>
-        <b-col align="center">
+        <b-col align="center" cols="6" offset="3">
           <h1>
             metricq-&#x1F9D9;-frontend
           </h1>
           <p class="lead">
             A configuration web app for MetricQ
           </p>
-        </b-col>
-        <b-col sm="3"></b-col>
-      </b-row>
-      <b-row>
-        <b-col
-          ><b-button @click="loadExampleData">
+          <b-button @click="loadExampleData">
             Load example data
-          </b-button></b-col
-        >
+          </b-button>
+        </b-col>
       </b-row>
     </div>
   </b-container>
