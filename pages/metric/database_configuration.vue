@@ -75,16 +75,7 @@ export default {
     }
   },
   fetch() {
-    Database.commit((state) => {
-      state.fetching = true
-    })
-    Database.api()
-      .get('/databases')
-      .finally(() => {
-        Database.commit((state) => {
-          state.fetching = false
-        })
-      })
+    // TODO Fetch database-metric relation only for selected metrics
   },
   methods: {
     onMetricDatabaseApplyToAll(databaseSettings) {

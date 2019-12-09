@@ -56,6 +56,7 @@
 <script>
 import MetricTable from '~/components/MetricTable'
 import Metric from '~/models/Metric'
+import Database from '~/models/Database'
 
 export default {
   components: {
@@ -80,15 +81,24 @@ export default {
         .get()
     }
   },
-  asyncData({ query }) {},
-  fetch() {
+  async mounted() {
     Metric.commit((state) => {
       state.fetching = true
     })
-    Metric.api()
+    await Metric.api()
       .get('/metrics')
       .finally(() => {
         Metric.commit((state) => {
+          state.fetching = false
+        })
+      })
+    Database.commit((state) => {
+      state.fetching = true
+    })
+    await Database.api()
+      .get('/databases')
+      .finally(() => {
+        Database.commit((state) => {
           state.fetching = false
         })
       })
