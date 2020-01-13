@@ -127,6 +127,7 @@ export default {
           .then((value) => {
             if (value) {
               // TODO restart source
+              this.$toast.success('Saved configuration!')
             } else {
               console.log('Do not restart source')
             }

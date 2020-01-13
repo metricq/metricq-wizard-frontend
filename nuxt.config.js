@@ -42,7 +42,8 @@ export default {
     // Doc: https://bootstrap-vue.js.org
     'bootstrap-vue/nuxt',
     // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/toast'
   ],
   /*
    ** Axios module configuration
@@ -61,5 +62,17 @@ export default {
      */
     extend(config, ctx) {},
     extractCSS: true
+  },
+  toast: {
+    position: 'top-right',
+    duration: 5000,
+    // you can pass a single action as below
+    action: {
+      text: 'Close',
+      onClick: (e, toastObject) => {
+        toastObject.goAway(0)
+      }
+    },
+    theme: 'outline'
   }
 }
