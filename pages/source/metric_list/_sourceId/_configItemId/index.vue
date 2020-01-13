@@ -1,0 +1,143 @@
+<template>
+  <div class="p-2">
+    <b-row>
+      <b-col>
+        <h1>{{ id }}</h1>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col cols="2">
+        <b-button
+          :to="{
+            name: 'source-metric_list-sourceId',
+            params: {
+              sourceId: id
+            }
+          }"
+          class="mb-1"
+        >
+          Back to configuration item list
+        </b-button>
+      </b-col>
+      <b-col cols="2" offset="8" align="right">
+        <b-button @click="createSelectedMetrics" :disabled="!isMetricSelected">
+          Configure new metrics
+        </b-button>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        <b-table
+          ref="availableMetricListTable"
+          :items="availableMetrics"
+          :fields="fields"
+          small
+          primary-key="id"
+          responsive="true"
+          striped
+          hover
+          @row-clicked="onRowClicked"
+        >
+          <template v-slot:cell(select)="data">
+            <b-checkbox v-model="data.item.selected" />
+          </template>
+          <template v-slot:cell(metric_name)="data">
+            <b-form inline>
+              <span>{{ data.item.metric_prefix }}</span>
+              <b-input
+                size="sm"
+                type="text"
+                trim
+                v-model="data.item.metric_custom_part"
+              />
+              <span>{{ data.item.metric_suffix }}</span>
+            </b-form>
+          </template>
+        </b-table>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        {{ selectedMetrics }}
+      </b-col>
+    </b-row>
+  </div>
+</template>
+
+<script>
+export default {
+  components: {},
+  async asyncData({ $axios, params }) {
+    const { data } = await $axios.get(
+      `/source/${params.sourceId}/config_item/${encodeURIComponent(
+        params.configItemId
+      )}/metrics`
+    )
+    return {
+      id: params.sourceId,
+      availableMetrics: data.map((item) => {
+        if (item.selected === undefined) {
+          item.selected = item.is_active
+        }
+        return item
+      }),
+      fields: ['select', 'id', 'current_value', 'metric_name']
+    }
+  },
+  computed: {
+    isMetricSelected() {
+      return this.availableMetrics.reduce(function(accumulator, currentValue) {
+        return accumulator || currentValue.selected
+      }, false)
+    },
+    selectedMetrics() {
+      return this.availableMetrics.filter((el) => el.selected)
+    }
+  },
+  methods: {
+    onRowClicked(item, index, event) {
+      item.selected = !item.selected
+    },
+    async createSelectedMetrics() {
+      const { status } = await this.$axios.post(
+        `/source/${
+          this.$route.params.sourceId
+        }/config_item/${encodeURIComponent(
+          this.$route.params.configItemId
+        )}/metrics`,
+        {
+          metrics: this.selectedMetrics
+        }
+      )
+      if (status === 200) {
+        this.$bvModal
+          .msgBoxConfirm(
+            `Save configuration for source ${this.id} and restart source?`,
+            {
+              title: 'Please Confirm',
+              buttonSize: 'sm',
+              okVariant: 'danger',
+              okTitle: 'YES',
+              cancelTitle: 'NO',
+              footerClass: 'p-2',
+              hideHeaderClose: false,
+              centered: true
+            }
+          )
+          .then((value) => {
+            if (value) {
+              // TODO restart source
+            } else {
+              console.log('Do not restart source')
+            }
+          })
+          .finally(() => {
+            this.$router.back()
+          })
+      }
+    }
+  }
+}
+</script>
+
+<style scoped />

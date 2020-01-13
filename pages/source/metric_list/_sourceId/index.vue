@@ -6,68 +6,51 @@
       </b-col>
     </b-row>
     <b-row>
-      <b-col>
-        <b-card>
-          <FormGenerator :schema="schema" v-model="formData">
-            <template v-slot:actions>
-              <b-button :disabled="searching" variant="primary" @click="search">
-                <b-spinner v-if="searching" class="ml-auto" small />
-                Search
-              </b-button>
-            </template>
-          </FormGenerator>
-        </b-card>
-      </b-col>
-    </b-row>
-    <b-table
-      :fields="fields"
-      :items="possibleMetrics"
-      selectable
-      small
-      @row-selected="onRowSelected"
-    />
-    <b-row>
-      <b-col>
-        {{ source.selectedMetrics }}
-      </b-col>
-      <b-col cols="2" align="right">
+      <b-col cols="2" offset="10" align="right">
         <b-button
           :to="{
-            name: 'source-metric_list-sourceId-create_new_metrics',
+            name: 'source-metric_list-sourceId-add_configuration_item',
             params: {
               sourceId: id
             }
           }"
-          :disabled="source.selectedMetrics.length === 0"
+          class="mb-1"
         >
-          Configure new metrics
+          Add new configuration item
         </b-button>
       </b-col>
     </b-row>
+    <b-list-group>
+      <b-list-group-item
+        v-for="configItem in configurationItems"
+        :key="configItem.id"
+        :to="{
+          name: 'source-metric_list-sourceId-configItemId',
+          params: {
+            sourceId: id,
+            configItemId: configItem.id
+          }
+        }"
+      >
+        <h4>
+          {{ configItem.name }}
+          <small class="text-muted">{{ configItem.description }}</small>
+        </h4>
+      </b-list-group-item>
+    </b-list-group>
   </div>
 </template>
 
 <script>
-import FormGenerator from '~/components/forms/FormGenerator'
 import Source from '~/models/Source'
 
 export default {
-  components: { FormGenerator },
+  components: {},
   async asyncData({ $axios, params }) {
-    const { data } = await $axios.get(
-      `/source/${params.sourceId}/get_available_metrics/input_form`
-    )
-    const source =
-      Source.query()
-        .whereId(params.sourceId)
-        .first() || new Source()
+    const { data } = await $axios.get(`/source/${params.sourceId}/config_items`)
     return {
       id: params.sourceId,
-      formData: Object.assign({}, source.searchParams),
-      schema: data,
-      searching: false,
-      fields: ['id', 'current_value'],
-      possibleMetrics: []
+      configurationItems: data
     }
   },
   computed: {
@@ -79,31 +62,7 @@ export default {
       )
     }
   },
-  methods: {
-    search() {
-      this.searching = true
-      Source.insertOrUpdate({
-        data: {
-          id: this.id,
-          searchParams: this.formData
-        }
-      })
-      this.$axios
-        .post(`/source/${this.id}/get_available_metrics`, this.formData)
-        .then((response) => {
-          this.possibleMetrics = response.data
-        })
-        .finally(() => (this.searching = false))
-    },
-    onRowSelected(selectedRows) {
-      Source.insertOrUpdate({
-        data: {
-          id: this.id,
-          selectedMetrics: selectedRows
-        }
-      })
-    }
-  }
+  methods: {}
 }
 </script>
 
