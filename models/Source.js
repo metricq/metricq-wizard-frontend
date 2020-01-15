@@ -13,7 +13,8 @@ export default class Source extends Model {
     return {
       id: this.string().nullable(),
       searchParams: this.attr({}),
-      selectedMetrics: this.attr([])
+      selectedMetrics: this.attr([]),
+      configurable: this.boolean(false)
     }
   }
 

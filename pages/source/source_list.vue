@@ -10,8 +10,10 @@
               name: 'source-metric_list-sourceId',
               params: { sourceId: item.id }
             }"
+            :disabled="!item.configurable"
           >
-            {{ item.id }}
+            <span v-if="item.configurable">{{ item.id }}</span>
+            <del v-else>{{ item.id }}</del>
           </b-list-group-item>
         </b-list-group>
       </b-col>
