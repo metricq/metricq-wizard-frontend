@@ -35,6 +35,17 @@
         <h4>
           {{ configItem.name }}
           <small class="text-muted">{{ configItem.description }}</small>
+          <b-link
+            :to="{
+              name: 'source-metric_list-sourceId-configItemId-edit',
+              params: {
+                sourceId: id,
+                configItemId: configItem.id
+              }
+            }"
+          >
+            Edit
+          </b-link>
         </h4>
       </b-list-group-item>
     </b-list-group>
