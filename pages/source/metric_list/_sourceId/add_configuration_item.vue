@@ -10,12 +10,12 @@
         <FormGenerator :schema="schema" v-model="formData">
           <template v-slot:actions>
             <b-button
-              :disabled="saving"
+              :disabled="adding"
               variant="primary"
-              @click="saveConfigItem()"
+              @click="addConfigItem()"
             >
-              <b-spinner v-if="saving" class="ml-auto" small />
-              Save
+              <b-spinner v-if="adding" class="ml-auto" small />
+              Add configuration item
             </b-button>
           </template>
         </FormGenerator>
@@ -38,7 +38,7 @@ export default {
       sourceId: params.sourceId,
       schema: data,
       formData: {},
-      saving: false
+      adding: false
     }
   },
   computed: {
@@ -51,15 +51,23 @@ export default {
     }
   },
   methods: {
-    saveConfigItem() {
+    async addConfigItem() {
       const formData = {
         ...this.formData
       }
       console.log(formData)
-      this.saving = true
-      this.$axios
-        .post(`/source/${this.sourceId}/config_items`, formData)
-        .finally(() => (this.saving = false))
+      this.adding = true
+      const { status } = await this.$axios.post(
+        `/source/${this.sourceId}/config_items`,
+        formData
+      )
+      if (status === 200) {
+        this.$toast.success('Added configuration item!')
+      } else {
+        this.$toast.error('Adding configuration item failed!')
+      }
+      this.adding = false
+      this.$router.back()
     }
   }
 }
