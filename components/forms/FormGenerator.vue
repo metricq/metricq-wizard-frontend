@@ -1,5 +1,5 @@
 <template>
-  <b-form inline class="mb-2">
+  <b-form :inline="inline" class="mb-2">
     <component
       :is="field.type"
       v-for="(field, id) in schema"
@@ -7,6 +7,7 @@
       :id="id"
       :field="field"
       :data="formData[id]"
+      :inline="inline"
       @input="updateData(id, $event)"
     />
     <div>
@@ -28,7 +29,7 @@ import PasswordField from './fields/PasswordField'
 export default {
   name: 'FormGenerator',
   components: { PasswordField, StringField, SelectField },
-  props: ['schema', 'value'],
+  props: ['schema', 'value', 'inline'],
   data() {
     return {
       formData: this.value

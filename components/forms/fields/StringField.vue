@@ -1,6 +1,6 @@
 <template>
-  <div class="mb-2 mr-sm-2 mb-sm-0">
-    <label :for="'stringfield-' + id">{{ id }}</label>
+  <div :class="outerClass">
+    <label :for="'stringfield-' + id">{{ field.label || id }}</label>
     <b-form-input
       :id="'stringfield-' + id"
       required
@@ -14,7 +14,12 @@
 <script>
 export default {
   name: 'StringField',
-  props: ['id', 'field', 'data']
+  props: ['id', 'field', 'data', 'inline'],
+  data() {
+    return {
+      outerClass: this.inline ? 'mb-2 mr-sm-2 mb-sm-0' : ''
+    }
+  }
 }
 </script>
 

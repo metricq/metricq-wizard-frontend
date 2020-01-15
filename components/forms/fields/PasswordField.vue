@@ -1,6 +1,6 @@
 <template>
-  <div class="mb-2 mr-sm-2 mb-sm-0">
-    <label :for="'passwordfield-' + id">{{ id }}</label>
+  <div :class="outerClass">
+    <label :for="'passwordfield-' + id">{{ field.label || id }}</label>
     <b-form-input
       :id="'passwordfield-' + id"
       type="password"
@@ -15,7 +15,12 @@
 <script>
 export default {
   name: 'PasswordField',
-  props: ['id', 'field', 'data']
+  props: ['id', 'field', 'data', 'inline'],
+  data() {
+    return {
+      outerClass: this.inline ? 'mb-2 mr-sm-2 mb-sm-0' : ''
+    }
+  }
 }
 </script>
 

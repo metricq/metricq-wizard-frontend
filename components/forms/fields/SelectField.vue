@@ -1,6 +1,6 @@
 <template>
-  <div class="mb-2 mr-sm-2 mb-sm-0">
-    <label :for="'selectfield-' + id">{{ id }}</label>
+  <div :class="outerClass">
+    <label :for="'selectfield-' + id">{{ field.label || id }}</label>
     <b-form-select
       :id="'selectfield-' + id"
       :options="field.options"
@@ -18,7 +18,12 @@
 <script>
 export default {
   name: 'SelectField',
-  props: ['id', 'field', 'data']
+  props: ['id', 'field', 'data', 'inline'],
+  data() {
+    return {
+      outerClass: this.inline ? 'mb-2 mr-sm-2 mb-sm-0' : ''
+    }
+  }
 }
 </script>
 
