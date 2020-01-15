@@ -45,6 +45,7 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/toast'
   ],
+  bootstrapVue: {},
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
@@ -61,7 +62,8 @@ export default {
      ** You can extend webpack config here
      */
     extend(config, ctx) {},
-    extractCSS: true
+    extractCSS: true,
+    analyze: true
   },
   toast: {
     position: 'top-right',
