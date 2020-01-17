@@ -11,9 +11,9 @@
       @input="updateData(id, $event)"
     />
     <div>
-      <label>&nbsp;</label>
+      <label v-if="inline">&nbsp;</label>
       <slot name="actions">
-        <b-button type="submit" variant="primary">
+        <b-button type="submit" variant="primary" :class="buttonClass">
           Submit
         </b-button>
       </slot>
@@ -25,14 +25,16 @@
 import StringField from './fields/StringField'
 import SelectField from './fields/SelectField'
 import PasswordField from './fields/PasswordField'
+import NumberField from './fields/NumberField'
 
 export default {
   name: 'FormGenerator',
-  components: { PasswordField, StringField, SelectField },
+  components: { PasswordField, StringField, SelectField, NumberField },
   props: ['schema', 'value', 'inline'],
   data() {
     return {
-      formData: this.value
+      formData: this.value,
+      buttonClass: this.inline ? 'ml-auto' : ''
     }
   },
   methods: {
