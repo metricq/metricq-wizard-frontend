@@ -6,7 +6,20 @@
       </b-col>
     </b-row>
     <b-row>
-      <b-col cols="2" offset="10" align="right">
+      <b-col>
+        <b-button
+          class="mb-1"
+          :to="{
+            name: 'source-metric_list-sourceId-edit_global_configuration',
+            params: {
+              sourceId: id
+            }
+          }"
+        >
+          Edit global source configuration
+        </b-button>
+      </b-col>
+      <b-col cols="2">
         <b-button
           :to="{
             name: 'source-metric_list-sourceId-add_configuration_item',
@@ -14,7 +27,7 @@
               sourceId: id
             }
           }"
-          class="mb-1"
+          class="mb-1 float-right"
         >
           Add new configuration item
         </b-button>
