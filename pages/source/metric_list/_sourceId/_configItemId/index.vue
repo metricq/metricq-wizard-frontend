@@ -49,6 +49,7 @@
                 type="text"
                 trim
                 v-model="data.item.metric_custom_part"
+                v-if="data.item.has_custom_part"
               />
               <span>{{ data.item.metric_suffix }}</span>
             </b-form>
