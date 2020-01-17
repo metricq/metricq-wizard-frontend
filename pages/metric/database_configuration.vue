@@ -74,8 +74,24 @@ export default {
       )
     }
   },
-  fetch() {
+  async fetch() {
     // TODO Fetch database-metric relation only for selected metrics
+    const selectedMetrics = Metric.query()
+      .where('selected', true)
+      .all()
+      .map((k, v) => v.id)
+    Database.commit((state) => {
+      state.fetching = true
+    })
+    await Database.api()
+      .post('/databases/historic_metrics', {
+        selectedMetrics
+      })
+      .finally(() => {
+        Database.commit((state) => {
+          state.fetching = false
+        })
+      })
   },
   methods: {
     onMetricDatabaseApplyToAll(databaseSettings) {

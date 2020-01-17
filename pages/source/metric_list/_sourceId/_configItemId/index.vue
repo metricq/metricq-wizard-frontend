@@ -125,7 +125,7 @@ export default {
         )
         if (answer) {
           const { status } = await this.$axios.post(
-            `/source/${this.$route.params.sourceId}/save`
+            `/source/${this.$route.params.sourceId}/save_reconfigure`
           )
           if (status === 200) {
             this.$toast.success(
