@@ -65,6 +65,36 @@ export default {
       )
       if (status === 200) {
         this.$toast.success('Updated global config!')
+        const answer = await this.$bvModal.msgBoxConfirm(
+          `Save configuration for source ${this.id} and reconfigure source?`,
+          {
+            title: 'Please Confirm',
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            okTitle: 'YES',
+            cancelTitle: 'NO',
+            footerClass: 'p-2',
+            hideHeaderClose: false,
+            centered: true
+          }
+        )
+        if (answer) {
+          const { status } = await this.$axios.post(
+            `/source/${this.$route.params.sourceId}/save_reconfigure`
+          )
+          if (status === 200) {
+            this.$toast.success(
+              'Saved configuration and requested source reconfiguration!'
+            )
+          } else {
+            this.$toast.error(
+              'Saving configuration or source reconfiguration failed!'
+            )
+          }
+        } else {
+          console.log('Do not restart source')
+        }
+        this.$router.back()
       } else {
         this.$toast.error('Updating global config failed!')
       }
