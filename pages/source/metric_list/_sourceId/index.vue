@@ -59,6 +59,11 @@
           >
             Edit
           </b-link>
+          <b-link
+            @click="deleteConfigItem(configItem)"
+            class="text-danger float-right"
+            >Delete</b-link
+          >
         </h4>
       </b-list-group-item>
     </b-list-group>
@@ -86,7 +91,39 @@ export default {
       )
     }
   },
-  methods: {}
+  methods: {
+    async deleteConfigItem(configItem) {
+      const answer = await this.$bvModal.msgBoxConfirm(
+        `Should ${configItem.name} really be deleted?`,
+        {
+          title: 'Please Confirm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          okTitle: 'YES',
+          cancelTitle: 'NO',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true
+        }
+      )
+      if (answer) {
+        const { status } = await this.$axios.delete(
+          `/source/${this.id}/config_item/${encodeURIComponent(configItem.id)}`
+        )
+        if (status === 200) {
+          this.$toast.success('Deleted configuration item!')
+          const { data } = await this.$axios.get(
+            `/source/${this.id}/config_items`
+          )
+          this.configurationItems = data
+        } else {
+          this.$toast.error('Deleting configuration item failed!')
+        }
+      } else {
+        console.log('Do not delete config item')
+      }
+    }
+  }
 }
 </script>
 
