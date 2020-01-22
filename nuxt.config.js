@@ -52,7 +52,7 @@ export default {
    */
   axios: {
     prefix: '/api',
-    port: 8000
+    port: process.env.NODE_ENV === 'development' ? 8000 : undefined
   },
   env: {
     baseUrl:
