@@ -82,16 +82,21 @@ export default {
     }
   },
   async mounted() {
-    Metric.commit((state) => {
-      state.fetching = true
-    })
-    await Metric.api()
-      .get('/metrics')
-      .finally(() => {
-        Metric.commit((state) => {
-          state.fetching = false
-        })
+    if (
+      this.$route.params.loadMetrics == null ||
+      this.$route.params.loadMetrics
+    ) {
+      Metric.commit((state) => {
+        state.fetching = true
       })
+      await Metric.api()
+        .get('/metrics')
+        .finally(() => {
+          Metric.commit((state) => {
+            state.fetching = false
+          })
+        })
+    }
     Database.commit((state) => {
       state.fetching = true
     })
