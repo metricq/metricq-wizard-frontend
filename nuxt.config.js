@@ -63,7 +63,7 @@ export default {
      */
     extend(config, ctx) {},
     extractCSS: true,
-    analyze: true
+    analyze: false
   },
   toast: {
     position: 'top-right',
