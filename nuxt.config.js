@@ -52,13 +52,16 @@ export default {
    */
   axios: {
     prefix: '/api',
-    port: process.env.NODE_ENV === 'development' ? 8000 : undefined
+    baseUrl:
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:8000'
+        : 'https://wizard.metricq.zih.tu-dresden.de'
   },
   env: {
     baseUrl:
       process.env.NODE_ENV === 'development'
         ? 'http://localhost:3000'
-        : 'https://igel.metricq.zih.tu-dresden.de/wizard'
+        : 'https://wizard.metricq.zih.tu-dresden.de'
   },
   /*
    ** Build configuration
