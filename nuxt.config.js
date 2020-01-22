@@ -54,6 +54,12 @@ export default {
     prefix: '/api',
     port: 8000
   },
+  env: {
+    baseUrl:
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000'
+        : 'https://igel.metricq.zih.tu-dresden.de/wizard'
+  },
   /*
    ** Build configuration
    */
