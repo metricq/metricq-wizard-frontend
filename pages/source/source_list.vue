@@ -5,7 +5,7 @@
         <b-list-group>
           <b-list-group-item
             v-for="item in sources"
-            v-bind:key="item.id"
+            :key="item.id"
             :to="{
               name: 'source-metric_list-sourceId',
               params: { sourceId: item.id }
@@ -25,14 +25,6 @@
 import Source from '~/models/Source'
 
 export default {
-  asyncData() {
-    return {}
-  },
-  computed: {
-    sources() {
-      return Source.query().all()
-    }
-  },
   fetch() {
     Source.commit((state) => {
       state.fetching = true
@@ -44,6 +36,14 @@ export default {
           state.fetching = false
         })
       })
+  },
+  asyncData() {
+    return {}
+  },
+  computed: {
+    sources() {
+      return Source.query().all()
+    }
   }
 }
 </script>

@@ -7,13 +7,13 @@
     </b-row>
     <b-row>
       <b-col>
-        <FormGenerator :schema="schema" v-model="formData">
+        <FormGenerator v-model="formData" :schema="schema">
           <template v-slot:actions>
             <b-button
               :disabled="updating"
               variant="primary"
-              @click="updateGlobalConfig()"
               class="mt-1"
+              @click="updateGlobalConfig()"
             >
               <b-spinner v-if="updating" small />
               Update global configuration

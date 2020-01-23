@@ -58,16 +58,16 @@
         <b-button :disabled="metric.historic" type="reset" variant="danger">
           Reset to defaults
         </b-button>
-        <b-button @click="onApplyToAll" variant="primary" v-if="showApplyAll">
+        <b-button v-if="showApplyAll" variant="primary" @click="onApplyToAll">
           Apply to all
         </b-button>
         <b-button
           v-if="!hideSave"
-          @click="save"
           :disabled="metric.historic || metric.saving"
           variant="primary"
+          @click="save"
         >
-          <b-spinner class="ml-auto" small v-if="metric.saving" />
+          <b-spinner v-if="metric.saving" class="ml-auto" small />
           Save
         </b-button>
       </b-form-group>

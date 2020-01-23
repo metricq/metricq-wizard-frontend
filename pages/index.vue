@@ -24,6 +24,7 @@ import Database from '~/models/Database'
 
 export default {
   components: {},
+  asyncData({ query }) {},
   computed: {
     selected() {
       return Metric.query()
@@ -32,7 +33,6 @@ export default {
         .get()
     }
   },
-  asyncData({ query }) {},
   methods: {
     loadExampleData() {
       const metrics = [

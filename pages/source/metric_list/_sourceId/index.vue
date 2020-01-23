@@ -60,8 +60,8 @@
             Edit
           </b-link>
           <b-link
-            @click="deleteConfigItem(configItem)"
             class="text-danger float-right"
+            @click="deleteConfigItem(configItem)"
             >Delete</b-link
           >
         </h4>

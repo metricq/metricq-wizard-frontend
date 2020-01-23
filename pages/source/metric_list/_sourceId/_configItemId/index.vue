@@ -20,7 +20,7 @@
         </b-button>
       </b-col>
       <b-col cols="2" offset="8" align="right">
-        <b-button @click="createSelectedMetrics" :disabled="!isMetricSelected">
+        <b-button :disabled="!isMetricSelected" @click="createSelectedMetrics">
           Configure new metrics
         </b-button>
       </b-col>
@@ -45,11 +45,11 @@
             <b-form inline>
               <span>{{ data.item.metric_prefix }}</span>
               <b-input
+                v-if="data.item.has_custom_part"
+                v-model="data.item.metric_custom_part"
                 size="sm"
                 type="text"
                 trim
-                v-model="data.item.metric_custom_part"
-                v-if="data.item.has_custom_part"
               />
               <span>{{ data.item.metric_suffix }}</span>
             </b-form>

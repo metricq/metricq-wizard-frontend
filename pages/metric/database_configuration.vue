@@ -1,20 +1,20 @@
 <template>
   <b-container fluid>
     <MetricDatabaseConfiguration
-      v-bind:globalDatabaseSettings="databaseSettings"
-      @metric-database-apply-to-all="onMetricDatabaseApplyToAll"
-      v-bind:showApplyAll="true"
-      v-bind:hide-save="true"
+      :global-database-settings="databaseSettings"
+      :show-apply-all="true"
+      :hide-save="true"
       class="mb-2"
+      @metric-database-apply-to-all="onMetricDatabaseApplyToAll"
     />
-    <div v-for="item in selected" v-bind:key="item.id">
+    <div v-for="item in selected" :key="item.id">
       <MetricDatabaseConfiguration
         ref="dbConfigs"
-        v-bind:metricId="item.id"
-        v-bind:globalDatabaseSettings="databaseSettings"
+        :metric-id="item.id"
+        :global-database-settings="databaseSettings"
+        class="mb-2"
         @metric-database-apply-to-all="onMetricDatabaseApplyToAll"
         @metric-database-saved="onMetricDatabaseSaved"
-        class="mb-2"
       />
     </div>
     <div>
@@ -32,10 +32,10 @@
         <b-col cols="2" align="right">
           <b-button
             variant="primary"
-            @click="onSaveAllClicked"
             :disabled="saving"
+            @click="onSaveAllClicked"
           >
-            <b-spinner class="ml-auto" small v-if="saving" />
+            <b-spinner v-if="saving" class="ml-auto" small />
             Save all
           </b-button>
         </b-col>
@@ -52,27 +52,6 @@ import Database from '~/models/Database'
 export default {
   components: {
     MetricDatabaseConfiguration
-  },
-  data() {
-    return {
-      databaseSettings: {},
-      savedDatabases: new Set()
-    }
-  },
-  computed: {
-    selected() {
-      return Metric.query()
-        .with('database')
-        .where('selected', true)
-        .all()
-    },
-    saving() {
-      return (
-        Metric.query()
-          .where('saving', true)
-          .count() !== 0
-      )
-    }
   },
   async fetch() {
     // TODO Fetch database-metric relation only for selected metrics
@@ -93,17 +72,25 @@ export default {
         })
       })
   },
-  methods: {
-    onMetricDatabaseApplyToAll(databaseSettings) {
-      this.databaseSettings = databaseSettings
+  data() {
+    return {
+      databaseSettings: {},
+      savedDatabases: new Set()
+    }
+  },
+  computed: {
+    selected() {
+      return Metric.query()
+        .with('database')
+        .where('selected', true)
+        .all()
     },
-    onSaveAllClicked() {
-      this.$refs.dbConfigs.forEach(function(child) {
-        child.save()
-      })
-    },
-    onMetricDatabaseSaved(databaseId) {
-      this.savedDatabases.add(databaseId)
+    saving() {
+      return (
+        Metric.query()
+          .where('saving', true)
+          .count() !== 0
+      )
     }
   },
   watch: {
@@ -136,6 +123,19 @@ export default {
             }
           })
       }
+    }
+  },
+  methods: {
+    onMetricDatabaseApplyToAll(databaseSettings) {
+      this.databaseSettings = databaseSettings
+    },
+    onSaveAllClicked() {
+      this.$refs.dbConfigs.forEach(function(child) {
+        child.save()
+      })
+    },
+    onMetricDatabaseSaved(databaseId) {
+      this.savedDatabases.add(databaseId)
     }
   }
 }

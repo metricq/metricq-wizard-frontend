@@ -13,7 +13,7 @@
     <b-row v-for="item in source.selectedMetrics" :key="item.id">
       <b-col>
         <b-card :title="item.id">
-          <FormGenerator :schema="schema" v-model="formData[item.id]">
+          <FormGenerator v-model="formData[item.id]" :schema="schema">
             <template v-slot:actions>
               <b-button
                 :disabled="saving"

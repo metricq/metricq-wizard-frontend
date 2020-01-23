@@ -7,7 +7,7 @@
     </b-row>
     <b-row>
       <b-col>
-        <FormGenerator :schema="schema" v-model="formData">
+        <FormGenerator v-model="formData" :schema="schema">
           <template v-slot:actions>
             <b-button
               :disabled="adding"
