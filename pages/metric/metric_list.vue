@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid>
+  <b-container fluid="">
     <div>
       <b-row>
         <b-col cols="3">
@@ -81,9 +81,9 @@
           >
             <b-input-group size="sm">
               <b-form-input
+                id="filterInput"
                 v-model="filterString"
                 type="search"
-                id="filterInput"
                 debounce="100"
                 placeholder="Type to Search"
               />
