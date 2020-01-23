@@ -2,6 +2,73 @@
   <b-container fluid>
     <div>
       <b-row>
+        <b-col cols="3">
+          <b-form-group
+            label="Load by database"
+            label-cols-sm="4"
+            label-align-sm="right"
+            label-size="sm"
+            label-for="loadByDatabase"
+            class="mb-0"
+          >
+            <b-input-group size="sm">
+              <b-form-select
+                id="loadByDatabase"
+                v-model="loadSelectedDatabase"
+                :options="databases"
+                :value="null"
+                disabled
+              />
+              <b-input-group-append>
+                <b-button
+                  :disabled="!loadSelectedDatabase"
+                  @click="loadByDatabase()"
+                >
+                  Load
+                </b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
+        </b-col>
+        <b-col cols="3">
+          <b-form-group
+            label="Load by source"
+            label-cols-sm="4"
+            label-align-sm="right"
+            label-size="sm"
+            label-for="loadBySource"
+            class="mb-0"
+          >
+            <b-input-group size="sm">
+              <b-form-select
+                id="loadBySource"
+                v-model="loadSelectedSource"
+                :options="sources"
+                :value="null"
+              />
+              <b-input-group-append>
+                <b-button
+                  :disabled="!loadSelectedSource"
+                  @click="loadBySource()"
+                >
+                  Load
+                </b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
+        </b-col>
+        <b-col>
+          <b-button
+            class="float-right"
+            :disabled="metricCount == 0"
+            size="sm"
+            @click="clearMetricList()"
+          >
+            Clear metric list
+          </b-button>
+        </b-col>
+      </b-row>
+      <b-row>
         <b-col />
         <b-col lg="6" class="my-1">
           <b-form-group
@@ -57,6 +124,7 @@
 import MetricTable from '~/components/MetricTable'
 import Metric from '~/models/Metric'
 import Database from '~/models/Database'
+import Source from '~/models/Source'
 
 export default {
   components: {
@@ -70,7 +138,9 @@ export default {
         { value: null, text: 'Any' },
         { value: true, text: 'Saved in DB' },
         { value: false, text: 'Not in DB' }
-      ]
+      ],
+      loadSelectedDatabase: null,
+      loadSelectedSource: null
     }
   },
   computed: {
@@ -79,21 +149,70 @@ export default {
         .with('database')
         .where('selected', true)
         .get()
+    },
+    metricCount() {
+      return Metric.query().count()
+    },
+    databases() {
+      return Database.query()
+        .all()
+        .map((item) => item.id)
+    },
+    sources() {
+      return Source.query()
+        .all()
+        .map((item) => item.id)
     }
   },
   async mounted() {
     Database.commit((state) => {
       state.fetching = true
     })
-    await Database.api()
+    Database.api()
       .get('/databases')
       .finally(() => {
         Database.commit((state) => {
           state.fetching = false
         })
       })
+    Source.commit((state) => {
+      state.fetching = true
+    })
+    await Source.api()
+      .get('/sources')
+      .finally(() => {
+        Source.commit((state) => {
+          state.fetching = false
+        })
+      })
   },
-  methods: {}
+  methods: {
+    async loadByDatabase() {
+      Metric.commit((state) => {
+        state.fetching = true
+      })
+      await Metric.api().post('/metrics', {
+        database: this.loadSelectedDatabase
+      })
+      Metric.commit((state) => {
+        state.fetching = false
+      })
+    },
+    async loadBySource() {
+      Metric.commit((state) => {
+        state.fetching = true
+      })
+      await Metric.api().post('/metrics', {
+        source: this.loadSelectedSource
+      })
+      Metric.commit((state) => {
+        state.fetching = false
+      })
+    },
+    async clearMetricList() {
+      await Metric.deleteAll()
+    }
+  }
 }
 </script>
 
