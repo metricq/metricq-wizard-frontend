@@ -54,12 +54,7 @@ export default {
     prefix: '/api',
     port: process.env.NODE_ENV === 'development' ? 8000 : undefined
   },
-  env: {
-    baseUrl:
-      process.env.NODE_ENV === 'development'
-        ? 'http://localhost:3000'
-        : 'https://wizard.metricq.zih.tu-dresden.de'
-  },
+
   /*
    ** Build configuration
    */
@@ -82,5 +77,8 @@ export default {
       }
     },
     theme: 'outline'
+  },
+  router: {
+    base: process.env.NODE_ENV === 'development' ? '/' : '/wizard'
   }
 }
