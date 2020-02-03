@@ -152,7 +152,10 @@ export default {
                 Metric.commit((state) => {
                   state.fetching = true
                 })
-                this.$toast.info('Loading database configuration. Please wait!')
+                const loadingToast = this.$toast.info(
+                  'Loading database configuration. Please wait!',
+                  { duration: null }
+                )
                 // TODO find right method for getting metric subset
                 await Metric.api().post('/metrics', {
                   requested_metrics: data.metrics
@@ -160,6 +163,7 @@ export default {
                 Metric.commit((state) => {
                   state.fetching = false
                 })
+                loadingToast.goAway()
                 this.$toast.success('Loaded database configuration.')
                 await this.$router.push({
                   name: 'metric-metric_list',
