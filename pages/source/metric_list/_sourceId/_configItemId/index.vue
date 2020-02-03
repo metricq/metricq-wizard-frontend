@@ -21,7 +21,7 @@
       </b-col>
       <b-col cols="2" offset="8" align="right">
         <b-button :disabled="!isMetricSelected" @click="createSelectedMetrics">
-          Configure new metrics
+          Configure metrics
         </b-button>
       </b-col>
     </b-row>
@@ -134,39 +134,41 @@ export default {
             this.$toast.success(
               'Saved configuration and requested source reconfiguration!'
             )
-            const answer = await this.$bvModal.msgBoxConfirm(
-              `${data.metrics.length} metrics created. Configure database storage for them?`,
-              {
-                title: 'Please Confirm',
-                buttonSize: 'sm',
-                okVariant: 'danger',
-                okTitle: 'YES',
-                cancelTitle: 'NO',
-                footerClass: 'p-2',
-                hideHeaderClose: false,
-                centered: true
-              }
-            )
-            if (answer) {
-              Metric.commit((state) => {
-                state.fetching = true
-              })
-              this.$toast.info('Loading database configuration. Please wait!')
-              // TODO find right method for getting metric subset
-              await Metric.api().post('/metrics', {
-                requested_metrics: data.metrics
-              })
-              Metric.commit((state) => {
-                state.fetching = false
-              })
-              this.$toast.success('Loaded database configuration.')
-              await this.$router.push({
-                name: 'metric-metric_list',
-                params: {
-                  loadMetrics: false
+            if (data.metrics.length !== 0) {
+              const answer = await this.$bvModal.msgBoxConfirm(
+                `${data.metrics.length} metrics created. Configure database storage for them?`,
+                {
+                  title: 'Please Confirm',
+                  buttonSize: 'sm',
+                  okVariant: 'danger',
+                  okTitle: 'YES',
+                  cancelTitle: 'NO',
+                  footerClass: 'p-2',
+                  hideHeaderClose: false,
+                  centered: true
                 }
-              })
-              return
+              )
+              if (answer) {
+                Metric.commit((state) => {
+                  state.fetching = true
+                })
+                this.$toast.info('Loading database configuration. Please wait!')
+                // TODO find right method for getting metric subset
+                await Metric.api().post('/metrics', {
+                  requested_metrics: data.metrics
+                })
+                Metric.commit((state) => {
+                  state.fetching = false
+                })
+                this.$toast.success('Loaded database configuration.')
+                await this.$router.push({
+                  name: 'metric-metric_list',
+                  params: {
+                    loadMetrics: false
+                  }
+                })
+                return
+              }
             }
           } else {
             this.$toast.error(
