@@ -13,7 +13,10 @@
           hover
         >
           <template v-slot:cell(actions)="data">
-            <b-button size="sm float-right" @click="reconfigureClient(data.id)">
+            <b-button
+              size="sm float-right"
+              @click="reconfigureClient(data.item.id)"
+            >
               Send configuration
             </b-button>
           </template>
