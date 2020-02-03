@@ -14,13 +14,21 @@
               name: 'metric-metric_list'
             }"
           >
-            Metrics Overview </b-nav-item
-          ><b-nav-item
+            Metrics Overview
+          </b-nav-item>
+          <b-nav-item
             :to="{
               name: 'source-source_list'
             }"
           >
             Source Overview
+          </b-nav-item>
+          <b-nav-item
+            :to="{
+              name: 'client-client_list'
+            }"
+          >
+            Client Overview
           </b-nav-item>
         </b-navbar-nav>
 
