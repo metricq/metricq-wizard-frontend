@@ -57,11 +57,6 @@
         </b-table>
       </b-col>
     </b-row>
-    <b-row>
-      <b-col>
-        {{ selectedMetrics }}
-      </b-col>
-    </b-row>
   </div>
 </template>
 
