@@ -17,7 +17,6 @@
 
 <script>
 import Metric from '~/models/Metric'
-import Database from '~/models/Database'
 
 export default {
   components: {},
