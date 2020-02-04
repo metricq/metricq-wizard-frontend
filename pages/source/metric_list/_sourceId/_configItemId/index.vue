@@ -41,18 +41,18 @@
           <template v-slot:cell(select)="data">
             <b-checkbox v-model="data.item.selected" />
           </template>
-          <template v-slot:cell(metric_name)="data">
-            <b-form inline>
-              <span>{{ data.item.metric_prefix }}</span>
-              <b-input
-                v-if="data.item.has_custom_part"
-                v-model="data.item.metric_custom_part"
-                size="sm"
-                type="text"
-                trim
-              />
-              <span>{{ data.item.metric_suffix }}</span>
-            </b-form>
+          <template v-slot:cell(id)="data">
+            {{ data.value }}
+          </template>
+          <template v-slot:cell()="data">
+            <FormGenerator
+              v-model="data.item.customColumnsValues[data.field.key]"
+              :schema="data.item.customColumns[data.field.key]"
+              inline
+              size="sm"
+              hide-labels
+              disable-actions
+            />
           </template>
         </b-table>
       </b-col>
@@ -62,9 +62,10 @@
 
 <script>
 import Metric from '~/models/Metric'
+import FormGenerator from '~/components/forms/FormGenerator'
 
 export default {
-  components: {},
+  components: { FormGenerator },
   async asyncData({ $axios, params }) {
     const { data } = await $axios.get(
       `/source/${params.sourceId}/config_item/${encodeURIComponent(
@@ -73,13 +74,22 @@ export default {
     )
     return {
       id: params.sourceId,
-      availableMetrics: data.map((item) => {
+      availableMetrics: data.metrics.map((item) => {
         if (item.selected === undefined) {
-          item.selected = item.is_active
+          item.selected = item.isActive
+        }
+        if (!item.customColumnsValues) {
+          item.customColumnsValues = {}
         }
         return item
       }),
-      fields: ['select', 'id', 'current_value', 'metric_name']
+      fields: [
+        'select',
+        'id',
+        ...Object.entries(data.columns).map((item) => {
+          return { key: item[0], label: item[1] }
+        })
+      ]
     }
   },
   computed: {
