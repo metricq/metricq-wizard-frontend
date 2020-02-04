@@ -1,10 +1,13 @@
 <template>
   <div :class="outerClass">
-    <label :for="'selectfield-' + id">{{ field.label || id }}</label>
+    <label v-if="!hideLabel" :for="'selectfield-' + id">{{
+      field.label || id
+    }}</label>
     <b-form-select
       :id="'selectfield-' + id"
       :options="field.options"
       :value="data"
+      :size="size"
       required
       @input="$emit('input', $event)"
     >
@@ -18,7 +21,20 @@
 <script>
 export default {
   name: 'SelectField',
-  props: ['id', 'field', 'data', 'inline'],
+  props: {
+    id: String,
+    field: Object,
+    data: {},
+    inline: Boolean,
+    size: {
+      type: String,
+      default: ''
+    },
+    hideLabel: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       outerClass: this.inline ? 'mb-2 mr-sm-2 mb-sm-0' : ''
