@@ -2,7 +2,22 @@
   <div class="p-2">
     <b-row>
       <b-col>
-        <h1>{{ sourceId }}</h1>
+        <h1>Source {{ sourceId }}: Edit {{ source.configItemName }}</h1>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col cols="2">
+        <b-button
+          :to="{
+            name: 'source-config_item_list-sourceId',
+            params: {
+              sourceId: sourceId
+            }
+          }"
+          class="mb-1"
+        >
+          Back to {{ source.configItemName }} list
+        </b-button>
       </b-col>
     </b-row>
     <b-row>
@@ -12,10 +27,11 @@
             <b-button
               :disabled="updating"
               variant="primary"
+              class="mt-1 float-right"
               @click="addConfigItem()"
             >
               <b-spinner v-if="updating" class="ml-auto" small />
-              Update configuration item
+              Update {{ source.configItemName }}
             </b-button>
           </template>
         </FormGenerator>

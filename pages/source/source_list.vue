@@ -1,21 +1,39 @@
 <template>
-  <div>
+  <div class="pl-2 pr-2">
     <b-row>
-      <b-col cols="10" offset="1">
-        <b-list-group>
-          <b-list-group-item
-            v-for="item in sources"
-            :key="item.id"
-            :to="{
-              name: 'source-config_item_list-sourceId',
-              params: { sourceId: item.id }
-            }"
-            :disabled="!item.configurable"
-          >
-            <span v-if="item.configurable">{{ item.id }}</span>
-            <del v-else>{{ item.id }}</del>
-          </b-list-group-item>
-        </b-list-group>
+      <b-col>
+        <h1>Source Overview</h1>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        <b-table
+          ref="metricListTable"
+          :items="sources"
+          :fields="tableFields"
+          small
+          primary-key="id"
+          responsive="true"
+          striped
+        >
+          <template v-slot:cell(id)="data">
+            <span v-if="data.item.configurable">{{ data.item.id }}</span>
+            <del v-else>{{ data.item.id }}</del>
+          </template>
+          <template v-slot:cell(actions)="data">
+            <b-button
+              :to="{
+                name: 'source-config_item_list-sourceId',
+                params: { sourceId: data.item.id }
+              }"
+              :disabled="!data.item.configurable"
+              size="sm"
+              class="float-right"
+            >
+              Configure source
+            </b-button>
+          </template>
+        </b-table>
       </b-col>
     </b-row>
   </div>
@@ -25,20 +43,19 @@
 import Source from '~/models/Source'
 
 export default {
-  fetch() {
+  async fetch() {
     Source.commit((state) => {
       state.fetching = true
     })
-    Source.api()
-      .get('/sources')
-      .finally(() => {
-        Source.commit((state) => {
-          state.fetching = false
-        })
-      })
+    await Source.api().get('/sources')
+    Source.commit((state) => {
+      state.fetching = false
+    })
   },
-  asyncData() {
-    return {}
+  data() {
+    return {
+      tableFields: [{ key: 'id', label: 'Source' }, 'actions']
+    }
   },
   computed: {
     sources() {

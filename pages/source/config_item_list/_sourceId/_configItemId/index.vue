@@ -2,7 +2,7 @@
   <div class="p-2">
     <b-row>
       <b-col>
-        <h1>{{ id }}</h1>
+        <h1>Source {{ id }}: Available Metrics</h1>
       </b-col>
     </b-row>
     <b-row>
@@ -16,12 +16,7 @@
           }"
           class="mb-1"
         >
-          Back to configuration item list
-        </b-button>
-      </b-col>
-      <b-col cols="2" offset="8" align="right">
-        <b-button :disabled="!isMetricSelected" @click="createSelectedMetrics">
-          Configure metrics
+          Back to {{ source.configItemName }} list
         </b-button>
       </b-col>
     </b-row>
@@ -56,12 +51,25 @@
         </b-table>
       </b-col>
     </b-row>
+    <b-row>
+      <b-col>
+        <b-button
+          :disabled="!isMetricSelected"
+          @click="createSelectedMetrics"
+          class="float-right"
+          variant="primary"
+        >
+          Configure metrics
+        </b-button>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
 <script>
 import Metric from '~/models/Metric'
 import FormGenerator from '~/components/forms/FormGenerator'
+import Source from '~/models/Source'
 
 export default {
   components: { FormGenerator },
@@ -99,6 +107,13 @@ export default {
     },
     selectedMetrics() {
       return this.availableMetrics.filter((el) => el.selected)
+    },
+    source() {
+      return (
+        Source.query()
+          .whereId(this.id)
+          .first() || new Source()
+      )
     }
   },
   methods: {

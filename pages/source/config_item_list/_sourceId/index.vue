@@ -4,7 +4,7 @@
       <b-col>
         <h1>
           Source {{ id }}:
-          <span class="text-capitalize">{{ configItemName }}s</span>
+          <span class="text-capitalize">{{ source.configItemName }}s</span>
         </h1>
       </b-col>
     </b-row>
@@ -57,14 +57,14 @@
           }"
           size="sm"
         >
-          Edit {{ configItemName }}
+          Edit {{ source.configItemName }}
         </b-button>
         <b-button
           @click="deleteConfigItem(data.item)"
           variant="danger"
           size="sm"
         >
-          Delete {{ configItemName }}
+          Delete {{ source.configItemName }}
         </b-button>
       </template>
     </b-table>
@@ -81,7 +81,7 @@
           class="mb-1 float-right"
           variant="primary"
         >
-          Add new {{ configItemName }}
+          Add new {{ source.configItemName }}
         </b-button>
       </b-col>
     </b-row>
@@ -95,9 +95,12 @@ export default {
   components: {},
   async asyncData({ $axios, params }) {
     const { data } = await $axios.get(`/source/${params.sourceId}/config_items`)
+    await Source.update({
+      where: params.sourceId,
+      data: { configItemName: data.configItemName }
+    })
     return {
       id: params.sourceId,
-      configItemName: data.configItemName,
       configurationItems: data.configItems,
       tableFields: ['name', 'description', 'actions']
     }

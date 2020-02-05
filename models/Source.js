@@ -12,9 +12,8 @@ export default class Source extends Model {
   static fields() {
     return {
       id: this.string().nullable(),
-      searchParams: this.attr({}),
-      selectedMetrics: this.attr([]),
-      configurable: this.boolean(false)
+      configurable: this.boolean(false),
+      configItemName: this.string('config item')
     }
   }
 
