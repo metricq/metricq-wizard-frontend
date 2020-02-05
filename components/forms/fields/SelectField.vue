@@ -11,7 +11,7 @@
       required
       @input="$emit('input', $event)"
     >
-      <template v-slot:first>
+      <template v-slot:first v-if="insertChoose">
         <option :value="undefined">Choose...</option>
       </template>
     </b-form-select>
@@ -37,6 +37,12 @@ export default {
   },
   data() {
     return {
+      insertChoose: this.field.options.reduce((o, item) => {
+        if (!item.value) {
+          return false
+        }
+        return o && true
+      }, true),
       outerClass: this.inline ? 'mb-2 mr-sm-2 mb-sm-0' : ''
     }
   }
