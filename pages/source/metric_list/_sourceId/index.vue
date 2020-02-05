@@ -2,7 +2,10 @@
   <div class="p-2">
     <b-row>
       <b-col>
-        <h1>{{ id }}</h1>
+        <h1>
+          Source {{ id }}:
+          <span class="text-capitalize">{{ configItemName }}s</span>
+        </h1>
       </b-col>
     </b-row>
     <b-row>
@@ -74,7 +77,7 @@
           }"
           size="sm"
         >
-          Edit
+          Edit {{ configItemName }}
         </b-button>
         <b-button
           @click="deleteConfigItem(data.item)"
@@ -100,7 +103,8 @@ export default {
     const { data } = await $axios.get(`/source/${params.sourceId}/config_items`)
     return {
       id: params.sourceId,
-      configurationItems: data,
+      configItemName: data.configItemName,
+      configurationItems: data.configItems,
       tableFields: ['name', 'description', 'actions']
     }
   },
