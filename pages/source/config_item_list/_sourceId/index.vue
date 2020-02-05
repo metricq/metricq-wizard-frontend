@@ -64,7 +64,7 @@
           variant="danger"
           size="sm"
         >
-          Delete
+          Delete {{ configItemName }}
         </b-button>
       </template>
     </b-table>
