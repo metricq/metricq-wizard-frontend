@@ -36,7 +36,6 @@
           responsive="true"
           striped
           hover
-          @row-clicked="onRowClicked"
         >
           <template v-slot:cell(select)="data">
             <b-checkbox v-model="data.item.selected" />
@@ -103,9 +102,6 @@ export default {
     }
   },
   methods: {
-    onRowClicked(item, index, event) {
-      item.selected = !item.selected
-    },
     async createSelectedMetrics() {
       const { status, data } = await this.$axios.post(
         `/source/${
