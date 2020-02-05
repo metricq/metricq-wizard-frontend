@@ -8,18 +8,15 @@
     <b-row>
       <b-col>
         <b-button
-          class="mb-1"
           :to="{
-            name: 'source-metric_list-sourceId-edit_global_configuration',
-            params: {
-              sourceId: id
-            }
+            name: 'source-source_list'
           }"
+          class="mb-1"
         >
-          Edit global source configuration
+          Back to source overview
         </b-button>
       </b-col>
-      <b-col cols="2">
+      <b-col cols="4">
         <b-button
           :to="{
             name: 'source-metric_list-sourceId-add_configuration_item',
@@ -31,42 +28,66 @@
         >
           Add new configuration item
         </b-button>
+        <b-button
+          class="mb-1 mr-1 float-right"
+          :to="{
+            name: 'source-metric_list-sourceId-edit_global_configuration',
+            params: {
+              sourceId: id
+            }
+          }"
+        >
+          Edit global source configuration
+        </b-button>
       </b-col>
     </b-row>
-    <b-list-group>
-      <b-list-group-item
-        v-for="configItem in configurationItems"
-        :key="configItem.id"
-        :to="{
-          name: 'source-metric_list-sourceId-configItemId',
-          params: {
-            sourceId: id,
-            configItemId: configItem.id
-          }
-        }"
-      >
-        <h4>
-          {{ configItem.name }}
-          <small class="text-muted">{{ configItem.description }}</small>
-          <b-link
-            :to="{
-              name: 'source-metric_list-sourceId-configItemId-edit',
-              params: {
-                sourceId: id,
-                configItemId: configItem.id
-              }
-            }"
-          >
-            Edit
-          </b-link>
-          <b-link
-            class="text-danger float-right"
-            @click="deleteConfigItem(configItem)"
-            >Delete</b-link
-          >
-        </h4>
-      </b-list-group-item>
-    </b-list-group>
+    <b-table
+      ref="metricListTable"
+      :items="configurationItems"
+      :fields="tableFields"
+      small
+      primary-key="id"
+      responsive="true"
+      striped
+      hover
+    >
+      <template v-slot:cell(actions)="data">
+        <b-button
+          :to="{
+            name: 'source-metric_list-sourceId-configItemId',
+            params: {
+              sourceId: id,
+              configItemId: data.item.id
+            }
+          }"
+          size="sm"
+        >
+          Configure metrics
+        </b-button>
+        <b-button
+          :to="{
+            name: 'source-metric_list-sourceId-configItemId-edit',
+            params: {
+              sourceId: id,
+              configItemId: data.item.id
+            }
+          }"
+          size="sm"
+        >
+          Edit
+        </b-button>
+        <b-button
+          @click="deleteConfigItem(data.item)"
+          variant="danger"
+          size="sm"
+        >
+          Delete
+        </b-button>
+        <b-badge v-if="data.item.historic">
+          Saved in DB
+        </b-badge>
+      </template>
+    </b-table>
   </div>
 </template>
 
@@ -79,7 +100,8 @@ export default {
     const { data } = await $axios.get(`/source/${params.sourceId}/config_items`)
     return {
       id: params.sourceId,
-      configurationItems: data
+      configurationItems: data,
+      tableFields: ['name', 'description', 'actions']
     }
   },
   computed: {
