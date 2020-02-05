@@ -9,28 +9,8 @@
       </b-col>
     </b-row>
     <b-row>
-      <b-col>
-        <b-button
-          :to="{
-            name: 'source-source_list'
-          }"
-          class="mb-1"
-        >
-          Back to source overview
-        </b-button>
-      </b-col>
+      <b-col> </b-col>
       <b-col cols="4">
-        <b-button
-          :to="{
-            name: 'source-metric_list-sourceId-add_configuration_item',
-            params: {
-              sourceId: id
-            }
-          }"
-          class="mb-1 float-right"
-        >
-          Add new configuration item
-        </b-button>
         <b-button
           class="mb-1 mr-1 float-right"
           :to="{
@@ -86,11 +66,25 @@
         >
           Delete
         </b-button>
-        <b-badge v-if="data.item.historic">
-          Saved in DB
-        </b-badge>
       </template>
     </b-table>
+    <b-row>
+      <b-col> </b-col>
+      <b-col cols="2">
+        <b-button
+          :to="{
+            name: 'source-metric_list-sourceId-add_configuration_item',
+            params: {
+              sourceId: id
+            }
+          }"
+          class="mb-1 float-right"
+          variant="primary"
+        >
+          Add new {{ configItemName }}
+        </b-button>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
