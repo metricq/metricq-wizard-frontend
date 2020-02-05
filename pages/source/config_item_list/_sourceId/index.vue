@@ -14,7 +14,7 @@
         <b-button
           class="mb-1 mr-1 float-right"
           :to="{
-            name: 'source-metric_list-sourceId-edit_global_configuration',
+            name: 'source-config_item_list-sourceId-edit_global_configuration',
             params: {
               sourceId: id
             }
@@ -37,7 +37,7 @@
       <template v-slot:cell(actions)="data">
         <b-button
           :to="{
-            name: 'source-metric_list-sourceId-configItemId',
+            name: 'source-config_item_list-sourceId-configItemId',
             params: {
               sourceId: id,
               configItemId: data.item.id
@@ -49,7 +49,7 @@
         </b-button>
         <b-button
           :to="{
-            name: 'source-metric_list-sourceId-configItemId-edit',
+            name: 'source-config_item_list-sourceId-configItemId-edit',
             params: {
               sourceId: id,
               configItemId: data.item.id
@@ -73,7 +73,7 @@
       <b-col cols="2">
         <b-button
           :to="{
-            name: 'source-metric_list-sourceId-add_configuration_item',
+            name: 'source-config_item_list-sourceId-add_configuration_item',
             params: {
               sourceId: id
             }

@@ -7,7 +7,7 @@
             v-for="item in sources"
             :key="item.id"
             :to="{
-              name: 'source-metric_list-sourceId',
+              name: 'source-config_item_list-sourceId',
               params: { sourceId: item.id }
             }"
             :disabled="!item.configurable"

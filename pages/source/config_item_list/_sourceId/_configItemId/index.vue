@@ -9,7 +9,7 @@
       <b-col cols="2">
         <b-button
           :to="{
-            name: 'source-metric_list-sourceId',
+            name: 'source-config_item_list-sourceId',
             params: {
               sourceId: id
             }
