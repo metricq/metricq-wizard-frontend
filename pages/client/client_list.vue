@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="p-2">
     <b-row>
       <b-col>
         <b-table
