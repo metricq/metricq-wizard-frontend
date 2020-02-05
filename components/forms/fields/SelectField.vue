@@ -37,12 +37,13 @@ export default {
   },
   data() {
     return {
-      insertChoose: this.field.options.reduce((o, item) => {
-        if (!item.value) {
-          return false
-        }
-        return o && true
-      }, true),
+      insertChoose:
+        this.field.options.reduce((o, item) => {
+          if (item.value === undefined) {
+            return false
+          }
+          return o && true
+        }, true) && this.data === undefined,
       outerClass: this.inline ? 'mb-2 mr-sm-2 mb-sm-0' : ''
     }
   }
