@@ -9,6 +9,7 @@
           :fields="fields"
           :per-page="perPage"
           :current-page="currentPage"
+          :empty-text="emptyText"
           small
           primary-key="id"
           responsive="true"
@@ -16,6 +17,7 @@
           sort-icon-left
           striped
           hover
+          show-empty
           @row-clicked="onRowClicked"
         >
           <template v-slot:cell(select)="data">
@@ -89,6 +91,12 @@ export default {
       return Metric.query()
         .where('selected', true)
         .get()
+    },
+    emptyText() {
+      if (this.historic == null && !this.filter) {
+        return 'No metrics loaded! Please use the controlls at the top.'
+      }
+      return 'There are no metrics matching your filter.'
     }
   },
   methods: {

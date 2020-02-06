@@ -1,11 +1,17 @@
 <template>
   <div>
+    <b-row>
+      <b-col>
+        <h1>Metrics Database Configuration</h1>
+      </b-col>
+    </b-row>
     <MetricDatabaseConfiguration
       :global-database-settings="databaseSettings"
       :show-apply-all="true"
       :hide-save="true"
       class="mb-2"
       @metric-database-apply-to-all="onMetricDatabaseApplyToAll"
+      v-if="selected.length > 1"
     />
     <div v-for="item in selected" :key="item.id">
       <MetricDatabaseConfiguration
@@ -23,8 +29,9 @@
           :to="{
             name: 'metric-metric_list'
           }"
+          variant="danger"
         >
-          Back to overview
+          Cancel
         </b-button>
       </b-col>
       <b-col />
@@ -35,7 +42,7 @@
           @click="onSaveAllClicked"
         >
           <b-spinner v-if="saving" class="ml-auto" small />
-          Save all
+          Save database settings for all metrics
         </b-button>
       </b-col>
     </b-row>

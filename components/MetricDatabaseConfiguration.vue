@@ -1,6 +1,6 @@
 <template>
   <b-card :header="metric.id" :sub-title="metric.description">
-    <b-form ref="databaseForm" inline class="mb-2" align="right">
+    <b-form ref="databaseForm" inline class="mb-2">
       <b-form-group class="w-25 mr-sm-2">
         <label class="" for="inline-form-custom-select-pref">Database</label>
         <b-form-select
@@ -53,13 +53,13 @@
           placeholder="10"
         />
       </b-form-group>
-      <b-form-group align="right">
+      <b-form-group>
         <label>&nbsp;</label>
         <b-button :disabled="metric.historic" type="reset" variant="danger">
           Reset to defaults
         </b-button>
         <b-button v-if="showApplyAll" variant="primary" @click="onApplyToAll">
-          Apply to all
+          Apply settings to all metrics
         </b-button>
         <b-button
           v-if="!hideSave"
@@ -68,7 +68,7 @@
           @click="save"
         >
           <b-spinner v-if="metric.saving" class="ml-auto" small />
-          Save
+          Save database settings for metric
         </b-button>
       </b-form-group>
     </b-form>
