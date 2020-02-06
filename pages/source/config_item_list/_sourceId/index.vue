@@ -9,7 +9,20 @@
       </b-col>
     </b-row>
     <b-row>
-      <b-col> </b-col>
+      <b-col>
+        <b-button
+          :to="{
+            name: 'source-config_item_list-sourceId-add_configuration_item',
+            params: {
+              sourceId: id
+            }
+          }"
+          class="mb-1"
+          variant="primary"
+        >
+          Add new {{ source.configItemName }}
+        </b-button>
+      </b-col>
       <b-col cols="4">
         <b-button
           class="mb-1 mr-1 float-right"
@@ -69,23 +82,6 @@
         </b-button>
       </template>
     </b-table>
-    <b-row>
-      <b-col> </b-col>
-      <b-col cols="2">
-        <b-button
-          :to="{
-            name: 'source-config_item_list-sourceId-add_configuration_item',
-            params: {
-              sourceId: id
-            }
-          }"
-          class="mb-1 float-right"
-          variant="primary"
-        >
-          Add new {{ source.configItemName }}
-        </b-button>
-      </b-col>
-    </b-row>
   </div>
 </template>
 

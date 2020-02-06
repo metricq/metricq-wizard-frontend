@@ -6,24 +6,21 @@
       </b-col>
     </b-row>
     <b-row>
-      <b-col cols="2">
-        <b-button
-          :to="{
-            name: 'source-config_item_list-sourceId',
-            params: {
-              sourceId: sourceId
-            }
-          }"
-          class="mb-1"
-        >
-          Back to {{ source.configItemName }} list
-        </b-button>
-      </b-col>
-    </b-row>
-    <b-row>
       <b-col>
         <FormGenerator v-model="formData" :schema="schema">
           <template v-slot:actions>
+            <b-button
+              :to="{
+                name: 'source-config_item_list-sourceId',
+                params: {
+                  sourceId: sourceId
+                }
+              }"
+              class="mt-1"
+              variant="danger"
+            >
+              Back to {{ source.configItemName }} list
+            </b-button>
             <b-button
               :disabled="adding"
               variant="primary"

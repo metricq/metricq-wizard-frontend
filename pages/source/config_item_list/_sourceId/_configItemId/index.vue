@@ -6,21 +6,6 @@
       </b-col>
     </b-row>
     <b-row>
-      <b-col cols="2">
-        <b-button
-          :to="{
-            name: 'source-config_item_list-sourceId',
-            params: {
-              sourceId: id
-            }
-          }"
-          class="mb-1"
-        >
-          Back to {{ source.configItemName }} list
-        </b-button>
-      </b-col>
-    </b-row>
-    <b-row>
       <b-col>
         <b-table
           ref="availableMetricListTable"
@@ -53,6 +38,19 @@
       </b-col>
     </b-row>
     <b-row>
+      <b-col cols="2">
+        <b-button
+          :to="{
+            name: 'source-config_item_list-sourceId',
+            params: {
+              sourceId: id
+            }
+          }"
+          variant="danger"
+        >
+          Cancel metric configuration
+        </b-button>
+      </b-col>
       <b-col>
         <b-button
           :disabled="!isMetricSelected"
