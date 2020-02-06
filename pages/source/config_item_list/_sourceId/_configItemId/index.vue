@@ -30,6 +30,7 @@
           primary-key="id"
           responsive="true"
           striped
+          sort-icon-left
           hover
         >
           <template v-slot:cell(select)="data">

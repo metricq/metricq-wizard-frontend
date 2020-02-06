@@ -13,6 +13,7 @@
           primary-key="id"
           responsive="true"
           select-mode="multi"
+          sort-icon-left
           striped
           hover
           @row-clicked="onRowClicked"

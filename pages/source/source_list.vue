@@ -14,6 +14,7 @@
           small
           primary-key="id"
           responsive="true"
+          sort-icon-left
           striped
         >
           <template v-slot:cell(id)="data">
