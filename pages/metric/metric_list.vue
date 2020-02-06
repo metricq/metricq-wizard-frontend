@@ -1,123 +1,118 @@
 <template>
-  <b-container fluid="">
-    <div>
-      <b-row>
-        <b-col cols="3">
-          <b-form-group
-            label="Load by database"
-            label-cols-sm="4"
-            label-align-sm="right"
-            label-size="sm"
-            label-for="loadByDatabase"
-            class="mb-0"
-          >
-            <b-input-group size="sm">
-              <b-form-select
-                id="loadByDatabase"
-                v-model="loadSelectedDatabase"
-                :options="databases"
-                :value="null"
-                disabled
-              />
-              <b-input-group-append>
-                <b-button
-                  :disabled="!loadSelectedDatabase"
-                  @click="loadByDatabase()"
-                >
-                  Load
-                </b-button>
-              </b-input-group-append>
-            </b-input-group>
-          </b-form-group>
-        </b-col>
-        <b-col cols="3">
-          <b-form-group
-            label="Load by source"
-            label-cols-sm="4"
-            label-align-sm="right"
-            label-size="sm"
-            label-for="loadBySource"
-            class="mb-0"
-          >
-            <b-input-group size="sm">
-              <b-form-select
-                id="loadBySource"
-                v-model="loadSelectedSource"
-                :options="sources"
-                :value="null"
-              />
-              <b-input-group-append>
-                <b-button
-                  :disabled="!loadSelectedSource"
-                  @click="loadBySource()"
-                >
-                  Load
-                </b-button>
-              </b-input-group-append>
-            </b-input-group>
-          </b-form-group>
-        </b-col>
-        <b-col>
-          <b-button
-            class="float-right"
-            :disabled="metricCount == 0"
-            size="sm"
-            @click="clearMetricList()"
-          >
-            Clear metric list
-          </b-button>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col />
-        <b-col lg="6" class="my-1">
-          <b-form-group
-            label="Filter"
-            label-cols-sm="3"
-            label-align-sm="right"
-            label-size="sm"
-            label-for="filterInput"
-            class="mb-0"
-          >
-            <b-input-group size="sm">
-              <b-form-input
-                id="filterInput"
-                v-model="filterString"
-                type="search"
-                debounce="100"
-                placeholder="Type to Search"
-              />
-              <b-input-group-append>
-                <b-button :disabled="!filterString" @click="filterString = ''"
-                  >Clear</b-button
-                >
-              </b-input-group-append>
-              <b-form-select
-                id="historicFilter"
-                v-model="filterHistoric"
-                :options="filterHistoricOptions"
-                :value="null"
-              />
-            </b-input-group>
-          </b-form-group>
-        </b-col>
-      </b-row>
-      <MetricTable :filter="filterString" :historic="filterHistoric" />
-      <b-row>
-        <b-col />
-        <b-col cols="2" align="right">
-          <b-button
-            :to="{
-              name: 'metric-database_configuration'
-            }"
-            :disabled="selected.length === 0"
-          >
-            Configure database
-          </b-button>
-        </b-col>
-      </b-row>
-    </div>
-  </b-container>
+  <div>
+    <b-row>
+      <b-col cols="3">
+        <b-form-group
+          label="Load by database"
+          label-cols-sm="4"
+          label-align-sm="right"
+          label-size="sm"
+          label-for="loadByDatabase"
+          class="mb-0"
+        >
+          <b-input-group size="sm">
+            <b-form-select
+              id="loadByDatabase"
+              v-model="loadSelectedDatabase"
+              :options="databases"
+              :value="null"
+              disabled
+            />
+            <b-input-group-append>
+              <b-button
+                :disabled="!loadSelectedDatabase"
+                @click="loadByDatabase()"
+              >
+                Load
+              </b-button>
+            </b-input-group-append>
+          </b-input-group>
+        </b-form-group>
+      </b-col>
+      <b-col cols="3">
+        <b-form-group
+          label="Load by source"
+          label-cols-sm="4"
+          label-align-sm="right"
+          label-size="sm"
+          label-for="loadBySource"
+          class="mb-0"
+        >
+          <b-input-group size="sm">
+            <b-form-select
+              id="loadBySource"
+              v-model="loadSelectedSource"
+              :options="sources"
+              :value="null"
+            />
+            <b-input-group-append>
+              <b-button :disabled="!loadSelectedSource" @click="loadBySource()">
+                Load
+              </b-button>
+            </b-input-group-append>
+          </b-input-group>
+        </b-form-group>
+      </b-col>
+      <b-col>
+        <b-button
+          class="float-right"
+          :disabled="metricCount == 0"
+          size="sm"
+          @click="clearMetricList()"
+        >
+          Clear metric list
+        </b-button>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col />
+      <b-col lg="6" class="my-1">
+        <b-form-group
+          label="Filter"
+          label-cols-sm="3"
+          label-align-sm="right"
+          label-size="sm"
+          label-for="filterInput"
+          class="mb-0"
+        >
+          <b-input-group size="sm">
+            <b-form-input
+              id="filterInput"
+              v-model="filterString"
+              type="search"
+              debounce="100"
+              placeholder="Type to Search"
+            />
+            <b-input-group-append>
+              <b-button :disabled="!filterString" @click="filterString = ''"
+                >Clear</b-button
+              >
+            </b-input-group-append>
+            <b-form-select
+              id="historicFilter"
+              v-model="filterHistoric"
+              :options="filterHistoricOptions"
+              :value="null"
+            />
+          </b-input-group>
+        </b-form-group>
+      </b-col>
+    </b-row>
+    <MetricTable :filter="filterString" :historic="filterHistoric" />
+    <b-row>
+      <b-col />
+      <b-col cols="2" align="right">
+        <b-button
+          :to="{
+            name: 'metric-database_configuration'
+          }"
+          :disabled="selected.length === 0"
+        >
+          Configure database
+        </b-button>
+      </b-col>
+    </b-row>
+  </div>
 </template>
 
 <script>

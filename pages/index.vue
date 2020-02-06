@@ -1,18 +1,16 @@
 <template>
-  <b-container fluid>
-    <div>
-      <b-row>
-        <b-col align="center" cols="6" offset="3">
-          <h1>
-            metricq-&#x1F9D9;-frontend
-          </h1>
-          <p class="lead">
-            A configuration web app for MetricQ
-          </p>
-        </b-col>
-      </b-row>
-    </div>
-  </b-container>
+  <div>
+    <b-row>
+      <b-col align="center" cols="6" offset="3">
+        <h1>
+          metricq-&#x1F9D9;-frontend
+        </h1>
+        <p class="lead">
+          A configuration web app for MetricQ
+        </p>
+      </b-col>
+    </b-row>
+  </div>
 </template>
 
 <script>

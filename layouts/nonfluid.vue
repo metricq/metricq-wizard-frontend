@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navbar />
-    <b-container fluid>
+    <b-container>
       <nuxt />
     </b-container>
   </div>

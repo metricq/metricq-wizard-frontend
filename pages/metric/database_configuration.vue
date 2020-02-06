@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid>
+  <div>
     <MetricDatabaseConfiguration
       :global-database-settings="databaseSettings"
       :show-apply-all="true"
@@ -17,31 +17,29 @@
         @metric-database-saved="onMetricDatabaseSaved"
       />
     </div>
-    <div>
-      <b-row>
-        <b-col cols="2">
-          <b-button
-            :to="{
-              name: 'metric-metric_list'
-            }"
-          >
-            Back to overview
-          </b-button>
-        </b-col>
-        <b-col />
-        <b-col cols="2" align="right">
-          <b-button
-            variant="primary"
-            :disabled="saving"
-            @click="onSaveAllClicked"
-          >
-            <b-spinner v-if="saving" class="ml-auto" small />
-            Save all
-          </b-button>
-        </b-col>
-      </b-row>
-    </div>
-  </b-container>
+    <b-row>
+      <b-col cols="2">
+        <b-button
+          :to="{
+            name: 'metric-metric_list'
+          }"
+        >
+          Back to overview
+        </b-button>
+      </b-col>
+      <b-col />
+      <b-col cols="2" align="right">
+        <b-button
+          variant="primary"
+          :disabled="saving"
+          @click="onSaveAllClicked"
+        >
+          <b-spinner v-if="saving" class="ml-auto" small />
+          Save all
+        </b-button>
+      </b-col>
+    </b-row>
+  </div>
 </template>
 
 <script>

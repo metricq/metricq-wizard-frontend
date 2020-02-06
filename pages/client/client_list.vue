@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2">
+  <div>
     <b-row>
       <b-col>
         <b-table
@@ -28,6 +28,7 @@
 
 <script>
 export default {
+  layout: 'nonfluid',
   fetch() {},
   async asyncData({ $axios }) {
     const { data } = await $axios.get(`/clients`)

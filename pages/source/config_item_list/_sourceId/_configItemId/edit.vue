@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2">
+  <div>
     <b-row>
       <b-col>
         <h1>Source {{ sourceId }}: Edit {{ source.configItemName }}</h1>

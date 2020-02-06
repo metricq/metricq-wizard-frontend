@@ -1,12 +1,12 @@
 <template>
-  <div class="pl-2 pr-2">
+  <div>
     <b-row>
       <b-col>
         <h1>Source Overview</h1>
       </b-col>
     </b-row>
     <b-row>
-      <b-col cols="lg-8" offset-lg="2">
+      <b-col>
         <b-table
           ref="metricListTable"
           :items="sources"
@@ -43,6 +43,7 @@
 import Source from '~/models/Source'
 
 export default {
+  layout: 'nonfluid',
   async fetch() {
     Source.commit((state) => {
       state.fetching = true

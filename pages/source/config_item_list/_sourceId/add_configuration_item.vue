@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2">
+  <div>
     <b-row>
       <b-col>
         <h1>Source {{ sourceId }}: Add new {{ source.configItemName }}</h1>
