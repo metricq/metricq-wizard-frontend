@@ -2,6 +2,11 @@
   <div>
     <b-row>
       <b-col>
+        <h1>Client Overview</h1>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
         <b-table
           ref="metricListTable"
           :items="clients"
@@ -12,6 +17,9 @@
           striped
           hover
         >
+          <template v-slot:head(actions)="data">
+            <span class="float-right">{{ data.label }}</span>
+          </template>
           <template v-slot:cell(actions)="data">
             <b-button
               size="sm float-right"
