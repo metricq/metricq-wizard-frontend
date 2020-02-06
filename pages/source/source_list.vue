@@ -6,7 +6,7 @@
       </b-col>
     </b-row>
     <b-row>
-      <b-col>
+      <b-col cols="lg-8" offset-lg="2">
         <b-table
           ref="metricListTable"
           :items="sources"
@@ -17,9 +17,8 @@
           sort-icon-left
           striped
         >
-          <template v-slot:cell(id)="data">
-            <span v-if="data.item.configurable">{{ data.item.id }}</span>
-            <del v-else>{{ data.item.id }}</del>
+          <template v-slot:head(actions)="data">
+            <span class="float-right">{{ data.label }}</span>
           </template>
           <template v-slot:cell(actions)="data">
             <b-button
@@ -55,7 +54,7 @@ export default {
   },
   data() {
     return {
-      tableFields: [{ key: 'id', label: 'Source' }, 'actions']
+      tableFields: [{ key: 'id', label: 'Source' }, 'type', 'actions']
     }
   },
   computed: {

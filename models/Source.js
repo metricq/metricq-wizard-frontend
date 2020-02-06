@@ -12,6 +12,7 @@ export default class Source extends Model {
   static fields() {
     return {
       id: this.string().nullable(),
+      type: this.string().nullable(),
       configurable: this.boolean(false),
       configItemName: this.string('config item')
     }
