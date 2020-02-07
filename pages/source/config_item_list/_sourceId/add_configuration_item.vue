@@ -42,6 +42,7 @@ import FormGenerator from '~/components/forms/FormGenerator'
 import Source from '~/models/Source'
 
 export default {
+  layout: 'nonfluid',
   components: { FormGenerator },
   async asyncData({ $axios, params }) {
     const { data } = await $axios.get(
