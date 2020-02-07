@@ -45,7 +45,7 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/toast'
   ],
-  bootstrapVue: {},
+  bootstrapVue: { icons: true },
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options

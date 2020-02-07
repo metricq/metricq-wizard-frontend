@@ -30,7 +30,7 @@
               size="sm"
               class="float-right"
             >
-              Configure source
+              <b-icon-gear scale="1.5" />
             </b-button>
           </template>
         </b-table>

@@ -59,7 +59,7 @@
           }"
           size="sm"
         >
-          Configure metrics
+          <b-icon-list-task variant="light" scale="2" />
         </b-button>
         <b-button
           :to="{
@@ -71,14 +71,14 @@
           }"
           size="sm"
         >
-          Edit {{ source.configItemName }}
+          <b-icon-gear variant="light" scale="1.5" />
         </b-button>
         <b-button
           @click="deleteConfigItem(data.item)"
           variant="danger"
           size="sm"
         >
-          Delete {{ source.configItemName }}
+          <b-icon-trash variant="light" scale="1.5" />
         </b-button>
       </template>
     </b-table>
