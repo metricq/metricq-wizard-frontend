@@ -24,8 +24,9 @@
             <b-button
               size="sm float-right"
               @click="reconfigureClient(data.item.id)"
+              variant="danger"
             >
-              Send configuration
+              <b-icon-bootstrap-reboot scale="1.5" />
             </b-button>
           </template>
         </b-table>
