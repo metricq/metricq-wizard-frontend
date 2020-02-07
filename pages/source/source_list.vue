@@ -22,6 +22,14 @@
           </template>
           <template v-slot:cell(actions)="data">
             <b-button
+              size="sm"
+              class="float-right ml-1"
+              variant="danger"
+              @click="reconfigureSource(data.item.id)"
+            >
+              <b-icon-bootstrap-reboot scale="1.5" />
+            </b-button>
+            <b-button
               :to="{
                 name: 'source-config_item_list-sourceId',
                 params: { sourceId: data.item.id }
@@ -61,6 +69,33 @@ export default {
   computed: {
     sources() {
       return Source.query().all()
+    }
+  },
+  methods: {
+    async reconfigureSource(sourceId) {
+      const answer = await this.$bvModal.msgBoxConfirm(
+        `Really reconfigure ${sourceId}?`,
+        {
+          title: 'Please Confirm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          okTitle: 'YES',
+          cancelTitle: 'NO',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true
+        }
+      )
+      if (answer) {
+        const { status } = await this.$axios.post(
+          `/client/${sourceId}/reconfigure`
+        )
+        if (status === 200) {
+          this.$toast.success('Requested source reconfiguration!')
+        } else {
+          this.$toast.error('Source reconfiguration failed!')
+        }
+      }
     }
   }
 }
