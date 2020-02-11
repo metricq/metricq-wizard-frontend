@@ -82,7 +82,7 @@ export default {
       }
       if (this.filter) {
         metricQuery = metricQuery.search(this.filter, {
-          keys: ['id', 'source', 'description']
+          keys: ['id', 'source', 'description', 'units']
         })
       }
       return metricQuery.get()
