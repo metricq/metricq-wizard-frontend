@@ -26,6 +26,8 @@
               class="float-right ml-1"
               variant="danger"
               @click="reconfigureSource(data.item.id)"
+              v-b-tooltip.hover
+              title="Send config to source"
             >
               <b-icon-bootstrap-reboot scale="1.5" />
             </b-button>
@@ -36,9 +38,23 @@
               }"
               :disabled="!data.item.configurable"
               size="sm"
-              class="float-right"
+              class="float-right ml-1"
+              v-b-tooltip.hover
+              title="Edit source config"
             >
               <b-icon-gear scale="1.5" />
+            </b-button>
+            <b-button
+              :to="{
+                name: 'source-edit_json-sourceId',
+                params: { sourceId: data.item.id }
+              }"
+              size="sm"
+              class="float-right "
+              v-b-tooltip.hover
+              title="Edit raw JSON config"
+            >
+              <b-icon-document-code scale="1.5" />
             </b-button>
           </template>
         </b-table>

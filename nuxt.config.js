@@ -27,7 +27,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['@/plugins/vuex-orm-axios'],
+  plugins: ['@/plugins/vuex-orm-axios', '@/plugins/vue-json-edit'],
   /*
    ** Nuxt.js dev-modules
    */
