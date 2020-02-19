@@ -1,4 +1,4 @@
 import Vue from 'vue'
-import JsonEditor from 'Vue-json-edit'
+import JsonEditor from 'vue-json-edit'
 
 Vue.use(JsonEditor)
