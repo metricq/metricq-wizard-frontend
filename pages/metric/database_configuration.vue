@@ -59,11 +59,10 @@ export default {
     MetricDatabaseConfiguration
   },
   async fetch() {
-    // TODO Fetch database-metric relation only for selected metrics
     const selectedMetrics = Metric.query()
       .where('selected', true)
       .all()
-      .map((k, v) => v.id)
+      .map((k, v) => k.id)
     Database.commit((state) => {
       state.fetching = true
     })
