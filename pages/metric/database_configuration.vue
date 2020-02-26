@@ -62,7 +62,7 @@ export default {
     const selectedMetrics = Metric.query()
       .where('selected', true)
       .all()
-      .map((k, v) => k.id)
+      .map((value) => value.id)
     Metric.commit((state) => {
       state.fetching = true
     })
