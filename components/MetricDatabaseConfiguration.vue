@@ -17,7 +17,10 @@
           </template>
         </b-form-select>
       </b-form-group>
-      <b-form-group class="mr-sm-2">
+      <b-form-group
+        class="mr-sm-2"
+        description="duration string, default unit is seconds"
+      >
         <label for="input-1">Minimal aggregation interval:</label>
         <b-form-input
           id="input-1"
@@ -29,7 +32,10 @@
           placeholder="duration, e.g. 10s"
         />
       </b-form-group>
-      <b-form-group class="mr-sm-2">
+      <b-form-group
+        class="mr-sm-2"
+        description="duration string, default unit is seconds"
+      >
         <label for="input-2">Maximal aggregation interval:</label>
         <b-form-input
           id="input-2"
