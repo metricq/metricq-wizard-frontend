@@ -13,7 +13,9 @@
           required
         >
           <template v-slot:first>
-            <option :value="null">Choose...</option>
+            <b-form-select-option :value="null" disabled
+              >Choose...</b-form-select-option
+            >
           </template>
         </b-form-select>
       </b-form-group>
@@ -127,7 +129,7 @@ export default {
         .first() || this.globalDatabaseSettings
     return {
       databaseSettings: {
-        databaseId: metric.databaseId,
+        databaseId: metric.databaseId || null,
         intervalMin: metric.intervalMin,
         intervalMax: metric.intervalMax,
         intervalFactor: metric.intervalFactor
