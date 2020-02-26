@@ -63,6 +63,18 @@ export default {
       .where('selected', true)
       .all()
       .map((k, v) => k.id)
+    Metric.commit((state) => {
+      state.fetching = true
+    })
+    await Metric.api()
+      .post('/metrics/database/defaults', {
+        selectedMetrics
+      })
+      .finally(() => {
+        Metric.commit((state) => {
+          state.fetching = false
+        })
+      })
     Database.commit((state) => {
       state.fetching = true
     })
