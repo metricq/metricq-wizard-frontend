@@ -37,8 +37,8 @@
           :total-rows="rows"
           :per-page="perPage"
           align="center"
-          first-number="true"
-          last-number="true"
+          first-number
+          last-number
         />
       </b-col>
     </b-row>
