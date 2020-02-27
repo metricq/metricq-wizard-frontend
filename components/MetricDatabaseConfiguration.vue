@@ -1,16 +1,20 @@
 <template>
   <b-card :header="metric.id" :sub-title="metric.description">
-    <b-form ref="databaseForm" inline class="mb-2">
-      <b-form-group class="w-25 mr-sm-2">
-        <label class="" for="inline-form-custom-select-pref">Database</label>
+    <b-form ref="databaseForm" inline class="mb-2 align-items-start d-flex">
+      <b-form-group
+        class="flex-fill mr-sm-2"
+        label="Database"
+        label-align="center"
+        label-size="sm"
+      >
         <b-form-select
           id="inline-form-custom-select-pref"
           v-model="databaseSettings.databaseId"
           :options="databases"
           :value="null"
           :disabled="metric.historic"
-          class="w-100"
           required
+          class="w-100"
         >
           <template v-slot:first>
             <b-form-select-option :value="null" disabled
@@ -20,10 +24,12 @@
         </b-form-select>
       </b-form-group>
       <b-form-group
-        class="mr-sm-2"
+        class="flex-fill mr-sm-2"
         description="duration string, default unit is seconds"
+        label="Minimal aggregation interval"
+        label-align="center"
+        label-size="sm"
       >
-        <label for="input-1">Minimal aggregation interval:</label>
         <b-form-input
           id="input-1"
           ref="intervalMinFormField"
@@ -32,13 +38,16 @@
           :disabled="metric.historic"
           required
           placeholder="duration, e.g. 10s"
+          class="w-100"
         />
       </b-form-group>
       <b-form-group
-        class="mr-sm-2"
+        class="flex-fill mr-sm-2"
         description="duration string, default unit is seconds"
+        label="Maximal aggregation interval"
+        label-align="center"
+        label-size="sm"
       >
-        <label for="input-2">Maximal aggregation interval:</label>
         <b-form-input
           id="input-2"
           ref="intervalMaxFormField"
@@ -47,10 +56,16 @@
           :disabled="metric.historic"
           required
           placeholder="duration, e.g. 365d"
+          class="w-100"
         />
       </b-form-group>
-      <b-form-group class="mr-sm-2">
-        <label for="input-3">Aggregation interval factor:</label>
+      <b-form-group
+        class="flex-fill mr-sm-2"
+        description=""
+        label="Aggregation interval factor"
+        label-align="center"
+        label-size="sm"
+      >
         <b-form-input
           id="input-3"
           v-model="databaseSettings.intervalFactor"
@@ -59,26 +74,35 @@
           type="number"
           required
           placeholder="10"
+          class="w-100"
         />
       </b-form-group>
-      <b-form-group>
-        <label>&nbsp;</label>
-        <b-button :disabled="metric.historic" type="reset" variant="danger">
-          Reset to defaults
-        </b-button>
-        <b-button v-if="showApplyAll" variant="primary" @click="onApplyToAll">
-          Apply settings to all metrics
-        </b-button>
-        <b-button
-          v-if="!hideSave"
-          :disabled="metric.historic || metric.saving"
-          variant="primary"
-          @click="save"
-        >
-          <b-spinner v-if="metric.saving" class="ml-auto" small />
-          Save database settings for metric
-        </b-button>
-      </b-form-group>
+      <b-button
+        :disabled="metric.historic"
+        type="reset"
+        variant="danger"
+        class="flex-fill align-self-center mr-2"
+      >
+        Reset to defaults
+      </b-button>
+      <b-button
+        v-if="showApplyAll"
+        variant="primary"
+        class="flex-fill align-self-center mr-2"
+        @click="onApplyToAll"
+      >
+        Apply settings to all metrics
+      </b-button>
+      <b-button
+        v-if="!hideSave"
+        :disabled="metric.historic || metric.saving"
+        variant="primary"
+        class="flex-fill align-self-center"
+        @click="save"
+      >
+        <b-spinner v-if="metric.saving" class="ml-auto" small />
+        Save database settings for metric
+      </b-button>
     </b-form>
   </b-card>
 </template>

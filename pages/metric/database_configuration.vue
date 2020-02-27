@@ -6,12 +6,12 @@
       </b-col>
     </b-row>
     <MetricDatabaseConfiguration
+      v-if="selected.length > 1"
       :global-database-settings="databaseSettings"
       :show-apply-all="true"
       :hide-save="true"
       class="mb-2"
       @metric-database-apply-to-all="onMetricDatabaseApplyToAll"
-      v-if="selected.length > 1"
     />
     <div v-for="item in selected" :key="item.id">
       <MetricDatabaseConfiguration
@@ -24,7 +24,7 @@
       />
     </div>
     <b-row>
-      <b-col cols="2">
+      <b-col>
         <b-button
           :to="{
             name: 'metric-metric_list'
@@ -35,10 +35,11 @@
         </b-button>
       </b-col>
       <b-col />
-      <b-col cols="2" align="right">
+      <b-col>
         <b-button
           variant="primary"
           :disabled="saving"
+          class="float-right"
           @click="onSaveAllClicked"
         >
           <b-spinner v-if="saving" class="ml-auto" small />
