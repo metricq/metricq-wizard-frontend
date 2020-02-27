@@ -26,6 +26,26 @@
               @change="onRowSelected(data.item, $event)"
             />
           </template>
+          <template v-slot:cell(source)="data">
+            <b-link
+              v-if="data.item.sourceRef && data.item.sourceRef.configurable"
+              :to="{
+                name: 'source-config_item_list-sourceId',
+                params: { sourceId: data.item.source }
+              }"
+            >
+              {{ data.item.source }}
+            </b-link>
+            <b-link
+              v-else
+              :to="{
+                name: 'source-edit_json-sourceId',
+                params: { sourceId: data.item.source }
+              }"
+            >
+              {{ data.item.source }}
+            </b-link>
+          </template>
           <template v-slot:cell(state)="data">
             <b-badge v-if="data.item.historic">
               Saved in DB
@@ -78,7 +98,7 @@ export default {
       return this.items.length
     },
     items() {
-      let metricQuery = Metric.query()
+      let metricQuery = Metric.query().with('sourceRef')
       if (this.historic != null) {
         metricQuery = metricQuery.where('historic', this.historic)
       }

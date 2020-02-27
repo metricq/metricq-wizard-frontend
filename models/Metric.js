@@ -1,5 +1,6 @@
 import { Model } from '@vuex-orm/core'
 import Database from '~/models/Database'
+import Source from '~/models/Source'
 
 export default class Metric extends Model {
   static entity = 'metric'
@@ -17,6 +18,7 @@ export default class Metric extends Model {
       description: this.string().nullable(),
       unit: this.string().nullable(),
       source: this.string().nullable(),
+      sourceRef: this.belongsTo(Source, 'source'),
       historic: this.boolean(false),
       // Database settings
       databaseId: this.string().nullable(),
