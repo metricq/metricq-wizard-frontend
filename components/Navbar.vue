@@ -45,6 +45,10 @@
             <b-spinner class="ml-auto" small />
             <strong>Fetching databases...</strong>
           </b-nav-text>
+          <b-nav-text v-if="fetchingSources" class="mr-sm-2">
+            <b-spinner class="ml-auto" small />
+            <strong>Fetching sources...</strong>
+          </b-nav-text>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
@@ -54,6 +58,7 @@
 <script>
 import Metric from '~/models/Metric'
 import Database from '~/models/Database'
+import Source from '~/models/Source'
 
 export default {
   name: 'Navbar',
@@ -63,6 +68,9 @@ export default {
     },
     fetchingDatabases() {
       return Database.store().state.entities.database.fetching
+    },
+    fetchingSources() {
+      return Source.store().state.entities.database.fetching
     }
   }
 }
