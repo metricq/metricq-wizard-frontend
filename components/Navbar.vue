@@ -70,7 +70,7 @@ export default {
       return Database.store().state.entities.database.fetching
     },
     fetchingSources() {
-      return Source.store().state.entities.database.fetching
+      return Source.store().state.entities.source.fetching
     }
   }
 }
