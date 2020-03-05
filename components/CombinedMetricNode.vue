@@ -19,8 +19,12 @@
       </span>
       <span v-else>{{ expression.operation }}</span>
       <span class="float-right mb-1">
-        <b-icon-pencil scale="1.5" />
-        <b-icon-trash v-if="deletable" scale="1.5" />
+        <b-button size="sm" variant="outline-secondary">
+          <b-icon-pencil scale="1.5" />
+        </b-button>
+        <b-button v-if="deletable" variant="outline-danger" size="sm">
+          <b-icon-trash scale="1.5" />
+        </b-button>
       </span>
     </div>
     <b-collapse
@@ -39,7 +43,9 @@
       </b-list-group>
       <div class="w-100">
         <span class="float-right mt-1">
-          <b-icon-plus v-if="canAddSubNodes" scale="2" />
+          <b-button v-if="canAddSubNodes" size="sm" variant="outline-secondary">
+            <b-icon-plus scale="2" />
+          </b-button>
         </span>
       </div>
     </b-collapse>
