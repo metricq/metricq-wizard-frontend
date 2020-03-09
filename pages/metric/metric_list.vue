@@ -245,14 +245,23 @@
     />
     <b-row class="pt-1 pb-1">
       <b-col />
-      <b-col cols="2" align="right">
+      <b-col>
         <b-button
           :to="{
             name: 'metric-database_configuration',
           }"
           :disabled="selected.length === 0"
+          class="float-right"
         >
           Configure database
+        </b-button>
+        <b-button
+          :to="{
+            name: 'metric-create_combined_metric'
+          }"
+          class="float-right mr-1"
+        >
+          Create new combined metric
         </b-button>
       </b-col>
     </b-row>
