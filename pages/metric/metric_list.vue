@@ -75,7 +75,27 @@
       </b-row>
     </b-card>
     <b-row>
-      <b-col />
+      <b-col class="my-1">
+        <b-button size="sm" @click="$refs.metricTable.selectCurrentPage()">
+          Select this page
+        </b-button>
+        <b-button size="sm" @click="$refs.metricTable.selectAllFiltered()">
+          Select all (filtered)
+        </b-button>
+        <b-button size="sm" @click="$refs.metricTable.deselectCurrentPage()">
+          Deselect this page
+        </b-button>
+        <b-button size="sm" @click="$refs.metricTable.deselectAllFiltered()">
+          Deselect all (filtered)
+        </b-button>
+        <b-button
+          size="sm"
+          variant="danger"
+          @click="$refs.metricTable.deselectAll()"
+        >
+          Deselect all
+        </b-button>
+      </b-col>
       <b-col lg="6" class="my-1">
         <b-form-group
           label="Filter"
@@ -108,8 +128,12 @@
         </b-form-group>
       </b-col>
     </b-row>
-    <MetricTable :filter="filterString" :historic="filterHistoric" />
-    <b-row>
+    <MetricTable
+      ref="metricTable"
+      :filter="filterString"
+      :historic="filterHistoric"
+    />
+    <b-row class="pt-1 pb-1">
       <b-col />
       <b-col cols="2" align="right">
         <b-button

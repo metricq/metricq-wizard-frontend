@@ -133,6 +133,36 @@ export default {
         where: item.id,
         data: { selected: !item.selected }
       })
+    },
+    selectCurrentPage() {
+      this.currentTableItems.forEach((item) => {
+        item.selected = true
+        item.$save()
+      })
+    },
+    selectAllFiltered() {
+      this.items.forEach((item) => {
+        item.selected = true
+        item.$save()
+      })
+    },
+    deselectCurrentPage() {
+      this.currentTableItems.forEach((item) => {
+        item.selected = false
+        item.$save()
+      })
+    },
+    deselectAllFiltered() {
+      this.items.forEach((item) => {
+        item.selected = false
+        item.$save()
+      })
+    },
+    deselectAll() {
+      this.selected.forEach((item) => {
+        item.selected = false
+        item.$save()
+      })
     }
   }
 }
