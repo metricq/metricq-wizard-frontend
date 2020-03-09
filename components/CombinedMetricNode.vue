@@ -36,7 +36,7 @@
       <b-list-group class="w-100">
         <combined-metric-node
           v-for="input in inputs"
-          :key="input"
+          :key="'cmn-' + getKeyFromExpression(input)"
           :expression="input"
           :deletable="type === 'multi'"
         />
@@ -57,7 +57,6 @@ export default {
   name: 'CombinedMetricNode',
   props: {
     expression: {
-      type: Object,
       default() {
         return {}
       }
@@ -68,30 +67,8 @@ export default {
     }
   },
   data() {
-    let type
-    let inputs
-    if (!this.expression) {
-      type = 'empty'
-    } else if (
-      this.expression instanceof String ||
-      typeof this.expression === 'string'
-    ) {
-      type = 'metric'
-    } else if (
-      this.expression instanceof Number ||
-      typeof this.expression === 'number'
-    ) {
-      type = 'number'
-    } else if (['+', '-', '*', '/'].includes(this.expression.operation)) {
-      type = 'binary'
-      inputs = [this.expression.left, this.expression.right]
-    } else if (['sum', 'min', 'max'].includes(this.expression.operation)) {
-      type = 'multi'
-      inputs = this.expression.inputs
-    } else if (this.expression.operation === 'throttle') {
-      type = 'throttle'
-      inputs = [this.expression.input]
-    }
+    const type = this.getExpressionType(this.expression)
+    const inputs = this.getInputsForExpression(this.expression)
 
     return {
       id: null,
@@ -103,6 +80,47 @@ export default {
   },
   mounted() {
     this.id = this._uid
+  },
+  methods: {
+    getKeyFromExpression(expression) {
+      return btoa(JSON.stringify(expression))
+    },
+    getExpressionType(expression) {
+      let type
+      if (!expression) {
+        type = 'empty'
+      } else if (
+        expression instanceof String ||
+        typeof expression === 'string'
+      ) {
+        type = 'metric'
+      } else if (
+        expression instanceof Number ||
+        typeof expression === 'number'
+      ) {
+        type = 'number'
+      } else if (['+', '-', '*', '/'].includes(expression.operation)) {
+        type = 'binary'
+      } else if (['sum', 'min', 'max'].includes(expression.operation)) {
+        type = 'multi'
+      } else if (expression.operation === 'throttle') {
+        type = 'throttle'
+      }
+      return type
+    },
+    getInputsForExpression(expression) {
+      let inputs = []
+      const type = this.getExpressionType(expression)
+
+      if (type === 'binary') {
+        inputs = [expression.left, expression.right]
+      } else if (type === 'multi') {
+        inputs = expression.inputs
+      } else if (type === 'throttle') {
+        inputs = [expression.input]
+      }
+      return inputs
+    }
   }
 }
 </script>
