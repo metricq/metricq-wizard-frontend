@@ -94,9 +94,9 @@
               placeholder="Type to Filter"
             />
             <b-input-group-append>
-              <b-button :disabled="!filterString" @click="filterString = ''"
-                >Clear</b-button
-              >
+              <b-button :disabled="!filterString" @click="filterString = ''">
+                Clear
+              </b-button>
             </b-input-group-append>
             <b-form-select
               id="historicFilter"
