@@ -8,7 +8,10 @@
     <b-row>
       <b-col>
         <b-list-group class="w-100">
-          <combined-metric-node :expression="testExpression" />
+          <combined-metric-node
+            :expression="testExpression"
+            @changeExpression="testExpression = $event"
+          />
         </b-list-group>
       </b-col>
     </b-row>
