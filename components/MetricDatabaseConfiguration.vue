@@ -17,7 +17,7 @@
           class="w-100"
         >
           <template v-slot:first>
-            <b-form-select-option :value="null" disabled
+            <b-form-select-option :value="null" :disabled="!showApplyAll"
               >Choose...</b-form-select-option
             >
           </template>
@@ -213,7 +213,7 @@ export default {
   watch: {
     globalDatabaseSettings(newVal) {
       if (!this.metric.historic) {
-        this.databaseSettings = { ...newVal }
+        this.databaseSettings = Object.assign({}, this.databaseSettings, newVal)
       }
     },
     intervalMinState(newVal) {
@@ -245,9 +245,21 @@ export default {
   },
   methods: {
     onApplyToAll() {
-      if (this.validate()) {
-        this.$emit('metric-database-apply-to-all', this.databaseSettings)
+      const databaseSettings = {}
+      if (this.databaseSettings.databaseId) {
+        databaseSettings.databaseId = this.databaseSettings.databaseId
       }
+      if (this.intervalMinState) {
+        databaseSettings.intervalMin = this.databaseSettings.intervalMin
+      }
+      if (this.intervalMaxState) {
+        databaseSettings.intervalMax = this.databaseSettings.intervalMax
+      }
+      if (this.intervalFactorState) {
+        databaseSettings.intervalFactor = this.databaseSettings.intervalFactor
+      }
+
+      this.$emit('metric-database-apply-to-all', databaseSettings)
     },
     save() {
       if (this.hideSave) {

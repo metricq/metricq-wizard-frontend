@@ -19,7 +19,6 @@
         :metric-id="item.id"
         :global-database-settings="databaseSettings"
         class="mb-2"
-        @metric-database-apply-to-all="onMetricDatabaseApplyToAll"
         @metric-database-saved="onMetricDatabaseSaved"
       />
     </div>
