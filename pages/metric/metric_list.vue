@@ -23,7 +23,13 @@
                 :options="databases"
                 :value="null"
                 disabled
-              />
+              >
+                <template v-slot:first>
+                  <b-form-select-option :value="null" disabled>
+                    Choose...
+                  </b-form-select-option>
+                </template>
+              </b-form-select>
               <b-input-group-append>
                 <b-button
                   :disabled="!loadSelectedDatabase"
@@ -50,11 +56,50 @@
                 v-model="loadSelectedSource"
                 :options="sources"
                 :value="null"
-              />
+              >
+                <template v-slot:first>
+                  <b-form-select-option :value="null" disabled>
+                    Choose...
+                  </b-form-select-option>
+                </template>
+              </b-form-select>
               <b-input-group-append>
                 <b-button
                   :disabled="!loadSelectedSource"
                   @click="loadBySource()"
+                >
+                  Load
+                </b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
+        </b-col>
+        <b-col cols="3">
+          <b-form-group
+            label="Load by transformer"
+            label-cols-sm="4"
+            label-align-sm="right"
+            label-size="sm"
+            label-for="loadByTransformer"
+            class="mb-0"
+          >
+            <b-input-group size="sm">
+              <b-form-select
+                id="loadByTransformer"
+                v-model="loadSelectedTransformer"
+                :options="transformers"
+                :value="null"
+              >
+                <template v-slot:first>
+                  <b-form-select-option :value="null" disabled>
+                    Choose...
+                  </b-form-select-option>
+                </template>
+              </b-form-select>
+              <b-input-group-append>
+                <b-button
+                  :disabled="!loadSelectedTransformer"
+                  @click="loadByTransformer()"
                 >
                   Load
                 </b-button>
@@ -154,6 +199,7 @@ import MetricTable from '~/components/MetricTable'
 import Metric from '~/models/Metric'
 import Database from '~/models/Database'
 import Source from '~/models/Source'
+import Transformer from '~/models/Transformer'
 
 export default {
   components: {
@@ -169,7 +215,8 @@ export default {
         { value: false, text: 'Not in DB' }
       ],
       loadSelectedDatabase: null,
-      loadSelectedSource: null
+      loadSelectedSource: null,
+      loadSelectedTransformer: null
     }
   },
   computed: {
@@ -189,6 +236,11 @@ export default {
     },
     sources() {
       return Source.query()
+        .all()
+        .map((item) => item.id)
+    },
+    transformers() {
+      return Transformer.query()
         .all()
         .map((item) => item.id)
     }
@@ -214,6 +266,16 @@ export default {
           state.fetching = false
         })
       })
+    Transformer.commit((state) => {
+      state.fetching = true
+    })
+    await Transformer.api()
+      .get('/transformers')
+      .finally(() => {
+        Transformer.commit((state) => {
+          state.fetching = false
+        })
+      })
   },
   methods: {
     async loadByDatabase() {
@@ -233,6 +295,17 @@ export default {
       })
       await Metric.api().post('/metrics', {
         source: this.loadSelectedSource
+      })
+      Metric.commit((state) => {
+        state.fetching = false
+      })
+    },
+    async loadByTransformer() {
+      Metric.commit((state) => {
+        state.fetching = true
+      })
+      await Metric.api().post('/metrics', {
+        source: this.loadSelectedTransformer
       })
       Metric.commit((state) => {
         state.fetching = false
