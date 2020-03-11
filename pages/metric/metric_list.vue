@@ -119,8 +119,8 @@
         </b-col>
       </b-row>
     </b-card>
-    <b-row>
-      <b-col class="my-1">
+    <b-row class="my-1">
+      <b-col cols="5">
         <b-button size="sm" @click="$refs.metricTable.selectCurrentPage()">
           Select this page
         </b-button>
@@ -141,7 +141,23 @@
           Deselect all
         </b-button>
       </b-col>
-      <b-col lg="6" class="my-1">
+      <b-col>
+        <b-form-group
+          label="Items per page"
+          label-cols="8"
+          label-align="right"
+          label-for="selectPageSize"
+          label-size="sm"
+        >
+          <b-form-select
+            id="selectPageSize"
+            v-model="pageSize"
+            :options="[10, 20, 50, 100, 500]"
+            size="sm"
+          />
+        </b-form-group>
+      </b-col>
+      <b-col lg="5">
         <b-form-group
           label="Filter"
           label-cols-sm="3"
@@ -157,9 +173,14 @@
               type="search"
               debounce="100"
               placeholder="Type to Filter"
+              size="sm"
             />
             <b-input-group-append>
-              <b-button :disabled="!filterString" @click="filterString = ''">
+              <b-button
+                :disabled="!filterString"
+                size="sm"
+                @click="filterString = ''"
+              >
                 Clear
               </b-button>
             </b-input-group-append>
@@ -177,6 +198,7 @@
       ref="metricTable"
       :filter="filterString"
       :historic="filterHistoric"
+      :page-size="pageSize"
     />
     <b-row class="pt-1 pb-1">
       <b-col />
@@ -216,7 +238,8 @@ export default {
       ],
       loadSelectedDatabase: null,
       loadSelectedSource: null,
-      loadSelectedTransformer: null
+      loadSelectedTransformer: null,
+      pageSize: 20
     }
   },
   computed: {
