@@ -18,6 +18,7 @@
             id="selectDatabase"
             v-model="selectedDatabase"
             :options="databases"
+            :state="!!selectedDatabase"
             :value="null"
             required
             class="w-100"
