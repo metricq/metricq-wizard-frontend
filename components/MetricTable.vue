@@ -7,7 +7,7 @@
           v-model="currentTableItems"
           :items="items"
           :fields="fields"
-          :per-page="perPage"
+          :per-page="pageSize"
           :current-page="currentPage"
           :empty-text="emptyText"
           small
@@ -55,7 +55,7 @@
         <b-pagination
           v-model="currentPage"
           :total-rows="rows"
-          :per-page="perPage"
+          :per-page="pageSize"
           align="center"
           first-number
           last-number
@@ -70,11 +70,10 @@ import Metric from '~/models/Metric'
 
 export default {
   name: 'MetricTable',
-  props: ['filter', 'historic'],
+  props: ['filter', 'historic', 'pageSize'],
   data() {
     return {
       currentTableItems: [],
-      perPage: 20,
       currentPage: 1,
       fields: [
         {
