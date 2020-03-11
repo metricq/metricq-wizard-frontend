@@ -158,6 +158,7 @@ import Database from '~/models/Database'
 
 export default {
   components: {},
+  layout: 'nonfluid',
   async asyncData() {
     const selectedMetrics = Metric.query()
       .where('selected', true)
