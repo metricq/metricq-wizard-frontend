@@ -6,7 +6,7 @@
       </b-col>
     </b-row>
     <b-row class="mb-1">
-      <b-col cols="2">
+      <b-col cols="4">
         <b-form-group
           label="Database"
           label-cols="4"
@@ -28,6 +28,21 @@
               </b-form-select-option>
             </template>
           </b-form-select>
+        </b-form-group>
+      </b-col>
+      <b-col />
+      <b-col cols="3">
+        <b-form-group
+          label="Items per page"
+          label-cols="8"
+          label-align="right"
+          label-for="selectPageSize"
+        >
+          <b-form-select
+            id="selectPageSize"
+            v-model="perPage"
+            :options="[10, 20, 50, 100, 500]"
+          />
         </b-form-group>
       </b-col>
     </b-row>
