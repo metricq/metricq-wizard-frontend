@@ -8,6 +8,8 @@ COPY --chown=metricq:metricq . /home/metricq/wizard-frontend
 
 WORKDIR /home/metricq/wizard-frontend
 
+ARG api_url
+ENV API_URL=$api_url
 RUN yarn install && yarn build
 
 EXPOSE 3000
