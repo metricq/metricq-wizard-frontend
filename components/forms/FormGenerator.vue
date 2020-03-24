@@ -1,17 +1,31 @@
 <template>
   <b-form :inline="inline" class="mb-2">
-    <component
-      :is="field.type"
-      v-for="(field, id) in schema"
-      :key="id"
-      :id="id"
-      :field="field"
-      :data="formData[id]"
-      :inline="inline"
-      :size="size"
-      :hideLabel="hideLabels"
-      @input="updateData(id, $event)"
-    />
+    <b-row :key="id" v-for="(field, id) in schema" class="mb-1">
+      <b-col
+        cols="1"
+        class="w-100 align-content-center"
+        :hidden="!fieldsSeparateSelectable"
+      >
+        <b-form-checkbox
+          :id="'checkbox-' + id"
+          v-model="selectedFields[id]"
+          size="lg"
+        ></b-form-checkbox>
+      </b-col>
+      <b-col>
+        <component
+          :is="field.type"
+          :key="id"
+          :id="id"
+          :field="field"
+          :data="formData[id]"
+          :inline="inline"
+          :size="size"
+          :hideLabel="hideLabels"
+          @input="updateData(id, $event)"
+        />
+      </b-col>
+    </b-row>
     <div v-if="!disableActions">
       <label v-if="inline">&nbsp;</label>
       <slot name="actions">
@@ -45,28 +59,37 @@ export default {
     inline: Boolean,
     size: {},
     hideLabels: Boolean,
-    disableActions: Boolean
+    disableActions: Boolean,
+    fieldsSeparateSelectable: {
+      type: Boolean,
+      default: true
+    }
   },
   data() {
     const formData = {}
+    const selectedFields = {}
     for (const fieldId in this.schema) {
       if (this.value && this.value[fieldId]) {
         formData[fieldId] = this.value[fieldId]
       } else if (this.schema[fieldId]) {
         formData[fieldId] = this.schema[fieldId].value
       }
+      selectedFields[fieldId] = !this.fieldsSeparateSelectable
     }
     console.log(formData)
     this.$emit('input', formData)
     return {
       formData,
+      selectedFields,
       buttonClass: this.inline ? 'ml-auto' : ''
     }
   },
   methods: {
     updateData(id, newVal) {
-      this.$set(this.formData, id, newVal)
-      this.$emit('input', this.formData)
+      if (this.selectedFields[id]) {
+        this.$set(this.formData, id, newVal)
+        this.$emit('input', this.formData)
+      }
     }
   }
 }
