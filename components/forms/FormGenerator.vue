@@ -10,6 +10,7 @@
           :id="'checkbox-' + id"
           v-model="selectedFields[id]"
           size="lg"
+          @input="fieldSelectionChanged(id, $event)"
         ></b-form-checkbox>
       </b-col>
       <b-col>
@@ -81,14 +82,23 @@ export default {
     return {
       formData,
       selectedFields,
-      buttonClass: this.inline ? 'ml-auto' : ''
+      buttonClass: this.inline ? 'ml-auto' : '',
+      temporaryFormData: {}
     }
   },
   methods: {
     updateData(id, newVal) {
       if (this.selectedFields[id]) {
         this.$set(this.formData, id, newVal)
+        this.$set(this.temporaryFormData, id, newVal)
         this.$emit('input', this.formData)
+      } else {
+        this.$set(this.temporaryFormData, id, newVal)
+      }
+    },
+    fieldSelectionChanged(id, newVal) {
+      if (newVal) {
+        this.$set(this.formData, id, this.temporaryFormData[id])
       }
     }
   }
