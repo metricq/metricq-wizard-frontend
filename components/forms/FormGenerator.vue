@@ -63,7 +63,7 @@ export default {
     disableActions: Boolean,
     fieldsSeparateSelectable: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   data() {
