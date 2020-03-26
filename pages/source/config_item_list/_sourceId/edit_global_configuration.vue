@@ -48,7 +48,9 @@ export default {
     const { data: schema } = await $axios.get(
       `/source/${params.sourceId}/input_form`
     )
-    const { data: formData } = await $axios.get(`/source/${params.sourceId}`)
+    const { data: formData } = await $axios.get(
+      `/source/${params.sourceId}/global_config`
+    )
     return {
       sourceId: params.sourceId,
       schema,
@@ -73,7 +75,7 @@ export default {
       console.log(formData)
       this.updating = true
       const { status } = await this.$axios.post(
-        `/source/${this.sourceId}`,
+        `/source/${this.sourceId}/global_config`,
         formData
       )
       if (status === 200) {
