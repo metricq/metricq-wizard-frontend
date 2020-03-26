@@ -279,16 +279,7 @@ export default {
           state.fetching = false
         })
       })
-    Source.commit((state) => {
-      state.fetching = true
-    })
-    await Source.api()
-      .get('/sources')
-      .finally(() => {
-        Source.commit((state) => {
-          state.fetching = false
-        })
-      })
+    await Source.fetchSources()
     Transformer.commit((state) => {
       state.fetching = true
     })

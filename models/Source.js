@@ -25,4 +25,17 @@ export default class Source extends Model {
       }
     }
   }
+
+  static async fetchSources() {
+    this.commit((state) => {
+      state.fetching = true
+    })
+    await this.api()
+      .get('/sources')
+      .finally(() => {
+        this.commit((state) => {
+          state.fetching = false
+        })
+      })
+  }
 }
