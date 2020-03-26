@@ -201,7 +201,19 @@
       :page-size="pageSize"
     />
     <b-row class="pt-1 pb-1">
-      <b-col />
+      <b-col>
+        <b-button
+          :to="{
+            name: 'source-sourceId-config_part_selection',
+            params: {
+              sourceId: commonSource
+            }
+          }"
+          :disabled="!commonSource || !commonSourceConfigurable"
+        >
+          Configure metrics source
+        </b-button>
+      </b-col>
       <b-col cols="2" align="right">
         <b-button
           :to="{
@@ -266,6 +278,32 @@ export default {
       return Transformer.query()
         .all()
         .map((item) => item.id)
+    },
+    commonSource() {
+      if (this.selected.length > 0) {
+        return this.selected
+          .map((currentValue) => currentValue.source)
+          .reduce((accumulator, currentValue) => {
+            if (currentValue === accumulator) {
+              return currentValue
+            } else {
+              return null
+            }
+          })
+      } else {
+        return null
+      }
+    },
+    commonSourceConfigurable() {
+      if (this.commonSource) {
+        const source = Source.query()
+          .whereId(this.commonSource)
+          .first()
+        if (source) {
+          return source.configurable
+        }
+      }
+      return false
     }
   },
   async mounted() {
