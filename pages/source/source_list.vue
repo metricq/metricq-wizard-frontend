@@ -22,36 +22,36 @@
           </template>
           <template v-slot:cell(actions)="data">
             <b-button
+              v-b-tooltip.hover
               size="sm"
               class="float-right ml-1"
               variant="danger"
-              @click="reconfigureSource(data.item.id)"
-              v-b-tooltip.hover
               title="Send config to source"
+              @click="reconfigureSource(data.item.id)"
             >
               <b-icon-bootstrap-reboot scale="1.5" />
             </b-button>
             <b-button
+              v-b-tooltip.hover
               :to="{
                 name: 'source-config_item_list-sourceId',
-                params: { sourceId: data.item.id }
+                params: { sourceId: data.item.id },
               }"
               :disabled="!data.item.configurable"
               size="sm"
               class="float-right ml-1"
-              v-b-tooltip.hover
               title="Edit source config"
             >
               <b-icon-gear scale="1.5" />
             </b-button>
             <b-button
+              v-b-tooltip.hover
               :to="{
                 name: 'source-edit_json-sourceId',
-                params: { sourceId: data.item.id }
+                params: { sourceId: data.item.id },
               }"
               size="sm"
-              class="float-right "
-              v-b-tooltip.hover
+              class="float-right"
               title="Edit raw JSON config"
             >
               <b-icon-document-code scale="1.5" />
@@ -79,13 +79,13 @@ export default {
   },
   data() {
     return {
-      tableFields: [{ key: 'id', label: 'Source' }, 'type', 'actions']
+      tableFields: [{ key: 'id', label: 'Source' }, 'type', 'actions'],
     }
   },
   computed: {
     sources() {
       return Source.query().all()
-    }
+    },
   },
   methods: {
     async reconfigureSource(sourceId) {
@@ -99,7 +99,7 @@ export default {
           cancelTitle: 'NO',
           footerClass: 'p-2',
           hideHeaderClose: false,
-          centered: true
+          centered: true,
         }
       )
       if (answer) {
@@ -112,8 +112,8 @@ export default {
           this.$toast.error('Source reconfiguration failed!')
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

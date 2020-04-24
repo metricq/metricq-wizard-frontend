@@ -23,8 +23,8 @@
           <template v-slot:cell(actions)="data">
             <b-button
               size="sm float-right"
-              @click="reconfigureClient(data.item.id)"
               variant="danger"
+              @click="reconfigureClient(data.item.id)"
             >
               <b-icon-bootstrap-reboot scale="1.5" />
             </b-button>
@@ -42,7 +42,7 @@ export default {
   async asyncData({ $axios }) {
     const { data } = await $axios.get(`/clients`)
     return {
-      clients: data
+      clients: data,
     }
   },
   computed: {},
@@ -58,7 +58,7 @@ export default {
           cancelTitle: 'NO',
           footerClass: 'p-2',
           hideHeaderClose: false,
-          centered: true
+          centered: true,
         }
       )
       if (answer) {
@@ -71,8 +71,8 @@ export default {
           this.$toast.error('Client reconfiguration failed!')
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

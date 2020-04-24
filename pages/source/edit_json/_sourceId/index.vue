@@ -55,17 +55,13 @@ export default {
       sourceId: params.sourceId,
       jsonData: data.config,
       updating: false,
-      showJsonEditor: true
+      showJsonEditor: true,
     }
   },
   computed: {
     source() {
-      return (
-        Source.query()
-          .whereId(this.sourceId)
-          .first() || new Source()
-      )
-    }
+      return Source.query().whereId(this.sourceId).first() || new Source()
+    },
   },
   methods: {
     async saveConfig() {
@@ -86,7 +82,7 @@ export default {
             cancelTitle: 'NO',
             footerClass: 'p-2',
             hideHeaderClose: false,
-            centered: true
+            centered: true,
           }
         )
         if (answer) {
@@ -104,8 +100,8 @@ export default {
         this.$toast.error('Saving config failed!')
       }
       this.updating = false
-    }
-  }
+    },
+  },
 }
 </script>
 

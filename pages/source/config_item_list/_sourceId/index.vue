@@ -14,8 +14,8 @@
           :to="{
             name: 'source-config_item_list-sourceId-add_configuration_item',
             params: {
-              sourceId: id
-            }
+              sourceId: id,
+            },
           }"
           class="mb-1"
           variant="primary"
@@ -29,8 +29,8 @@
           :to="{
             name: 'source-config_item_list-sourceId-edit_global_configuration',
             params: {
-              sourceId: id
-            }
+              sourceId: id,
+            },
           }"
         >
           Edit global source configuration
@@ -54,8 +54,8 @@
             name: 'source-config_item_list-sourceId-configItemId',
             params: {
               sourceId: id,
-              configItemId: data.item.id
-            }
+              configItemId: data.item.id,
+            },
           }"
           size="sm"
         >
@@ -66,17 +66,17 @@
             name: 'source-config_item_list-sourceId-configItemId-edit',
             params: {
               sourceId: id,
-              configItemId: data.item.id
-            }
+              configItemId: data.item.id,
+            },
           }"
           size="sm"
         >
           <b-icon-gear variant="light" scale="1.5" />
         </b-button>
         <b-button
-          @click="deleteConfigItem(data.item)"
           variant="danger"
           size="sm"
+          @click="deleteConfigItem(data.item)"
         >
           <b-icon-trash variant="light" scale="1.5" />
         </b-button>
@@ -94,22 +94,18 @@ export default {
     const { data } = await $axios.get(`/source/${params.sourceId}/config_items`)
     await Source.update({
       where: params.sourceId,
-      data: { configItemName: data.configItemName }
+      data: { configItemName: data.configItemName },
     })
     return {
       id: params.sourceId,
       configurationItems: data.configItems,
-      tableFields: ['name', 'description', 'actions']
+      tableFields: ['name', 'description', 'actions'],
     }
   },
   computed: {
     source() {
-      return (
-        Source.query()
-          .whereId(this.id)
-          .first() || new Source()
-      )
-    }
+      return Source.query().whereId(this.id).first() || new Source()
+    },
   },
   methods: {
     async deleteConfigItem(configItem) {
@@ -123,7 +119,7 @@ export default {
           cancelTitle: 'NO',
           footerClass: 'p-2',
           hideHeaderClose: false,
-          centered: true
+          centered: true,
         }
       )
       if (answer) {
@@ -142,8 +138,8 @@ export default {
       } else {
         console.log('Do not delete config item')
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -6,7 +6,7 @@ import database from '~/database'
 VuexORM.use(VuexORMAxios)
 VuexORM.use(VuexORMSearch, {
   shouldSort: true,
-  primaryKey: true
+  primaryKey: true,
 })
 
 export const plugins = [VuexORM.install(database)]

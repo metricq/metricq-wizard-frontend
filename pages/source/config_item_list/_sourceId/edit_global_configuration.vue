@@ -13,8 +13,8 @@
               :to="{
                 name: 'source-config_item_list-sourceId',
                 params: {
-                  sourceId: sourceId
-                }
+                  sourceId: sourceId,
+                },
               }"
               class="mt-1"
               variant="danger"
@@ -53,22 +53,18 @@ export default {
       sourceId: params.sourceId,
       schema,
       formData,
-      updating: false
+      updating: false,
     }
   },
   computed: {
     source() {
-      return (
-        Source.query()
-          .whereId(this.sourceId)
-          .first() || new Source()
-      )
-    }
+      return Source.query().whereId(this.sourceId).first() || new Source()
+    },
   },
   methods: {
     async updateGlobalConfig() {
       const formData = {
-        ...this.formData
+        ...this.formData,
       }
       console.log(formData)
       this.updating = true
@@ -88,7 +84,7 @@ export default {
             cancelTitle: 'NO',
             footerClass: 'p-2',
             hideHeaderClose: false,
-            centered: true
+            centered: true,
           }
         )
         if (answer) {
@@ -112,8 +108,8 @@ export default {
         this.$toast.error('Updating global config failed!')
       }
       this.updating = false
-    }
-  }
+    },
+  },
 }
 </script>
 

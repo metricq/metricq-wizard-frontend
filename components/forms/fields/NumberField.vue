@@ -18,9 +18,9 @@ export default {
   props: ['id', 'field', 'data', 'inline'],
   data() {
     return {
-      outerClass: this.inline ? 'mb-2 mr-sm-2 mb-sm-0' : ''
+      outerClass: this.inline ? 'mb-2 mr-sm-2 mb-sm-0' : '',
     }
-  }
+  },
 }
 </script>
 

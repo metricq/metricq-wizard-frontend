@@ -3,13 +3,13 @@
     <component
       :is="field.type"
       v-for="(field, id) in schema"
-      :key="id"
       :id="id"
+      :key="id"
       :field="field"
       :data="formData[id]"
       :inline="inline"
       :size="size"
-      :hideLabel="hideLabels"
+      :hide-label="hideLabels"
       @input="updateData(id, $event)"
     />
     <div v-if="!disableActions">
@@ -37,7 +37,7 @@ export default {
     StringField,
     SelectField,
     NumberField,
-    LabelField
+    LabelField,
   },
   props: {
     schema: {},
@@ -45,7 +45,7 @@ export default {
     inline: Boolean,
     size: {},
     hideLabels: Boolean,
-    disableActions: Boolean
+    disableActions: Boolean,
   },
   data() {
     const formData = {}
@@ -60,15 +60,15 @@ export default {
     this.$emit('input', formData)
     return {
       formData,
-      buttonClass: this.inline ? 'ml-auto' : ''
+      buttonClass: this.inline ? 'ml-auto' : '',
     }
   },
   methods: {
     updateData(id, newVal) {
       this.$set(this.formData, id, newVal)
       this.$emit('input', this.formData)
-    }
-  }
+    },
+  },
 }
 </script>
 

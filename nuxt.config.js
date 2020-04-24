@@ -11,10 +11,10 @@ export default {
       {
         hid: 'description',
         name: 'description',
-        content: process.env.npm_package_description || ''
-      }
+        content: process.env.npm_package_description || '',
+      },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/icon.png' }]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/icon.png' }],
   },
   /*
    ** Customize the progress-bar color
@@ -33,7 +33,7 @@ export default {
    */
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
-    '@nuxtjs/eslint-module'
+    '@nuxtjs/eslint-module',
   ],
   /*
    ** Nuxt.js modules
@@ -43,7 +43,7 @@ export default {
     'bootstrap-vue/nuxt',
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '@nuxtjs/toast'
+    '@nuxtjs/toast',
   ],
   bootstrapVue: { icons: true },
   /*
@@ -52,7 +52,7 @@ export default {
    */
   axios: {
     prefix: '/api',
-    port: process.env.NODE_ENV === 'development' ? 8000 : undefined
+    port: process.env.NODE_ENV === 'development' ? 8000 : undefined,
   },
 
   /*
@@ -64,7 +64,7 @@ export default {
      */
     extend(config, ctx) {},
     extractCSS: true,
-    analyze: false
+    analyze: false,
   },
   toast: {
     position: 'top-right',
@@ -74,11 +74,11 @@ export default {
       text: 'Close',
       onClick: (e, toastObject) => {
         toastObject.goAway(0)
-      }
+      },
     },
-    theme: 'outline'
+    theme: 'outline',
   },
   router: {
-    base: process.env.NODE_ENV === 'development' ? '/' : '/wizard'
-  }
+    base: process.env.NODE_ENV === 'development' ? '/' : '/wizard',
+  },
 }

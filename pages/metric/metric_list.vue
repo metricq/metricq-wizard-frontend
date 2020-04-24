@@ -205,7 +205,7 @@
       <b-col cols="2" align="right">
         <b-button
           :to="{
-            name: 'metric-database_configuration'
+            name: 'metric-database_configuration',
           }"
           :disabled="selected.length === 0"
         >
@@ -225,7 +225,7 @@ import Transformer from '~/models/Transformer'
 
 export default {
   components: {
-    MetricTable
+    MetricTable,
   },
   data() {
     return {
@@ -234,20 +234,17 @@ export default {
       filterHistoricOptions: [
         { value: null, text: 'Any' },
         { value: true, text: 'Saved in DB' },
-        { value: false, text: 'Not in DB' }
+        { value: false, text: 'Not in DB' },
       ],
       loadSelectedDatabase: null,
       loadSelectedSource: null,
       loadSelectedTransformer: null,
-      pageSize: 20
+      pageSize: 20,
     }
   },
   computed: {
     selected() {
-      return Metric.query()
-        .with('database')
-        .where('selected', true)
-        .get()
+      return Metric.query().with('database').where('selected', true).get()
     },
     metricCount() {
       return Metric.query().count()
@@ -266,7 +263,7 @@ export default {
       return Transformer.query()
         .all()
         .map((item) => item.id)
-    }
+    },
   },
   async mounted() {
     Database.commit((state) => {
@@ -306,7 +303,7 @@ export default {
         state.fetching = true
       })
       await Metric.api().post('/metrics', {
-        database: this.loadSelectedDatabase
+        database: this.loadSelectedDatabase,
       })
       Metric.commit((state) => {
         state.fetching = false
@@ -317,7 +314,7 @@ export default {
         state.fetching = true
       })
       await Metric.api().post('/metrics', {
-        source: this.loadSelectedSource
+        source: this.loadSelectedSource,
       })
       Metric.commit((state) => {
         state.fetching = false
@@ -328,7 +325,7 @@ export default {
         state.fetching = true
       })
       await Metric.api().post('/metrics', {
-        source: this.loadSelectedTransformer
+        source: this.loadSelectedTransformer,
       })
       Metric.commit((state) => {
         state.fetching = false
@@ -336,8 +333,8 @@ export default {
     },
     async clearMetricList() {
       await Metric.deleteAll()
-    }
-  }
+    },
+  },
 }
 </script>
 

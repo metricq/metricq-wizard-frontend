@@ -120,7 +120,7 @@
       <b-col>
         <b-button
           :to="{
-            name: 'metric-metric_list'
+            name: 'metric-metric_list',
           }"
           variant="danger"
         >
@@ -170,7 +170,7 @@ export default {
     })
     await Metric.api()
       .post('/metrics/database/defaults', {
-        selectedMetrics
+        selectedMetrics,
       })
       .finally(() => {
         Metric.commit((state) => {
@@ -182,7 +182,7 @@ export default {
     })
     await Database.api()
       .post('/databases/historic_metrics', {
-        selectedMetrics
+        selectedMetrics,
       })
       .finally(() => {
         Database.commit((state) => {
@@ -199,23 +199,16 @@ export default {
         { key: 'id', sortable: true },
         { key: 'intervalMin' },
         { key: 'intervalMax' },
-        { key: 'intervalFactor' }
-      ]
+        { key: 'intervalFactor' },
+      ],
     }
   },
   computed: {
     selected() {
-      return Metric.query()
-        .with('database')
-        .where('selected', true)
-        .all()
+      return Metric.query().with('database').where('selected', true).all()
     },
     saving() {
-      return (
-        Metric.query()
-          .where('saving', true)
-          .count() !== 0
-      )
+      return Metric.query().where('saving', true).count() !== 0
     },
     databases() {
       return Database.query()
@@ -226,7 +219,7 @@ export default {
     },
     rows() {
       return this.selected.length
-    }
+    },
   },
   watch: {
     saving(newValue, oldValue) {
@@ -246,7 +239,7 @@ export default {
               cancelTitle: 'NO',
               footerClass: 'p-2',
               hideHeaderClose: false,
-              centered: true
+              centered: true,
             }
           )
           .then((value) => {
@@ -258,7 +251,7 @@ export default {
             }
           })
       }
-    }
+    },
   },
   methods: {
     saveAll() {
@@ -278,11 +271,11 @@ export default {
           databaseId: this.selectedDatabase,
           intervalMin: metric.intervalMin,
           intervalMax: metric.intervalMax,
-          intervalFactor: metric.intervalFactor
+          intervalFactor: metric.intervalFactor,
         }
         Metric.update({
           where: metric.id,
-          data: { saving: true }
+          data: { saving: true },
         })
         Metric.api()
           .post('/metrics/database', data)
@@ -295,7 +288,7 @@ export default {
           .finally(() => {
             Metric.update({
               where: metric.id,
-              data: { saving: false }
+              data: { saving: false },
             })
           })
       })
@@ -323,8 +316,8 @@ export default {
     },
     verifyIntervalFactor(factor) {
       return !!Number(factor)
-    }
-  }
+    },
+  },
 }
 </script>
 

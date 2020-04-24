@@ -6,14 +6,14 @@ export default class Database extends Model {
 
   static state() {
     return {
-      fetching: false
+      fetching: false,
     }
   }
 
   static fields() {
     return {
       id: this.string().nullable(),
-      metrics: this.hasMany(Metric, 'databaseId')
+      metrics: this.hasMany(Metric, 'databaseId'),
     }
   }
 
@@ -21,7 +21,7 @@ export default class Database extends Model {
     actions: {
       reconfigureById(id) {
         return this.post(`/database/${id}/reconfigure`)
-      }
-    }
+      },
+    },
   }
 }

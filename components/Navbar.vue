@@ -10,7 +10,7 @@
       <b-navbar-nav>
         <b-nav-item
           :to="{
-            name: 'metric-metric_list'
+            name: 'metric-metric_list',
           }"
           active-class="active"
         >
@@ -18,7 +18,7 @@
         </b-nav-item>
         <b-nav-item
           :to="{
-            name: 'source-source_list'
+            name: 'source-source_list',
           }"
           active-class="active"
         >
@@ -26,7 +26,7 @@
         </b-nav-item>
         <b-nav-item
           :to="{
-            name: 'client-client_list'
+            name: 'client-client_list',
           }"
           active-class="active"
         >
@@ -77,8 +77,8 @@ export default {
     },
     fetchingTransformers() {
       return Transformer.store().state.entities.transformer.fetching
-    }
-  }
+    },
+  },
 }
 </script>
 

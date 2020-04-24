@@ -13,8 +13,8 @@
               :to="{
                 name: 'source-config_item_list-sourceId',
                 params: {
-                  sourceId: sourceId
-                }
+                  sourceId: sourceId,
+                },
               }"
               class="mt-1"
               variant="danger"
@@ -52,22 +52,18 @@ export default {
       sourceId: params.sourceId,
       schema: data,
       formData: {},
-      adding: false
+      adding: false,
     }
   },
   computed: {
     source() {
-      return (
-        Source.query()
-          .whereId(this.sourceId)
-          .first() || new Source()
-      )
-    }
+      return Source.query().whereId(this.sourceId).first() || new Source()
+    },
   },
   methods: {
     async addConfigItem() {
       const formData = {
-        ...this.formData
+        ...this.formData,
       }
       console.log(formData)
       this.adding = true
@@ -82,8 +78,8 @@ export default {
       }
       this.adding = false
       this.$router.back()
-    }
-  }
+    },
+  },
 }
 </script>
 

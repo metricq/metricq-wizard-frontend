@@ -5,7 +5,7 @@ export default class Source extends Model {
 
   static state() {
     return {
-      fetching: false
+      fetching: false,
     }
   }
 
@@ -14,7 +14,7 @@ export default class Source extends Model {
       id: this.string().nullable(),
       type: this.string().nullable(),
       configurable: this.boolean(false),
-      configItemName: this.string('config item')
+      configItemName: this.string('config item'),
     }
   }
 
@@ -22,7 +22,7 @@ export default class Source extends Model {
     actions: {
       reconfigureById(id) {
         return this.post(`/source/${id}/reconfigure`)
-      }
-    }
+      },
+    },
   }
 }

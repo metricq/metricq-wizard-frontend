@@ -21,13 +21,10 @@ export default {
   asyncData({ query }) {},
   computed: {
     selected() {
-      return Metric.query()
-        .with('database')
-        .where('selected', true)
-        .get()
-    }
+      return Metric.query().with('database').where('selected', true).get()
+    },
   },
-  methods: {}
+  methods: {},
 }
 </script>
 

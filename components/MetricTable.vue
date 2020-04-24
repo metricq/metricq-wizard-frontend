@@ -31,7 +31,7 @@
               v-if="data.item.sourceRef && data.item.sourceRef.configurable"
               :to="{
                 name: 'source-config_item_list-sourceId',
-                params: { sourceId: data.item.source }
+                params: { sourceId: data.item.source },
               }"
             >
               {{ data.item.source }}
@@ -40,7 +40,7 @@
               v-else
               :to="{
                 name: 'source-edit_json-sourceId',
-                params: { sourceId: data.item.source }
+                params: { sourceId: data.item.source },
               }"
             >
               {{ data.item.source }}
@@ -81,15 +81,15 @@ export default {
           sortable: true,
           sortByFormatted: (value, key, item) => {
             return item.selected ? '0Yes' : '1No' // sort selected, than no selected for ascending sorting
-          }
+          },
         },
         { key: 'id', sortable: true },
         { key: 'rate', sortable: true },
         { key: 'description', sortable: true },
         { key: 'unit', sortable: true },
         { key: 'source', sortable: true },
-        { key: 'state', sortable: true }
-      ]
+        { key: 'state', sortable: true },
+      ],
     }
   },
   computed: {
@@ -103,34 +103,32 @@ export default {
       }
       if (this.filter) {
         metricQuery = metricQuery.search(this.filter, {
-          keys: ['id', 'source', 'description', 'units']
+          keys: ['id', 'source', 'description', 'units'],
         })
       }
       return metricQuery.get()
     },
     selected() {
-      return Metric.query()
-        .where('selected', true)
-        .get()
+      return Metric.query().where('selected', true).get()
     },
     emptyText() {
       if (this.historic == null && !this.filter) {
         return 'No metrics loaded! Please use the controlls at the top.'
       }
       return 'There are no metrics matching your filter.'
-    }
+    },
   },
   methods: {
     onRowSelected(item, state) {
       Metric.update({
         where: item.id,
-        data: { selected: state }
+        data: { selected: state },
       })
     },
     onRowClicked(item, index, event) {
       Metric.update({
         where: item.id,
-        data: { selected: !item.selected }
+        data: { selected: !item.selected },
       })
     },
     selectCurrentPage() {
@@ -162,8 +160,8 @@ export default {
         item.selected = false
         item.$save()
       })
-    }
-  }
+    },
+  },
 }
 </script>
 

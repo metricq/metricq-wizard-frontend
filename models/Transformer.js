@@ -5,17 +5,17 @@ export default class Transformer extends Model {
 
   static state() {
     return {
-      fetching: false
+      fetching: false,
     }
   }
 
   static fields() {
     return {
-      id: this.string().nullable()
+      id: this.string().nullable(),
     }
   }
 
   static apiConfig = {
-    actions: {}
+    actions: {},
   }
 }

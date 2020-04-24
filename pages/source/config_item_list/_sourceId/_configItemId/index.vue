@@ -43,8 +43,8 @@
           :to="{
             name: 'source-config_item_list-sourceId',
             params: {
-              sourceId: id
-            }
+              sourceId: id,
+            },
           }"
           variant="danger"
         >
@@ -54,9 +54,9 @@
       <b-col>
         <b-button
           :disabled="!isMetricSelected"
-          @click="createSelectedMetrics"
           class="float-right"
           variant="primary"
+          @click="createSelectedMetrics"
         >
           Configure metrics
         </b-button>
@@ -94,13 +94,13 @@ export default {
         'id',
         ...Object.entries(data.columns).map((item) => {
           return { key: item[0], label: item[1] }
-        })
-      ]
+        }),
+      ],
     }
   },
   computed: {
     isMetricSelected() {
-      return this.availableMetrics.reduce(function(accumulator, currentValue) {
+      return this.availableMetrics.reduce(function (accumulator, currentValue) {
         return accumulator || currentValue.selected
       }, false)
     },
@@ -108,12 +108,8 @@ export default {
       return this.availableMetrics.filter((el) => el.selected)
     },
     source() {
-      return (
-        Source.query()
-          .whereId(this.id)
-          .first() || new Source()
-      )
-    }
+      return Source.query().whereId(this.id).first() || new Source()
+    },
   },
   methods: {
     async createSelectedMetrics() {
@@ -124,7 +120,7 @@ export default {
           this.$route.params.configItemId
         )}/metrics`,
         {
-          metrics: this.selectedMetrics
+          metrics: this.selectedMetrics,
         }
       )
       if (status === 200) {
@@ -138,7 +134,7 @@ export default {
             cancelTitle: 'NO',
             footerClass: 'p-2',
             hideHeaderClose: false,
-            centered: true
+            centered: true,
           }
         )
         if (answer) {
@@ -160,7 +156,7 @@ export default {
                   cancelTitle: 'NO',
                   footerClass: 'p-2',
                   hideHeaderClose: false,
-                  centered: true
+                  centered: true,
                 }
               )
               if (answer) {
@@ -173,7 +169,7 @@ export default {
                 )
                 // TODO find right method for getting metric subset
                 await Metric.api().post('/metrics', {
-                  requested_metrics: data.metrics
+                  requested_metrics: data.metrics,
                 })
                 Metric.commit((state) => {
                   state.fetching = false
@@ -183,8 +179,8 @@ export default {
                 await this.$router.push({
                   name: 'metric-metric_list',
                   params: {
-                    loadMetrics: false
-                  }
+                    loadMetrics: false,
+                  },
                 })
                 return
               }
@@ -199,8 +195,8 @@ export default {
         }
         this.$router.back()
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -7,7 +7,7 @@ export default class Metric extends Model {
 
   static state() {
     return {
-      fetching: false
+      fetching: false,
     }
   }
 
@@ -28,7 +28,7 @@ export default class Metric extends Model {
       intervalFactor: this.number().nullable(),
       // Client side stat
       selected: this.boolean(false),
-      saving: this.boolean(false)
+      saving: this.boolean(false),
     }
   }
 }
