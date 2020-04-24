@@ -5,8 +5,8 @@
         <h1>
           Source {{ sourceId }}: JSON Editor
           <b-link class="float-right" @click="showJsonEditor = !showJsonEditor">
-            <b-icon-document-code v-if="showJsonEditor"></b-icon-document-code>
-            <b-icon-document-richtext v-else></b-icon-document-richtext>
+            <b-icon-file-code v-if="showJsonEditor"></b-icon-file-code>
+            <b-icon-file-richtext v-else></b-icon-file-richtext>
           </b-link>
         </h1>
       </b-col>

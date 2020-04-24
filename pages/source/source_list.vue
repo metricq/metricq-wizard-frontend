@@ -54,7 +54,7 @@
               class="float-right"
               title="Edit raw JSON config"
             >
-              <b-icon-document-code scale="1.5" />
+              <b-icon-file-code scale="1.5" />
             </b-button>
           </template>
         </b-table>
