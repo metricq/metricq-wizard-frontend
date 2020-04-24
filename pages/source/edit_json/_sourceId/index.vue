@@ -55,7 +55,7 @@ export default {
       sourceId: params.sourceId,
       jsonData: data.config,
       updating: false,
-      showJsonEditor: true,
+      showJsonEditor: JSON.stringify(data.config).length < 10000,
     }
   },
   computed: {
