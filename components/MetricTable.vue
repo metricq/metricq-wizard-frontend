@@ -47,9 +47,7 @@
             </b-link>
           </template>
           <template v-slot:cell(state)="data">
-            <b-badge v-if="data.item.historic">
-              Saved in DB
-            </b-badge>
+            <b-badge v-if="data.item.historic"> Saved in DB </b-badge>
           </template>
         </b-table>
         <b-pagination

@@ -13,9 +13,7 @@
     </b-row>
     <b-row>
       <b-col>
-        <b-button variant="danger" @click="$router.back()">
-          Cancel
-        </b-button>
+        <b-button variant="danger" @click="$router.back()"> Cancel </b-button>
       </b-col>
       <b-col>
         <b-button class="float-right" variant="primary" @click="saveConfig">
