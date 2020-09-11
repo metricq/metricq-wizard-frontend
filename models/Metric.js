@@ -20,6 +20,7 @@ export default class Metric extends Model {
       source: this.string().nullable(),
       sourceRef: this.belongsTo(Source, 'source'),
       historic: this.boolean(false),
+      additionalMetadata: this.attr().nullable(),
       // Database settings
       databaseId: this.string().nullable(),
       database: this.belongsTo(Database, 'databaseId'),
@@ -30,5 +31,34 @@ export default class Metric extends Model {
       selected: this.boolean(false),
       saving: this.boolean(false),
     }
+  }
+
+  static convertMetricListResponse({ data, headers }) {
+    return data.map((currentValue) => {
+      const {
+        id,
+        description,
+        unit,
+        source,
+        rate,
+        historic,
+        ...unfilteredAdditionalMetadata
+      } = currentValue
+      const additionalMetadata = Object.keys(unfilteredAdditionalMetadata)
+        .filter((key) => !key.startsWith('_'))
+        .reduce((obj, key) => {
+          obj[key] = unfilteredAdditionalMetadata[key]
+          return obj
+        }, {})
+      return {
+        id,
+        description,
+        unit,
+        source,
+        historic,
+        rate,
+        additionalMetadata,
+      }
+    })
   }
 }

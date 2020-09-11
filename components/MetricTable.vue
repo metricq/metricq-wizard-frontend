@@ -49,6 +49,19 @@
           <template v-slot:cell(state)="data">
             <b-badge v-if="data.item.historic"> Saved in DB </b-badge>
           </template>
+          <template v-slot:cell(show_metadata)="row">
+            <b-button size="sm" @click="row.toggleDetails" class="mr-2">
+              {{ row.detailsShowing ? 'Hide' : 'Show' }} Metadata
+            </b-button>
+          </template>
+
+          <template v-slot:row-details="row">
+            <!--              v-model="row.item.additionalMetadata"-->
+            <JsonEditor
+              :obj-data="row.item.additionalMetadata"
+              is-edit="false"
+            ></JsonEditor>
+          </template>
         </b-table>
         <b-pagination
           v-model="currentPage"
@@ -87,6 +100,7 @@ export default {
         { key: 'unit', sortable: true },
         { key: 'source', sortable: true },
         { key: 'state', sortable: true },
+        { key: 'show_metadata', sortable: false },
       ],
     }
   },

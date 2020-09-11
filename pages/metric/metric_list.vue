@@ -302,9 +302,15 @@ export default {
       Metric.commit((state) => {
         state.fetching = true
       })
-      await Metric.api().post('/metrics', {
-        database: this.loadSelectedDatabase,
-      })
+      await Metric.api().post(
+        '/metrics',
+        {
+          database: this.loadSelectedDatabase,
+        },
+        {
+          dataTransformer: Metric.convertMetricListResponse,
+        }
+      )
       Metric.commit((state) => {
         state.fetching = false
       })
@@ -313,9 +319,15 @@ export default {
       Metric.commit((state) => {
         state.fetching = true
       })
-      await Metric.api().post('/metrics', {
-        source: this.loadSelectedSource,
-      })
+      await Metric.api().post(
+        '/metrics',
+        {
+          source: this.loadSelectedSource,
+        },
+        {
+          dataTransformer: Metric.convertMetricListResponse,
+        }
+      )
       Metric.commit((state) => {
         state.fetching = false
       })
@@ -324,9 +336,15 @@ export default {
       Metric.commit((state) => {
         state.fetching = true
       })
-      await Metric.api().post('/metrics', {
-        source: this.loadSelectedTransformer,
-      })
+      await Metric.api().post(
+        '/metrics',
+        {
+          source: this.loadSelectedTransformer,
+        },
+        {
+          dataTransformer: Metric.convertMetricListResponse,
+        }
+      )
       Metric.commit((state) => {
         state.fetching = false
       })
