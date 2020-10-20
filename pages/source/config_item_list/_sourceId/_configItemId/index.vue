@@ -121,6 +121,9 @@ export default {
         )}/metrics`,
         {
           metrics: this.selectedMetrics,
+          notSelectedMetrics: this.availableMetrics
+            .filter((el) => !el.selected)
+            .map((item) => item.id),
         }
       )
       if (status === 200) {
