@@ -262,10 +262,14 @@ export default {
         return
       }
       this.errorCount = 0
-      this.selected.forEach((metric) => {
+      const databaseConfigurations = this.selected.map((metric) => {
         if (metric.historic) {
           return
         }
+        Metric.update({
+          where: metric.id,
+          data: { saving: true },
+        })
         const data = {
           id: metric.id,
           databaseId: this.selectedDatabase,
@@ -273,25 +277,24 @@ export default {
           intervalMax: metric.intervalMax,
           intervalFactor: metric.intervalFactor,
         }
-        Metric.update({
-          where: metric.id,
-          data: { saving: true },
+        return data
+      })
+      Metric.api()
+        .post('/metrics/database', {
+          databaseConfigurations,
         })
-        Metric.api()
-          .post('/metrics/database', data)
-          .catch(() => {
-            this.errorCount++
-            this.$toast.error(
-              `Saving database configuration for metric ${metric.id} failed!`
-            )
-          })
-          .finally(() => {
+        .catch(() => {
+          this.errorCount++
+          this.$toast.error(`Saving database configurations failed!`)
+        })
+        .finally(() => {
+          databaseConfigurations.forEach((config) => {
             Metric.update({
-              where: metric.id,
+              where: config.id,
               data: { saving: false },
             })
           })
-      })
+        })
     },
     verifyInterval(ref, interval) {
       try {
