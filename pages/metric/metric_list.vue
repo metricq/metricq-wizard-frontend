@@ -119,6 +119,51 @@
         </b-col>
       </b-row>
     </b-card>
+    <b-card title="Filter">
+      <b-row>
+        <b-col lg="4">
+          <b-input-group size="sm">
+            <b-form-input
+              id="filterInput"
+              v-model="filterString"
+              type="search"
+              debounce="100"
+              placeholder="Type to Filter"
+              size="sm"
+            />
+            <b-input-group-append>
+              <b-button
+                :disabled="!filterString"
+                size="sm"
+                @click="filterString = ''"
+              >
+                Clear
+              </b-button>
+            </b-input-group-append>
+          </b-input-group>
+          <b-form-checkbox v-model="disableFuzzy" id="disableFuzzyInput">
+            Only search id and source with disabled fuzzy search
+          </b-form-checkbox>
+        </b-col>
+
+        <b-col>
+          <b-form-group
+            label="DB Status"
+            label-cols-sm="3"
+            label-align-sm="right"
+            label-for="filterInput"
+            class="mb-0"
+          >
+            <b-form-select
+              id="historicFilter"
+              v-model="filterHistoric"
+              :options="filterHistoricOptions"
+              :value="null"
+            />
+          </b-form-group>
+        </b-col>
+      </b-row>
+    </b-card>
     <b-row class="my-1">
       <b-col cols="5">
         <b-button size="sm" @click="$refs.metricTable.selectCurrentPage()">
@@ -157,48 +202,13 @@
           />
         </b-form-group>
       </b-col>
-      <b-col lg="5">
-        <b-form-group
-          label="Filter"
-          label-cols-sm="3"
-          label-align-sm="right"
-          label-size="sm"
-          label-for="filterInput"
-          class="mb-0"
-        >
-          <b-input-group size="sm">
-            <b-form-input
-              id="filterInput"
-              v-model="filterString"
-              type="search"
-              debounce="100"
-              placeholder="Type to Filter"
-              size="sm"
-            />
-            <b-input-group-append>
-              <b-button
-                :disabled="!filterString"
-                size="sm"
-                @click="filterString = ''"
-              >
-                Clear
-              </b-button>
-            </b-input-group-append>
-            <b-form-select
-              id="historicFilter"
-              v-model="filterHistoric"
-              :options="filterHistoricOptions"
-              :value="null"
-            />
-          </b-input-group>
-        </b-form-group>
-      </b-col>
     </b-row>
     <MetricTable
       ref="metricTable"
       :filter="filterString"
       :historic="filterHistoric"
       :page-size="pageSize"
+      :disable-fuzzy="disableFuzzy"
     />
     <b-row class="pt-1 pb-1">
       <b-col />
@@ -240,6 +250,7 @@ export default {
       loadSelectedSource: null,
       loadSelectedTransformer: null,
       pageSize: 20,
+      disableFuzzy: false,
     }
   },
   computed: {
