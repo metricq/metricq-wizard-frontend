@@ -81,7 +81,7 @@ import Metric from '~/models/Metric'
 
 export default {
   name: 'MetricTable',
-  props: ['filter', 'historic', 'pageSize', 'disableFuzzy'],
+  props: ['filter', 'historic', 'pageSize', 'disableFuzzy', 'unit'],
   data() {
     return {
       currentTableItems: [],
@@ -112,6 +112,9 @@ export default {
       let metricQuery = Metric.query().with('sourceRef')
       if (this.historic != null) {
         metricQuery = metricQuery.where('historic', this.historic)
+      }
+      if (this.unit != null) {
+        metricQuery = metricQuery.where('unit', this.unit)
       }
       if (this.filter) {
         if (this.disableFuzzy) {

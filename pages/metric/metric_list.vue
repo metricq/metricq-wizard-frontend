@@ -145,7 +145,22 @@
             Only search id and source with disabled fuzzy search
           </b-form-checkbox>
         </b-col>
-
+        <b-col>
+          <b-form-group
+            label="Units"
+            label-cols-sm="3"
+            label-align-sm="right"
+            label-for="filterInput"
+            class="mb-0"
+          >
+            <b-form-select
+              id="unitFilter"
+              v-model="filterUnits"
+              :options="metricUnits"
+              :value="null"
+            />
+          </b-form-group>
+        </b-col>
         <b-col>
           <b-form-group
             label="DB Status"
@@ -207,6 +222,7 @@
       ref="metricTable"
       :filter="filterString"
       :historic="filterHistoric"
+      :unit="filterUnits"
       :page-size="pageSize"
       :disable-fuzzy="disableFuzzy"
     />
@@ -246,6 +262,7 @@ export default {
         { value: true, text: 'Saved in DB' },
         { value: false, text: 'Not in DB' },
       ],
+      filterUnits: null,
       loadSelectedDatabase: null,
       loadSelectedSource: null,
       loadSelectedTransformer: null,
@@ -274,6 +291,38 @@ export default {
       return Transformer.query()
         .all()
         .map((item) => item.id)
+    },
+    metricUnits() {
+      return Array.from(
+        new Set(
+          Metric.query()
+            .all()
+            .map((value) => {
+              if (value.unit === undefined) {
+                return null
+              } else {
+                return value.unit
+              }
+            })
+        )
+      )
+        .map((value) => {
+          if (value == null) {
+            return { value: null, text: 'Any' }
+          } else {
+            return { value, text: value }
+          }
+        })
+        .sort(({ text: aText }, { text: bText }) => {
+          if (aText < bText) {
+            return -1
+          }
+          if (aText > bText) {
+            return 1
+          }
+
+          return 0
+        })
     },
   },
   async mounted() {
