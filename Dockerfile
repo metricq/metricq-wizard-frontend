@@ -2,6 +2,7 @@ FROM node:alpine
 LABEL maintainer="franz.hoepfner@tu-dresden.de"
 
 RUN addgroup -S metricq && adduser -S metricq -G metricq
+RUN apk add --no-cache libc6-compat python3 make gcc build-base
 
 USER metricq
 COPY --chown=metricq:metricq . /home/metricq/wizard-frontend
