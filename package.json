@@ -27,7 +27,7 @@
     "@vuex-orm/core": "^0.36.3",
     "@vuex-orm/plugin-axios": "^0.9.3",
     "@vuex-orm/plugin-search": "^0.24.1",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "bootstrap": "^4.5.3",
     "bootstrap-vue": "^2.21.1",
     "nuxt": "^2.14.12",
