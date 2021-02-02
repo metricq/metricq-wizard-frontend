@@ -264,7 +264,7 @@ export default {
       this.errorCount = 0
       const databaseConfigurations = this.selected.map((metric) => {
         if (metric.historic) {
-          return
+          return null
         }
         Metric.update({
           where: metric.id,
