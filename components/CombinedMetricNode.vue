@@ -109,7 +109,13 @@
             <b-form-input
               :id="'edit-modal-metric-input' + id"
               v-model="editValues.metric"
+              list="metrics-list"
             />
+            <datalist id="metrics-list">
+              <option v-for="metric in metrics" :key="metric.id">
+                {{ metric.id }}
+              </option>
+            </datalist>
           </b-form-group>
         </div>
         <div v-else-if="editValues.type === 'number'">
@@ -169,6 +175,8 @@
 </template>
 
 <script>
+import Metric from '@/models/Metric'
+
 export default {
   name: 'CombinedMetricNode',
   props: {
@@ -226,6 +234,9 @@ export default {
     },
     inputs() {
       return this.getInputsForExpression(this.expression)
+    },
+    metrics() {
+      return Metric.query().get()
     },
   },
   watch: {},
