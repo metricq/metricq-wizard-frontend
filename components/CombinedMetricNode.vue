@@ -175,12 +175,12 @@ export default {
     expression: {
       default() {
         return {}
-      }
+      },
     },
     deletable: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     const type = this.getExpressionType(this.expression)
@@ -197,8 +197,8 @@ export default {
         metric: type === 'metric' ? this.expression : null,
         number: type === 'number' ? this.expression : null,
         cooldownPeriod:
-          type === 'throttle' ? this.expression.cooldown_period : null
-      }
+          type === 'throttle' ? this.expression.cooldown_period : null,
+      },
     }
   },
   computed: {
@@ -226,7 +226,7 @@ export default {
     },
     inputs() {
       return this.getInputsForExpression(this.expression)
-    }
+    },
   },
   watch: {},
   mounted() {
@@ -285,7 +285,7 @@ export default {
         metric: this.type === 'metric' ? this.expression : null,
         number: this.type === 'number' ? this.expression : null,
         cooldownPeriod:
-          this.type === 'throttle' ? this.expression.cooldown_period : null
+          this.type === 'throttle' ? this.expression.cooldown_period : null,
       }
     },
     applyEditValuesFromOk(bvModalEvt) {
@@ -316,19 +316,19 @@ export default {
         expression = {
           operation: 'throttle',
           cooldown_period: this.editValues.cooldownPeriod,
-          input: this.inputs[0] || null
+          input: this.inputs[0] || null,
         }
       } else if (this.editValues.type === 'operation') {
         if (['+', '-', '*', '/'].includes(this.editValues.operation)) {
           expression = {
             operation: this.editValues.operation,
             left: this.inputs[0] || null,
-            right: this.inputs[1] || null
+            right: this.inputs[1] || null,
           }
         } else {
           expression = {
             operation: this.editValues.operation,
-            inputs: this.inputs || []
+            inputs: this.inputs || [],
           }
         }
       }
@@ -389,8 +389,8 @@ export default {
       }
 
       this.$emit('changeExpression', expression)
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -257,7 +257,7 @@
         </b-button>
         <b-button
           :to="{
-            name: 'metric-create_combined_metric'
+            name: 'metric-create_combined_metric',
           }"
           class="float-right mr-1"
         >

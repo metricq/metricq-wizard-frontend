@@ -33,7 +33,7 @@ export default {
           {
             operation: 'throttle',
             cooldown_period: '1s',
-            input: 'foo.baz.highrate.power'
+            input: 'foo.baz.highrate.power',
           },
           {
             operation: '*',
@@ -41,13 +41,13 @@ export default {
             right: {
               operation: '+',
               left: 'foo.egg.A.current',
-              right: null
-            }
-          }
-        ]
-      }
+              right: null,
+            },
+          },
+        ],
+      },
     }
-  }
+  },
 }
 </script>
 
