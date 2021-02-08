@@ -20,9 +20,10 @@
 
 <script>
 import CombinedMetricNode from '~/components/CombinedMetricNode'
+
 export default {
-  layout: 'nonfluid',
   components: { CombinedMetricNode },
+  layout: 'nonfluid',
   data() {
     return {
       testExpression: {

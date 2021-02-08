@@ -75,7 +75,7 @@
       @hide="resetEditValues"
       @ok="applyEditValuesFromOk"
     >
-      <template v-slot:modal-header>
+      <template #modal-header>
         <h4>Edit node</h4>
         <b-form-group
           label="Type:"
@@ -181,6 +181,7 @@ export default {
   name: 'CombinedMetricNode',
   props: {
     expression: {
+      type: Object,
       default() {
         return {}
       },
@@ -305,9 +306,7 @@ export default {
       this.applyEditValues()
     },
     checkFormValidity() {
-      const valid = this.$refs.editModalForm.checkValidity()
-
-      return valid
+      return this.$refs.editModalForm.checkValidity()
     },
     applyEditValues() {
       // Exit when the form isn't valid
