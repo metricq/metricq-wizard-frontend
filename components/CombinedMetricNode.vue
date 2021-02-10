@@ -181,7 +181,7 @@ export default {
   name: 'CombinedMetricNode',
   props: {
     expression: {
-      type: Object,
+      type: [Object, String],
       default() {
         return {}
       },
@@ -195,8 +195,6 @@ export default {
     const type = this.getExpressionType(this.expression)
     return {
       id: null,
-      hasSubNodes: ['binary', 'multi', 'throttle'].includes(type),
-      canAddSubNodes: type === 'multi',
       editValues: {
         type: type === 'binary' || type === 'multi' ? 'operation' : type,
         operation:
@@ -238,6 +236,14 @@ export default {
     },
     metrics() {
       return Metric.query().get()
+    },
+    hasSubNodes() {
+      return ['binary', 'multi', 'throttle'].includes(
+        this.getExpressionType(this.expression)
+      )
+    },
+    canAddSubNodes() {
+      return this.getExpressionType(this.expression) === 'multi'
     },
   },
   watch: {},
