@@ -12,6 +12,7 @@ export default class Transformer extends Model {
   static fields() {
     return {
       id: this.string().nullable(),
+      isCombinator: this.boolean(),
     }
   }
 
