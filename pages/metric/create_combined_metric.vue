@@ -2,7 +2,7 @@
   <div>
     <b-row>
       <b-col>
-        <h1>Create combined metric</h1>
+        <h1>{{ editing ? 'Edit' : 'Create' }} combined metric</h1>
       </b-col>
     </b-row>
     <b-row class="mb-1">
@@ -19,7 +19,7 @@
             v-model="combinator"
             :state="!!combinator"
             :options="combinators"
-            :disabled="!combinatorChangeable"
+            :disabled="editing"
             :value="null"
             required
             class="w-100"
@@ -47,7 +47,7 @@
             id="inputMetric"
             v-model="metric"
             :state="!!metric"
-            :disabled="!combinatorChangeable"
+            :disabled="editing"
             value=""
             required
             class="w-100"
@@ -110,7 +110,7 @@ export default {
   asyncData({ params }) {
     return {
       expression: params.expression || null,
-      combinatorChangeable: params.expression == null,
+      editing: !!params.combinator && !!params.metric,
       combinator: params.combinator || null,
       metric: params.metric || '',
       saving: false,
