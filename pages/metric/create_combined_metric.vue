@@ -122,6 +122,7 @@ export default {
     },
     combinators() {
       return Transformer.query()
+        .where('isCombinator', true)
         .all()
         .map((transformer) => transformer.id)
     },
