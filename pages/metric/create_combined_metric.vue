@@ -140,9 +140,52 @@ export default {
       })
   },
   methods: {
-    saveAll() {
+    async saveAll() {
+      this.saving = true
       console.log(this.expression)
-      // TODO
+      try {
+        if (this.editing) {
+          await this.$axios.patch(
+            `/transformer/${this.combinator}/${this.metric}`,
+            {
+              expression: this.expression,
+            }
+          )
+          this.askForReconfigure()
+        } else {
+          await this.$axios.put(
+            `/transformer/${this.combinator}/${this.metric}`,
+            {
+              expression: this.expression,
+            }
+          )
+          this.askForReconfigure()
+        }
+      } catch (error) {
+        this.$toast.error(`Saving combined metric failed!`)
+      }
+      this.saving = false
+    },
+    askForReconfigure() {
+      this.$bvModal
+        .msgBoxConfirm(
+          `Reconfigure following combinator?\n${this.combinator}`,
+          {
+            title: 'Please Confirm',
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            okTitle: 'YES',
+            cancelTitle: 'NO',
+            footerClass: 'p-2',
+            hideHeaderClose: false,
+            centered: true,
+          }
+        )
+        .then((value) => {
+          if (value) {
+            Transformer.api().reconfigureById(this.combinator)
+          }
+        })
     },
   },
 }

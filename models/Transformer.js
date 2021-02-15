@@ -17,6 +17,10 @@ export default class Transformer extends Model {
   }
 
   static apiConfig = {
-    actions: {},
+    actions: {
+      reconfigureById(id) {
+        return this.post(`/client/${id}/reconfigure`)
+      },
+    },
   }
 }
