@@ -127,6 +127,18 @@ export default {
         .map((transformer) => transformer.id)
     },
   },
+  async mounted() {
+    Transformer.commit((state) => {
+      state.fetching = true
+    })
+    await Transformer.api()
+      .get('/transformers')
+      .finally(() => {
+        Transformer.commit((state) => {
+          state.fetching = false
+        })
+      })
+  },
   methods: {
     saveAll() {
       console.log(this.expression)
