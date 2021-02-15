@@ -255,14 +255,57 @@
         >
           Configure database
         </b-button>
-        <b-button
-          :to="{
+        <b-dropdown
+          split
+          :split-to="{
             name: 'metric-create_combined_metric',
           }"
+          text="Create new combined metric"
           class="float-right mr-1"
         >
-          Create new combined metric
-        </b-button>
+          <b-dropdown-item
+            :to="{
+              name: 'metric-create_combined_metric',
+              params: {
+                expression: {
+                  operation: 'sum',
+                  inputs: selected.map((item) => item.id),
+                },
+              },
+            }"
+            :disabled="selected.length === 0"
+          >
+            Create sum metric from selected
+          </b-dropdown-item>
+          <b-dropdown-item
+            :to="{
+              name: 'metric-create_combined_metric',
+              params: {
+                expression: {
+                  operation: 'min',
+                  inputs: selected.map((item) => item.id),
+                },
+              },
+            }"
+            :disabled="selected.length === 0"
+          >
+            Create min metric from selected
+          </b-dropdown-item>
+          <b-dropdown-item
+            :to="{
+              name: 'metric-create_combined_metric',
+              params: {
+                expression: {
+                  operation: 'max',
+                  inputs: selected.map((item) => item.id),
+                },
+              },
+            }"
+            :disabled="selected.length === 0"
+          >
+            Create max metric from selected
+          </b-dropdown-item>
+        </b-dropdown>
       </b-col>
     </b-row>
   </div>
