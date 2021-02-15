@@ -453,7 +453,16 @@ export default {
           source: this.loadSelectedTransformer,
         },
         {
-          dataTransformer: Metric.convertMetricListResponse,
+          dataTransformer: (response) => {
+            return Metric.convertMetricListResponse(response).map(
+              (currentValue) => {
+                return {
+                  ...currentValue,
+                  sourceType: 'transformer',
+                }
+              }
+            )
+          },
         }
       )
       Metric.commit((state) => {
