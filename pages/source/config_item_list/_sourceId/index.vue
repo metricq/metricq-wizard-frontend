@@ -48,7 +48,7 @@
       sort-icon-left
       hover
     >
-      <template v-slot:cell(actions)="data">
+      <template #cell(actions)="data">
         <b-button
           :to="{
             name: 'source-config_item_list-sourceId-configItemId',

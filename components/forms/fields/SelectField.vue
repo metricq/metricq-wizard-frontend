@@ -11,7 +11,7 @@
       required
       @input="$emit('input', $event)"
     >
-      <template v-if="insertChoose" v-slot:first>
+      <template v-if="insertChoose" #first>
         <option :value="undefined">Choose...</option>
       </template>
     </b-form-select>

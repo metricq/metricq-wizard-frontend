@@ -8,7 +8,7 @@
     <b-row>
       <b-col>
         <FormGenerator v-model="formData" :schema="schema">
-          <template v-slot:actions>
+          <template #actions>
             <b-button
               :to="{
                 name: 'source-config_item_list-sourceId',
@@ -42,8 +42,8 @@ import FormGenerator from '~/components/forms/FormGenerator'
 import Source from '~/models/Source'
 
 export default {
-  layout: 'nonfluid',
   components: { FormGenerator },
+  layout: 'nonfluid',
   async asyncData({ $axios, params }) {
     const { data } = await $axios.get(
       `/source/${params.sourceId}/config_items/input_form`
