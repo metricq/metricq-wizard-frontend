@@ -81,7 +81,7 @@ import Metric from '~/models/Metric'
 
 export default {
   name: 'MetricTable',
-  props: ['filter', 'historic', 'pageSize', 'disableFuzzy', 'unit'],
+  props: ['filter', 'historic', 'pageSize', 'disableFuzzy', 'unit', 'rate'],
   data() {
     return {
       currentTableItems: [],
@@ -115,6 +115,9 @@ export default {
       }
       if (this.unit != null) {
         metricQuery = metricQuery.where('unit', this.unit)
+      }
+      if (this.rate != null) {
+        metricQuery = metricQuery.where('rate', this.rate)
       }
       if (this.filter) {
         if (this.disableFuzzy) {

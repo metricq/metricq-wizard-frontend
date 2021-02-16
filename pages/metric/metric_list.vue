@@ -163,6 +163,22 @@
         </b-col>
         <b-col>
           <b-form-group
+            label="Rate"
+            label-cols-sm="3"
+            label-align-sm="right"
+            label-for="rateFilter"
+            class="mb-0"
+          >
+            <b-form-select
+              id="rateFilter"
+              v-model="filterRate"
+              :options="metricRates"
+              :value="null"
+            />
+          </b-form-group>
+        </b-col>
+        <b-col>
+          <b-form-group
             label="DB Status"
             label-cols-sm="3"
             label-align-sm="right"
@@ -223,6 +239,7 @@
       :filter="filterString"
       :historic="filterHistoric"
       :unit="filterUnits"
+      :rate="filterRate"
       :page-size="pageSize"
       :disable-fuzzy="disableFuzzy"
     />
@@ -263,6 +280,7 @@ export default {
         { value: false, text: 'Not in DB' },
       ],
       filterUnits: null,
+      filterRate: null,
       loadSelectedDatabase: null,
       loadSelectedSource: null,
       loadSelectedTransformer: null,
@@ -323,6 +341,30 @@ export default {
 
           return 0
         })
+    },
+    metricRates() {
+      return Array.from(
+        new Set(
+          Metric.query()
+            .all()
+            .map((value) => {
+              if (value.rate === undefined) {
+                return null
+              } else {
+                return value.rate
+              }
+            })
+            .concat([null])
+        )
+      )
+        .map((value) => {
+          if (value == null) {
+            return { value: null, text: 'Any' }
+          } else {
+            return { value, text: value }
+          }
+        })
+        .sort()
     },
   },
   async mounted() {
