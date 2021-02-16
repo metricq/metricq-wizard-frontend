@@ -20,6 +20,7 @@ export default class Metric extends Model {
       source: this.string().nullable(),
       sourceRef: this.belongsTo(Source, 'source'),
       historic: this.boolean(false),
+      lastMetadataUpdateStr: this.string().nullable(),
       additionalMetadata: this.attr().nullable(),
       // Database settings
       databaseId: this.string().nullable(),
@@ -33,6 +34,10 @@ export default class Metric extends Model {
     }
   }
 
+  get lastMetadataUpdate() {
+    return new Date(this.lastMetadataUpdateStr)
+  }
+
   static convertMetricListResponse({ data, headers }) {
     return data.map((currentValue) => {
       const {
@@ -42,6 +47,7 @@ export default class Metric extends Model {
         source,
         rate,
         historic,
+        date,
         ...unfilteredAdditionalMetadata
       } = currentValue
       const additionalMetadata = Object.keys(unfilteredAdditionalMetadata)
@@ -57,6 +63,7 @@ export default class Metric extends Model {
         source,
         historic,
         rate,
+        lastMetadataUpdateStr: date,
         additionalMetadata,
       }
     })

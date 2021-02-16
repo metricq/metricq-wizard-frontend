@@ -46,6 +46,13 @@
               {{ data.item.source }}
             </b-link>
           </template>
+          <template v-slot:cell(lastMetadataUpdate)="data">
+            {{
+              data.item.lastMetadataUpdate
+                ? data.item.lastMetadataUpdate.toLocaleString()
+                : ''
+            }}
+          </template>
           <template v-slot:cell(state)="data">
             <b-badge v-if="data.item.historic"> Saved in DB </b-badge>
           </template>
@@ -99,6 +106,7 @@ export default {
         { key: 'description', sortable: true },
         { key: 'unit', sortable: true },
         { key: 'source', sortable: true },
+        { key: 'lastMetadataUpdate', sortable: true },
         { key: 'state', sortable: true },
         { key: 'show_metadata', sortable: false },
       ],
