@@ -34,6 +34,22 @@
         >
           <b-icon-trash scale="1.5" />
         </b-button>
+        <b-button
+          v-if="outdentable"
+          variant="outline-danger"
+          size="sm"
+          @click="$emit('outdentExpression')"
+        >
+          <b-icon-arrow90deg-left />
+        </b-button>
+        <b-button
+          v-if="indentable"
+          variant="outline-secondary"
+          size="sm"
+          @click="indentExpression"
+        >
+          <b-icon-arrow-return-right />
+        </b-button>
       </span>
     </div>
     <b-collapse
@@ -48,8 +64,10 @@
           :key="'cmn-' + index + '-' + getKeyFromExpression(input)"
           :expression="input"
           :deletable="type === 'multi'"
+          :outdentable="type === 'throttle'"
           @changeExpression="updateSubexpression(index, $event)"
           @deleteExpression="deleteSubexpression(index)"
+          @outdentExpression="outdentSubexpression"
         />
       </b-list-group>
       <div class="w-100">
@@ -190,11 +208,16 @@ export default {
       type: Boolean,
       default: false,
     },
+    outdentable: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     const type = this.getExpressionType(this.expression)
     return {
       id: null,
+      indentable: true,
       editValues: {
         type: type === 'binary' || type === 'multi' ? 'operation' : type,
         operation:
@@ -402,6 +425,21 @@ export default {
             JSON.stringify(this.expression)
         )
         return
+      }
+
+      this.$emit('changeExpression', expression)
+    },
+    outdentSubexpression() {
+      const expression = JSON.parse(JSON.stringify(this.expression))
+
+      this.$emit('changeExpression', expression.input)
+    },
+    indentExpression() {
+      const subExpression = JSON.parse(JSON.stringify(this.expression))
+      const expression = {
+        operation: 'throttle',
+        cooldown_period: '0',
+        input: subExpression,
       }
 
       this.$emit('changeExpression', expression)
