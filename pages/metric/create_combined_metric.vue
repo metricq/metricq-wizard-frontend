@@ -113,6 +113,7 @@ export default {
       editing: !!params.combinator && !!params.metric,
       combinator: params.combinator || null,
       metric: params.metric || '',
+      configHash: params.configHash || null,
       saving: false,
     }
   },
@@ -149,6 +150,7 @@ export default {
             `/transformer/${this.combinator}/${this.metric}`,
             {
               expression: this.expression,
+              configHash: this.configHash,
             }
           )
           this.askForReconfigure()

@@ -216,6 +216,7 @@ export default {
               expression: data.expression,
               combinator: data.transformerId,
               metric: data.metric,
+              configHash: data.configHash,
             },
           })
         }
