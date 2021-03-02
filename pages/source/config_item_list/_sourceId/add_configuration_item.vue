@@ -44,9 +44,14 @@ import Source from '~/models/Source'
 export default {
   components: { FormGenerator },
   layout: 'nonfluid',
-  async asyncData({ $axios, params }) {
+  async asyncData({ $axios, params, store }) {
     const { data } = await $axios.get(
-      `/source/${params.sourceId}/config_items/input_form`
+      `/source/${params.sourceId}/config_items/input_form`,
+      {
+        params: {
+          session: store.state.session.sessionKey,
+        },
+      }
     )
     return {
       sourceId: params.sourceId,
@@ -68,7 +73,12 @@ export default {
       this.adding = true
       const { status } = await this.$axios.post(
         `/source/${this.sourceId}/config_items`,
-        formData
+        formData,
+        {
+          params: {
+            session: this.$store.state.session.sessionKey,
+          },
+        }
       )
       if (status === 200) {
         this.$toast.success('Added configuration item!')
