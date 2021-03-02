@@ -44,16 +44,26 @@ import Source from '~/models/Source'
 export default {
   components: { FormGenerator },
   layout: 'nonfluid',
-  async asyncData({ $axios, params }) {
+  async asyncData({ $axios, params, store }) {
     const { data: schema } = await $axios.get(
       `/source/${params.sourceId}/config_item/${encodeURIComponent(
         params.configItemId
-      )}/input_form`
+      )}/input_form`,
+      {
+        params: {
+          session: store.state.session.sessionKey,
+        },
+      }
     )
     const { data: formData } = await $axios.get(
       `/source/${params.sourceId}/config_item/${encodeURIComponent(
         params.configItemId
-      )}`
+      )}`,
+      {
+        params: {
+          session: store.state.session.sessionKey,
+        },
+      }
     )
     return {
       sourceId: params.sourceId,
@@ -77,7 +87,12 @@ export default {
         `/source/${this.sourceId}/config_item/${encodeURIComponent(
           this.$route.params.configItemId
         )}`,
-        formData
+        formData,
+        {
+          params: {
+            session: this.$store.state.session.sessionKey,
+          },
+        }
       )
       if (status === 200) {
         this.$toast.success('Updated configuration item!')
