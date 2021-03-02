@@ -90,8 +90,15 @@ import Source from '~/models/Source'
 
 export default {
   components: {},
-  async asyncData({ $axios, params }) {
-    const { data } = await $axios.get(`/source/${params.sourceId}/config_items`)
+  async asyncData({ $axios, params, store }) {
+    const { data } = await $axios.get(
+      `/source/${params.sourceId}/config_items`,
+      {
+        params: {
+          session: store.state.session.sessionKey,
+        },
+      }
+    )
     await Source.update({
       where: params.sourceId,
       data: { configItemName: data.configItemName },
@@ -124,12 +131,22 @@ export default {
       )
       if (answer) {
         const { status } = await this.$axios.delete(
-          `/source/${this.id}/config_item/${encodeURIComponent(configItem.id)}`
+          `/source/${this.id}/config_item/${encodeURIComponent(configItem.id)}`,
+          {
+            params: {
+              session: this.$store.state.session.sessionKey,
+            },
+          }
         )
         if (status === 200) {
           this.$toast.success('Deleted configuration item!')
           const { data } = await this.$axios.get(
-            `/source/${this.id}/config_items`
+            `/source/${this.id}/config_items`,
+            {
+              params: {
+                session: this.$store.state.session.sessionKey,
+              },
+            }
           )
           this.configurationItems = data
         } else {
