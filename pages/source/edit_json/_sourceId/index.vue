@@ -44,8 +44,8 @@
 <script>
 import Source from '~/models/Source'
 export default {
-  layout: 'nonfluid',
   components: {},
+  layout: 'nonfluid',
   async asyncData({ $axios, params }) {
     const { data } = await $axios.get(`/source/${params.sourceId}/raw_config`)
 

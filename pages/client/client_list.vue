@@ -17,10 +17,10 @@
           striped
           hover
         >
-          <template v-slot:head(actions)="data">
+          <template #head(actions)="data">
             <span class="float-right">{{ data.label }}</span>
           </template>
-          <template v-slot:cell(actions)="data">
+          <template #cell(actions)="data">
             <b-button
               size="sm float-right"
               variant="danger"
@@ -38,13 +38,13 @@
 <script>
 export default {
   layout: 'nonfluid',
-  fetch() {},
   async asyncData({ $axios }) {
     const { data } = await $axios.get(`/clients`)
     return {
       clients: data,
     }
   },
+  fetch() {},
   computed: {},
   methods: {
     async reconfigureClient(clientId) {

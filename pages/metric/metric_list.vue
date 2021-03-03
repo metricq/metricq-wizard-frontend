@@ -24,7 +24,7 @@
                 :value="null"
                 disabled
               >
-                <template v-slot:first>
+                <template #first>
                   <b-form-select-option :value="null" disabled>
                     Choose...
                   </b-form-select-option>
@@ -57,7 +57,7 @@
                 :options="sources"
                 :value="null"
               >
-                <template v-slot:first>
+                <template #first>
                   <b-form-select-option :value="null" disabled>
                     Choose...
                   </b-form-select-option>
@@ -90,7 +90,7 @@
                 :options="transformers"
                 :value="null"
               >
-                <template v-slot:first>
+                <template #first>
                   <b-form-select-option :value="null" disabled>
                     Choose...
                   </b-form-select-option>
@@ -141,7 +141,7 @@
               </b-button>
             </b-input-group-append>
           </b-input-group>
-          <b-form-checkbox v-model="disableFuzzy" id="disableFuzzyInput">
+          <b-form-checkbox id="disableFuzzyInput" v-model="disableFuzzy">
             Only search id and source with disabled fuzzy search
           </b-form-checkbox>
         </b-col>

@@ -18,13 +18,13 @@
           sort-icon-left
           hover
         >
-          <template v-slot:cell(select)="data">
+          <template #cell(select)="data">
             <b-checkbox v-model="data.item.selected" />
           </template>
-          <template v-slot:cell(id)="data">
+          <template #cell(id)="data">
             {{ data.value }}
           </template>
-          <template v-slot:cell()="data">
+          <template #cell()="data">
             <FormGenerator
               v-model="data.item.customColumnsValues[data.field.key]"
               :schema="data.item.customColumns[data.field.key]"

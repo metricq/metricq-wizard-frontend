@@ -23,7 +23,7 @@
             required
             class="w-100"
           >
-            <template v-slot:first>
+            <template #first>
               <b-form-select-option :value="null" disabled>
                 Choose...
               </b-form-select-option>
@@ -65,7 +65,7 @@
             hover
             show-empty
           >
-            <template v-slot:cell(intervalMin)="data">
+            <template #cell(intervalMin)="data">
               <b-form-input
                 :id="'input-interval-min-' + data.item.id"
                 :ref="'input-interval-min-' + data.item.id"
@@ -82,7 +82,7 @@
                 placeholder="duration, e.g. 10s"
               />
             </template>
-            <template v-slot:cell(intervalMax)="data">
+            <template #cell(intervalMax)="data">
               <b-form-input
                 :id="'input-interval-max-' + data.item.id"
                 :ref="'input-interval-max-' + data.item.id"
@@ -99,7 +99,7 @@
                 placeholder="duration, e.g. 10s"
               />
             </template>
-            <template v-slot:cell(intervalFactor)="data">
+            <template #cell(intervalFactor)="data">
               <b-form-input
                 :id="'input-interval-factor-' + data.item.id"
                 ref="intervalMinFormField"

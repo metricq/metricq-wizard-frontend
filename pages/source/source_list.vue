@@ -17,10 +17,10 @@
           sort-icon-left
           striped
         >
-          <template v-slot:head(actions)="data">
+          <template #head(actions)="data">
             <span class="float-right">{{ data.label }}</span>
           </template>
-          <template v-slot:cell(actions)="data">
+          <template #cell(actions)="data">
             <b-button
               v-b-tooltip.hover
               size="sm"
@@ -68,6 +68,11 @@ import Source from '~/models/Source'
 
 export default {
   layout: 'nonfluid',
+  data() {
+    return {
+      tableFields: [{ key: 'id', label: 'Source' }, 'type', 'actions'],
+    }
+  },
   async fetch() {
     Source.commit((state) => {
       state.fetching = true
@@ -76,11 +81,6 @@ export default {
     Source.commit((state) => {
       state.fetching = false
     })
-  },
-  data() {
-    return {
-      tableFields: [{ key: 'id', label: 'Source' }, 'type', 'actions'],
-    }
   },
   computed: {
     sources() {
