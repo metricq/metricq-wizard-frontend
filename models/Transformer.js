@@ -12,10 +12,15 @@ export default class Transformer extends Model {
   static fields() {
     return {
       id: this.string().nullable(),
+      isCombinator: this.boolean(),
     }
   }
 
   static apiConfig = {
-    actions: {},
+    actions: {
+      reconfigureById(id) {
+        return this.post(`/client/${id}/reconfigure`)
+      },
+    },
   }
 }

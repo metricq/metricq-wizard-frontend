@@ -56,9 +56,16 @@
           <template #cell(state)="data">
             <b-badge v-if="data.item.historic"> Saved in DB </b-badge>
           </template>
-          <template #cell(show_metadata)="row">
+          <template #cell(actions)="row">
             <b-button size="sm" class="mr-2" @click="row.toggleDetails">
               {{ row.detailsShowing ? 'Hide' : 'Show' }} Metadata
+            </b-button>
+            <b-button
+              size="sm"
+              @click="editCombinedMetric(row.item)"
+              v-if="row.item.sourceRef.isCombinator"
+            >
+              Edit expression
             </b-button>
           </template>
 
@@ -108,7 +115,7 @@ export default {
         { key: 'source', sortable: true },
         { key: 'lastMetadataUpdate', sortable: true },
         { key: 'state', sortable: true },
-        { key: 'show_metadata', sortable: false },
+        { key: 'actions', sortable: false },
       ],
     }
   },
@@ -195,6 +202,31 @@ export default {
         item.selected = false
         item.$save()
       })
+    },
+    async editCombinedMetric(item) {
+      try {
+        const { status, data } = await this.$axios.get(
+          `/transformer/${item.source}/${item.id}`
+        )
+        if (status === 200) {
+          console.log(data)
+          await this.$router.push({
+            name: 'metric-create_combined_metric',
+            params: {
+              expression: data.expression,
+              combinator: data.transformerId,
+              metric: data.metric,
+              configHash: data.configHash,
+            },
+          })
+        }
+      } catch (error) {
+        if (error.response.status === 404) {
+          this.$toast.error(`Metric not found in combinator config!`)
+        } else {
+          this.$toast.error(`Getting metric expression failed!`)
+        }
+      }
     },
   },
 }
