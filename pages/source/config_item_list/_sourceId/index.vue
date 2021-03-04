@@ -135,8 +135,6 @@ export default {
         } else {
           this.$toast.error('Deleting configuration item failed!')
         }
-      } else {
-        console.log('Do not delete config item')
       }
     },
   },

@@ -72,7 +72,6 @@ export default {
       const formData = {
         ...this.formData,
       }
-      console.log(formData)
       this.updating = true
       const { status } = await this.$axios.post(
         `/source/${this.sourceId}/config_item/${encodeURIComponent(

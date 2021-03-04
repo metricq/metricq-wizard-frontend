@@ -143,7 +143,6 @@ export default {
   methods: {
     async saveAll() {
       this.saving = true
-      console.log(this.expression)
       try {
         if (this.editing) {
           await this.$axios.patch(

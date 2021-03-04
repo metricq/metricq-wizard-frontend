@@ -65,7 +65,6 @@ export default {
         formData[fieldId] = this.schema[fieldId].value
       }
     }
-    console.log(formData)
     this.$emit('input', formData)
     return {
       formData,

@@ -66,7 +66,6 @@ export default {
       const formData = {
         ...this.formData,
       }
-      console.log(formData)
       this.updating = true
       const { status } = await this.$axios.post(
         `/source/${this.sourceId}`,
@@ -100,8 +99,6 @@ export default {
               'Saving configuration or source reconfiguration failed!'
             )
           }
-        } else {
-          console.log('Do not restart source')
         }
         this.$router.back()
       } else {

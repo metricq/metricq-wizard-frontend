@@ -65,7 +65,6 @@ export default {
       const formData = {
         ...this.formData,
       }
-      console.log(formData)
       this.adding = true
       const { status } = await this.$axios.post(
         `/source/${this.sourceId}/config_items`,

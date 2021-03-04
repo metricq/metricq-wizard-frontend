@@ -244,10 +244,7 @@ export default {
           )
           .then((value) => {
             if (value) {
-              console.log(`Restarting ${this.selectedDatabase}`)
               Database.api().reconfigureById(this.selectedDatabase)
-            } else {
-              console.log('Do not restart database')
             }
           })
       }

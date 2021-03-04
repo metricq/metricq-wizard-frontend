@@ -193,8 +193,6 @@ export default {
               'Saving configuration or source reconfiguration failed!'
             )
           }
-        } else {
-          console.log('Do not restart source')
         }
         this.$router.back()
       }

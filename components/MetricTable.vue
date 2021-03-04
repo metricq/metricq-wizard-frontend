@@ -215,7 +215,6 @@ export default {
           `/transformer/${item.source}/${item.id}`
         )
         if (status === 200) {
-          console.log(data)
           await this.$router.push({
             name: 'metric-create_combined_metric',
             params: {
