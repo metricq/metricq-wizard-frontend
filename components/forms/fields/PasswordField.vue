@@ -6,6 +6,7 @@
       type="password"
       required
       placeholder="duration, e.g. 10s"
+      :size="size"
       :value="data"
       @input="$emit('input', $event)"
     />
@@ -15,7 +16,25 @@
 <script>
 export default {
   name: 'PasswordField',
-  props: ['id', 'field', 'data', 'inline'],
+  props: {
+    id: {
+      type: String,
+      required: true,
+    },
+    field: {
+      type: Object,
+      required: true,
+    },
+    data: {
+      type: String,
+      default: null,
+    },
+    inline: Boolean,
+    size: {
+      type: String,
+      default: 'md',
+    },
+  },
   data() {
     return {
       outerClass: this.inline ? 'mb-2 mr-sm-2 mb-sm-0' : '',

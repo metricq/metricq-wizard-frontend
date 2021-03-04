@@ -61,9 +61,9 @@
               {{ row.detailsShowing ? 'Hide' : 'Show' }} Metadata
             </b-button>
             <b-button
+              v-if="row.item.sourceRef.isCombinator"
               size="sm"
               @click="editCombinedMetric(row.item)"
-              v-if="row.item.sourceRef.isCombinator"
             >
               Edit expression
             </b-button>
@@ -94,7 +94,14 @@ import Metric from '~/models/Metric'
 
 export default {
   name: 'MetricTable',
-  props: ['filter', 'historic', 'pageSize', 'disableFuzzy', 'unit', 'rate'],
+  props: {
+    filter: { type: String, default: null },
+    historic: { type: Boolean, default: null },
+    pageSize: { type: Number, default: 20 },
+    disableFuzzy: { type: Boolean, default: false },
+    unit: { type: String, default: null },
+    rate: { type: Number, default: null },
+  },
   data() {
     return {
       currentTableItems: [],

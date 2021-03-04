@@ -40,10 +40,19 @@ export default {
     LabelField,
   },
   props: {
-    schema: {},
-    value: {},
+    schema: {
+      type: Object,
+      required: true,
+    },
+    value: {
+      type: Object,
+      default: null,
+    },
     inline: Boolean,
-    size: {},
+    size: {
+      type: String,
+      default: 'md',
+    },
     hideLabels: Boolean,
     disableActions: Boolean,
   },

@@ -22,13 +22,22 @@
 export default {
   name: 'SelectField',
   props: {
-    id: String,
-    field: Object,
-    data: {},
+    id: {
+      type: String,
+      required: true,
+    },
+    field: {
+      type: Object,
+      required: true,
+    },
+    data: {
+      type: [String, Number],
+      default: undefined,
+    },
     inline: Boolean,
     size: {
       type: String,
-      default: '',
+      default: 'md',
     },
     hideLabel: {
       type: Boolean,
