@@ -392,10 +392,6 @@ export default {
       } else if (this.type === 'multi') {
         expression.inputs[index] = subExpression
       } else {
-        console.log(
-          "Error can't update sub expression for " +
-            JSON.stringify(this.expression)
-        )
         return
       }
 
@@ -406,10 +402,6 @@ export default {
       if (this.type === 'multi') {
         expression.inputs.splice(index, 1)
       } else {
-        console.log(
-          "Error can't delete sub expression for " +
-            JSON.stringify(this.expression)
-        )
         return
       }
 
@@ -420,10 +412,6 @@ export default {
       if (this.type === 'multi') {
         expression.inputs.push(null)
       } else {
-        console.log(
-          "Error can't add sub expression for " +
-            JSON.stringify(this.expression)
-        )
         return
       }
 

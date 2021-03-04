@@ -10,4 +10,4 @@ jobs:
     - name: Install dependecies
       run: yarn
     - name: Run lint script
-      run: yarn lint
+      run: yarn lint --max-warnings 0
