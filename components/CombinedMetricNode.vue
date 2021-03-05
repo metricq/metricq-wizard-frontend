@@ -74,8 +74,8 @@
           @outdentExpression="outdentSubexpression"
         />
         <b-list-group-item
-          class="flex-column align-items-start"
           v-if="inputs.length === 0"
+          class="flex-column align-items-start"
         >
           <span class="text-danger">Missing inputs!</span>
         </b-list-group-item>
