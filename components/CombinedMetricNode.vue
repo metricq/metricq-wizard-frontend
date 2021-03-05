@@ -135,7 +135,9 @@
             <b-form-input
               :id="'edit-modal-metric-input' + id"
               v-model="editValues.metric"
+              :state="!!editValues.metric"
               list="metrics-list"
+              required
             />
             <datalist id="metrics-list">
               <option v-for="metric in metrics" :key="metric.id">
@@ -153,7 +155,9 @@
             <b-form-input
               :id="'edit-modal-number-input' + id"
               v-model="editValues.number"
+              :state="!!editValues.number"
               type="number"
+              required
             />
           </b-form-group>
         </div>
@@ -166,6 +170,8 @@
             <b-select
               :id="'edit-modal-modal-operation-select' + id"
               v-model="editValues.operation"
+              :state="!!editValues.operation"
+              required
             >
               <b-form-select-option :value="null" disabled>
                 Choose...
@@ -189,6 +195,8 @@
             <b-form-input
               :id="'edit-modal-throttle-input' + id"
               v-model="editValues.cooldownPeriod"
+              :state="!!editValues.cooldownPeriod"
+              required
             />
           </b-form-group>
         </div>
@@ -321,7 +329,11 @@ export default {
       }
       return inputs
     },
-    resetEditValues() {
+    resetEditValues(bvModalEvt) {
+      if (bvModalEvt.trigger === 'ok') {
+        return
+      }
+
       this.editValues = {
         type:
           this.type === 'binary' || this.type === 'multi'
