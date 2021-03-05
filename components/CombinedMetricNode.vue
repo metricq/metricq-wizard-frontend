@@ -194,8 +194,14 @@
           >
             <b-form-input
               :id="'edit-modal-throttle-input' + id"
+              :ref="'edit-modal-throttle-input' + id"
               v-model="editValues.cooldownPeriod"
-              :state="!!editValues.cooldownPeriod"
+              :state="
+                verifyInterval(
+                  'edit-modal-throttle-input' + id,
+                  editValues.cooldownPeriod
+                )
+              "
               required
             />
           </b-form-group>
@@ -213,6 +219,7 @@
 
 <script>
 import Metric from '@/models/Metric'
+import timestring from 'timestring'
 
 export default {
   name: 'CombinedMetricNode',
@@ -488,6 +495,27 @@ export default {
       }
 
       this.$emit('changeExpression', expression)
+    },
+    verifyInterval(ref, interval) {
+      try {
+        if (Number(interval)) {
+          if (this.$refs[ref]) {
+            this.$refs[ref].setCustomValidity('')
+          }
+          return true
+        }
+
+        timestring(interval, 'ms', null)
+        if (this.$refs[ref]) {
+          this.$refs[ref].setCustomValidity('')
+        }
+        return true
+      } catch {
+        if (this.$refs[ref]) {
+          this.$refs[ref].setCustomValidity('Wrong duration string format')
+        }
+        return false
+      }
     },
   },
 }
