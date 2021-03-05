@@ -202,7 +202,10 @@
         </div>
       </form>
       <div v-if="willReduceInputs">
-        <b class="text-danger">This will reduce the inputs!</b>
+        <b class="text-danger">
+          This will reduce the inputs count from {{ oldInputCount }} to
+          {{ newInputCount }}!
+        </b>
       </div>
     </b-modal>
   </b-list-group-item>
@@ -253,14 +256,17 @@ export default {
         return false
       }
       if (this.editValues.type === 'empty') {
-        return true
+        return this.inputs.length !== 0
       }
       if (
         this.editValues.type === 'metric' ||
         this.editValues.type === 'number' ||
         this.editValues.type === 'throttle'
       ) {
-        return this.inputs.length > 1
+        return (
+          this.inputs.length > 1 &&
+          !this.inputs.reduce((acc, curr) => acc && curr == null, true)
+        )
       }
       if (['+', '-', '*', '/'].includes(this.editValues.operation)) {
         return this.inputs.length > 2
@@ -283,6 +289,25 @@ export default {
     },
     canAddSubNodes() {
       return this.getExpressionType(this.expression) === 'multi'
+    },
+    newInputCount() {
+      if (this.editValues.type === 'empty') {
+        return 0
+      }
+      if (
+        this.editValues.type === 'metric' ||
+        this.editValues.type === 'number' ||
+        this.editValues.type === 'throttle'
+      ) {
+        return 1
+      }
+      if (['+', '-', '*', '/'].includes(this.editValues.operation)) {
+        return 2
+      }
+      return this.inputs.length
+    },
+    oldInputCount() {
+      return this.inputs.length
     },
   },
   watch: {},
