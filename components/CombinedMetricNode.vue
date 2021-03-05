@@ -1,7 +1,11 @@
 <template>
   <b-list-group-item class="flex-column align-items-start">
     <div>
-      <b-link v-if="hasSubNodes" v-b-toggle="'subnodes-collapse-' + id">
+      <b-link
+        v-if="hasSubNodes"
+        v-b-toggle="'subnodes-collapse-' + id"
+        class="no-underline"
+      >
         <span class="when-opened">
           <b-icon-triangle-fill flip-v />
         </span>
@@ -440,5 +444,8 @@ export default {
 .collapsed > .when-opened,
 :not(.collapsed) > .when-closed {
   display: none;
+}
+.no-underline:hover {
+  text-decoration: none;
 }
 </style>
