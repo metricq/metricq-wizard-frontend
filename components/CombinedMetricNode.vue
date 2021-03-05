@@ -486,13 +486,6 @@ export default {
     },
     verifyInterval(ref, interval) {
       try {
-        if (Number(interval)) {
-          if (this.$refs[ref]) {
-            this.$refs[ref].setCustomValidity('')
-          }
-          return true
-        }
-
         timestring(interval, 'ms', null)
         if (this.$refs[ref]) {
           this.$refs[ref].setCustomValidity('')
