@@ -73,6 +73,12 @@
           @deleteExpression="deleteSubexpression(index)"
           @outdentExpression="outdentSubexpression"
         />
+        <b-list-group-item
+          class="flex-column align-items-start"
+          v-if="inputs.length === 0"
+        >
+          <span class="text-danger">Missing inputs!</span>
+        </b-list-group-item>
       </b-list-group>
       <div class="w-100">
         <span class="float-right mt-1">
