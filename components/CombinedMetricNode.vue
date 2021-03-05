@@ -14,7 +14,7 @@
         </span>
       </b-link>
       <span v-if="type === 'empty'">
-        <em class="text-muted">empty</em>
+        <em class="text-danger">Missing input!</em>
       </span>
       <span v-else-if="type === 'metric'">{{ expression }}</span>
       <span v-else-if="type === 'number'">{{ expression }}</span>
@@ -115,9 +115,7 @@
             :id="'edit-modal-header-type-select' + id"
             v-model="editValues.type"
           >
-            <b-select-option value="empty">
-              <em class="text-muted">empty</em>
-            </b-select-option>
+            <b-select-option value="empty" disabled>empty</b-select-option>
             <b-select-option value="metric">Metric</b-select-option>
             <b-select-option value="number">Number</b-select-option>
             <b-select-option value="operation">
