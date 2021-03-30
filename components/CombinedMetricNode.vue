@@ -155,7 +155,9 @@
             <b-form-input
               :id="'edit-modal-number-input' + id"
               v-model="editValues.number"
-              :state="!!editValues.number"
+              :state="
+                verifyNumber('edit-modal-number-input' + id, editValues.number)
+              "
               type="number"
               required
             />
@@ -225,7 +227,7 @@ export default {
   name: 'CombinedMetricNode',
   props: {
     expression: {
-      type: [Object, String],
+      type: [Object, String, Number],
       default() {
         return {}
       },
@@ -402,7 +404,7 @@ export default {
       } else if (this.editValues.type === 'metric') {
         expression = this.editValues.metric
       } else if (this.editValues.type === 'number') {
-        expression = this.editValues.number
+        expression = Number.parseFloat(this.editValues.number)
       } else if (this.editValues.type === 'throttle') {
         expression = {
           operation: 'throttle',
@@ -494,6 +496,20 @@ export default {
       } catch {
         if (this.$refs[ref]) {
           this.$refs[ref].setCustomValidity('Wrong duration string format')
+        }
+        return false
+      }
+    },
+    verifyNumber(ref, numberString) {
+      try {
+        Number.parseFloat(numberString)
+        if (this.$refs[ref]) {
+          this.$refs[ref].setCustomValidity('')
+        }
+        return true
+      } catch {
+        if (this.$refs[ref]) {
+          this.$refs[ref].setCustomValidity("Can't parse input as float")
         }
         return false
       }
