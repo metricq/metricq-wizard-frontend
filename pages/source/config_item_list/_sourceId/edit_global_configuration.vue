@@ -44,11 +44,20 @@ import Source from '~/models/Source'
 export default {
   components: { FormGenerator },
   layout: 'nonfluid',
-  async asyncData({ $axios, params }) {
+  async asyncData({ $axios, params, store }) {
     const { data: schema } = await $axios.get(
-      `/source/${params.sourceId}/input_form`
+      `/source/${params.sourceId}/input_form`,
+      {
+        params: {
+          session: store.state.session.sessionKey,
+        },
+      }
     )
-    const { data: formData } = await $axios.get(`/source/${params.sourceId}`)
+    const { data: formData } = await $axios.get(`/source/${params.sourceId}`, {
+      params: {
+        session: store.state.session.sessionKey,
+      },
+    })
     return {
       sourceId: params.sourceId,
       schema,
@@ -69,7 +78,12 @@ export default {
       this.updating = true
       const { status } = await this.$axios.post(
         `/source/${this.sourceId}`,
-        formData
+        formData,
+        {
+          params: {
+            session: this.$store.state.session.sessionKey,
+          },
+        }
       )
       if (status === 200) {
         this.$toast.success('Updated global config!')
@@ -88,7 +102,12 @@ export default {
         )
         if (answer) {
           const { status } = await this.$axios.post(
-            `/source/${this.$route.params.sourceId}/save_reconfigure`
+            `/source/${this.$route.params.sourceId}/save_reconfigure`,
+            {
+              params: {
+                session: this.$store.state.session.sessionKey,
+              },
+            }
           )
           if (status === 200) {
             this.$toast.success(

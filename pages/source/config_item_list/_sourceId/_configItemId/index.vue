@@ -76,7 +76,12 @@ export default {
     const { data } = await $axios.get(
       `/source/${params.sourceId}/config_item/${encodeURIComponent(
         params.configItemId
-      )}/metrics`
+      )}/metrics`,
+      {
+        params: {
+          session: this.$store.state.session.sessionKey,
+        },
+      }
     )
     return {
       id: params.sourceId,
@@ -124,6 +129,11 @@ export default {
           notSelectedMetrics: this.availableMetrics
             .filter((el) => !el.selected)
             .map((item) => item.id),
+        },
+        {
+          params: {
+            session: this.$store.state.session.sessionKey,
+          },
         }
       )
       if (status === 200) {
@@ -142,7 +152,12 @@ export default {
         )
         if (answer) {
           const { status } = await this.$axios.post(
-            `/source/${this.$route.params.sourceId}/save_reconfigure`
+            `/source/${this.$route.params.sourceId}/save_reconfigure`,
+            {
+              params: {
+                session: this.$store.state.session.sessionKey,
+              },
+            }
           )
           if (status === 200) {
             this.$toast.success(
