@@ -220,8 +220,8 @@
 </template>
 
 <script>
-import Metric from '@/models/Metric'
 import timestring from 'timestring'
+import Metric from '@/models/Metric'
 
 export default {
   name: 'CombinedMetricNode',
