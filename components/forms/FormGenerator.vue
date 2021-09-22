@@ -29,6 +29,7 @@ import SelectField from './fields/SelectField'
 import PasswordField from './fields/PasswordField'
 import NumberField from './fields/NumberField'
 import LabelField from './fields/LabelField'
+import JSONField from './fields/JSONField'
 
 export default {
   name: 'FormGenerator',
@@ -38,6 +39,7 @@ export default {
     SelectField,
     NumberField,
     LabelField,
+    JSONField,
   },
   props: {
     schema: {
