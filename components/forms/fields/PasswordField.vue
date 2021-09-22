@@ -1,6 +1,8 @@
 <template>
   <div :class="outerClass">
-    <label :for="'passwordfield-' + id">{{ field.label || id }}</label>
+    <label v-if="field.label || id !== '_'" :for="'passwordfield-' + id">
+      {{ field.label || id }}
+    </label>
     <b-form-input
       :id="'passwordfield-' + id"
       type="password"

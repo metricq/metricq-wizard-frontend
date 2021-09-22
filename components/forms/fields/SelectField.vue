@@ -1,8 +1,11 @@
 <template>
   <div :class="outerClass">
-    <label v-if="!hideLabel" :for="'selectfield-' + id">{{
-      field.label || id
-    }}</label>
+    <label
+      v-if="!hideLabel && (field.label || id !== '_')"
+      :for="'selectfield-' + id"
+    >
+      {{ field.label || id }}
+    </label>
     <b-form-select
       :id="'selectfield-' + id"
       :options="field.options"

@@ -1,6 +1,8 @@
 <template>
   <div :class="outerClass">
-    <label :for="'numberfield-' + id">{{ field.label || id }}</label>
+    <label v-if="field.label || id !== '_'" :for="'numberfield-' + id">
+      {{ field.label || id }}
+    </label>
     <b-form-input
       :id="'numberfield-' + id"
       type="number"

@@ -1,6 +1,8 @@
 <template>
   <div :class="outerClass">
-    <label :for="'stringfield-' + id">{{ field.label || id }}</label>
+    <label v-if="field.label || id !== '_'" :for="'stringfield-' + id">
+      {{ field.label || id }}
+    </label>
     <b-form-input
       :id="'stringfield-' + id"
       required
