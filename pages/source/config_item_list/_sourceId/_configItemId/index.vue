@@ -72,14 +72,14 @@ import Source from '~/models/Source'
 
 export default {
   components: { FormGenerator },
-  async asyncData({ $axios, params }) {
+  async asyncData({ $axios, params, store }) {
     const { data } = await $axios.get(
       `/source/${params.sourceId}/config_item/${encodeURIComponent(
         params.configItemId
       )}/metrics`,
       {
         params: {
-          session: this.$store.state.session.sessionKey,
+          session: store.state.session.sessionKey,
         },
       }
     )
@@ -153,6 +153,7 @@ export default {
         if (answer) {
           const { status } = await this.$axios.post(
             `/source/${this.$route.params.sourceId}/save_reconfigure`,
+            {},
             {
               params: {
                 session: this.$store.state.session.sessionKey,
