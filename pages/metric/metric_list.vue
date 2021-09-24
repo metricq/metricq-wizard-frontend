@@ -257,25 +257,15 @@
         </b-button>
         <b-dropdown
           split
-          :split-to="{
-            name: 'metric-create_combined_metric',
-          }"
-          text="Create new combined metric"
+          :split-to="combinedMetricButtonTarget.defaultButton.to"
+          :text="combinedMetricButtonTarget.defaultButton.text"
           class="float-right mr-1"
         >
           <b-dropdown-item
-            :to="{
-              name: 'metric-create_combined_metric',
-              params: {
-                expression: {
-                  operation: 'sum',
-                  inputs: selected.map((item) => item.id),
-                },
-              },
-            }"
+            :to="combinedMetricButtonTarget.firstButton.to"
             :disabled="selected.length === 0"
           >
-            Create sum metric from selected
+            {{ combinedMetricButtonTarget.firstButton.text }}
           </b-dropdown-item>
           <b-dropdown-item
             :to="{
@@ -417,6 +407,32 @@ export default {
           }
         })
         .sort()
+    },
+    combinedMetricButtonTarget() {
+      const emptyMetricButton = {
+        text: 'Create new combined metric',
+        to: {
+          name: 'metric-create_combined_metric',
+        },
+      }
+      const sumMetricButton = {
+        text: 'Create sum metric from selected',
+        to: {
+          name: 'metric-create_combined_metric',
+          params: {
+            expression: {
+              operation: 'sum',
+              inputs: this.selected.map((item) => item.id),
+            },
+          },
+        },
+      }
+      return {
+        defaultButton:
+          this.selected.length === 0 ? emptyMetricButton : sumMetricButton,
+        firstButton:
+          this.selected.length === 0 ? sumMetricButton : emptyMetricButton,
+      }
     },
   },
   async mounted() {
