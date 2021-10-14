@@ -67,7 +67,7 @@
           v-for="(input, index) in inputs"
           :key="'cmn-' + index + '-' + getKeyFromExpression(input)"
           :expression="input"
-          :deletable="type === 'multi'"
+          :deletable="input !== null"
           :outdentable="type === 'throttle'"
           @changeExpression="updateSubexpression(index, $event)"
           @deleteExpression="deleteSubexpression(index)"
@@ -453,7 +453,15 @@ export default {
     },
     deleteSubexpression(index) {
       const expression = JSON.parse(JSON.stringify(this.expression))
-      if (this.type === 'multi') {
+      if (this.type === 'throttle') {
+        expression.input = null
+      } else if (this.type === 'binary') {
+        if (index === 0) {
+          expression.left = null
+        } else if (index === 1) {
+          expression.right = null
+        }
+      } else if (this.type === 'multi') {
         expression.inputs.splice(index, 1)
       } else {
         return
