@@ -131,6 +131,7 @@
             label="Metric:"
             :label-for="'edit-modal-metric-input' + id"
             label-cols="3"
+            description="Searches in local loaded metrics and remote historic metrics (remote limit: 100)."
           >
             <b-form-input
               :id="'edit-modal-metric-input' + id"
@@ -138,6 +139,7 @@
               :state="!!editValues.metric"
               list="metrics-list"
               required
+              debounce="500"
             />
             <datalist id="metrics-list">
               <option v-for="metric in metrics" :key="metric.id">
@@ -257,6 +259,7 @@ export default {
         cooldownPeriod:
           type === 'throttle' ? this.expression.cooldown_period : null,
       },
+      foundMetrics: [],
     }
   },
   computed: {
@@ -289,7 +292,12 @@ export default {
       return this.getInputsForExpression(this.expression)
     },
     metrics() {
-      return Metric.query().get()
+      return Metric.query()
+        .get()
+        .concat(this.foundMetrics)
+        .filter((value, index, self) => {
+          return self.findIndex((element) => element.id === value.id) === index
+        })
     },
     hasSubNodes() {
       return ['binary', 'multi', 'throttle'].includes(
@@ -319,7 +327,22 @@ export default {
       return this.inputs.length
     },
   },
-  watch: {},
+  watch: {
+    'editValues.metric'(newValue) {
+      Metric.api()
+        .get('/metrics', {
+          params: {
+            infix: newValue,
+            limit: 100,
+          },
+          save: false,
+          dataTransformer: Metric.convertMetricListResponse,
+        })
+        .then((result) => {
+          this.foundMetrics = result.getDataFromResponse()
+        })
+    },
+  },
   mounted() {
     this.id = this._uid
   },
