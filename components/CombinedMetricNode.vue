@@ -131,7 +131,7 @@
             label="Metric:"
             :label-for="'edit-modal-metric-input' + id"
             label-cols="3"
-            description="Searches in local loaded metrics and remote historic metrics (remote limit: 100)."
+            description="Searches in locally loaded metrics and all available historic metrics (limit: 100)."
           >
             <b-form-input
               :id="'edit-modal-metric-input' + id"
