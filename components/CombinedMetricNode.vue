@@ -67,7 +67,7 @@
           v-for="(input, index) in inputs"
           :key="'cmn-' + index + '-' + getKeyFromExpression(input)"
           :expression="input"
-          :deletable="input !== null"
+          :deletable="input !== null || canAddSubNodes"
           :outdentable="type === 'throttle'"
           @changeExpression="updateSubexpression(index, $event)"
           @deleteExpression="deleteSubexpression(index)"
