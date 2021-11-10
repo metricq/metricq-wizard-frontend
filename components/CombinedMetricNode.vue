@@ -79,9 +79,10 @@
         >
           <span class="text-danger">Missing inputs!</span>
         </b-list-group-item>
-      </b-list-group>
-      <div class="w-100">
-        <span class="float-right mt-1">
+        <b-list-group-item
+          v-if="canAddSubNodes"
+          class="flex-column align-items-start"
+        >
           <b-button
             v-if="canAddSubNodes"
             size="sm"
@@ -90,8 +91,8 @@
           >
             <b-icon-plus scale="2" />
           </b-button>
-        </span>
-      </div>
+        </b-list-group-item>
+      </b-list-group>
     </b-collapse>
 
     <b-modal
