@@ -11,7 +11,7 @@ WORKDIR /home/metricq/wizard-frontend
 
 ARG api_url
 ENV API_URL=$api_url
-RUN yarn install && yarn build
+RUN yarn install && NODE_OPTIONS=--openssl-legacy-provider yarn build
 
 EXPOSE 3000
 ENV NUXT_HOST=0.0.0.0
