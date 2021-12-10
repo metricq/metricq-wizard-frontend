@@ -72,7 +72,7 @@ export default {
   methods: {
     async save() {
       const answer = await this.$bvModal.msgBoxConfirm(
-        `Save configuration for source ${this.id} and reconfigure source?`,
+        `Save configuration for source ${this.sourceId} and reconfigure source?`,
         {
           title: 'Please Confirm',
           buttonSize: 'sm',
