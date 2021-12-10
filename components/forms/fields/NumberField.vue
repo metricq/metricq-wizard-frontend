@@ -11,7 +11,8 @@
       :size="size"
       :value="data"
       number
-      @input="$emit('input', parseInt($event))"
+      step="any"
+      @input="$emit('input', parseFloat($event))"
     />
   </div>
 </template>
