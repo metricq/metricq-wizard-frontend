@@ -56,23 +56,23 @@
           <template #cell(state)="data">
             <b-badge v-if="data.item.historic"> Saved in DB </b-badge>
           </template>
-          <template #cell(actions)="row">
-            <b-button size="sm" class="mr-2" @click="row.toggleDetails">
-              {{ row.detailsShowing ? 'Hide' : 'Show' }} Metadata
+          <template #cell(actions)="data">
+            <b-button size="sm" class="mr-2" @click="data.toggleDetails">
+              {{ data.detailsShowing ? 'Hide' : 'Show' }} Metadata
             </b-button>
             <b-button
-              v-if="row.item.sourceRef.isCombinator"
+              v-if="data.item.sourceRef && data.item.sourceRef.isCombinator"
               size="sm"
-              @click="editCombinedMetric(row.item)"
+              @click="editCombinedMetric(data.item)"
             >
               Edit expression
             </b-button>
           </template>
 
-          <template #row-details="row">
+          <template #row-details="data">
             <!--              v-model="row.item.additionalMetadata"-->
             <pre>{{
-              JSON.stringify(row.item.additionalMetadata, null, 2)
+              JSON.stringify(data.item.additionalMetadata, null, 2)
             }}</pre>
           </template>
         </b-table>
