@@ -31,6 +31,7 @@ export default {
     '@/plugins/vuex-orm-axios',
     '@/plugins/vue-json-edit',
     '@/plugins/persistedState.client',
+    '@/plugins/moment-filter',
   ],
   /*
    ** Nuxt.js dev-modules

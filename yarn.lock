@@ -9332,6 +9332,7 @@ __metadata:
     jest: ^26.6.3
     jquery: ^3.6.0
     lint-staged: ^10.5.3
+    moment: ^2.29.1
     nuxt: ^2.15.4
     popper.js: ^1.16.1
     prettier: ^2.2.1
@@ -9599,6 +9600,13 @@ __metadata:
   bin:
     mkdirp: bin/cmd.js
   checksum: a96865108c6c3b1b8e1d5e9f11843de1e077e57737602de1b82030815f311be11f96f09cce59bd5b903d0b29834733e5313f9301e3ed6d6f6fba2eae0df4298f
+  languageName: node
+  linkType: hard
+
+"moment@npm:^2.29.1":
+  version: 2.29.1
+  resolution: "moment@npm:2.29.1"
+  checksum: 1e14d5f422a2687996be11dd2d50c8de3bd577c4a4ca79ba5d02c397242a933e5b941655de6c8cb90ac18f01cc4127e55b4a12ae3c527a6c0a274e455979345e
   languageName: node
   linkType: hard
 
