@@ -4,6 +4,7 @@
       <b-col>
         <h1>Source {{ id }}: Available Metrics</h1>
       </b-col>
+      <SessionManager :source-id="id" />
     </b-row>
     <b-row>
       <b-col>
@@ -58,7 +59,7 @@
           variant="primary"
           @click="createSelectedMetrics"
         >
-          Configure metrics
+          Update metrics configuration
         </b-button>
       </b-col>
     </b-row>
@@ -66,12 +67,12 @@
 </template>
 
 <script>
-import Metric from '~/models/Metric'
 import FormGenerator from '~/components/forms/FormGenerator'
+import SessionManager from '~/components/SessionManager'
 import Source from '~/models/Source'
 
 export default {
-  components: { FormGenerator },
+  components: { FormGenerator, SessionManager },
   async asyncData({ $axios, params, store }) {
     const { data } = await $axios.get(
       `/source/${params.sourceId}/config_item/${encodeURIComponent(
@@ -118,7 +119,7 @@ export default {
   },
   methods: {
     async createSelectedMetrics() {
-      const { status, data } = await this.$axios.post(
+      const { status } = await this.$axios.post(
         `/source/${
           this.$route.params.sourceId
         }/config_item/${encodeURIComponent(
@@ -137,79 +138,6 @@ export default {
         }
       )
       if (status === 200) {
-        const answer = await this.$bvModal.msgBoxConfirm(
-          `Save configuration for source ${this.id} and reconfigure source?`,
-          {
-            title: 'Please Confirm',
-            buttonSize: 'sm',
-            okVariant: 'danger',
-            okTitle: 'YES',
-            cancelTitle: 'NO',
-            footerClass: 'p-2',
-            hideHeaderClose: false,
-            centered: true,
-          }
-        )
-        if (answer) {
-          const { status } = await this.$axios.post(
-            `/source/${this.$route.params.sourceId}/save_reconfigure`,
-            {},
-            {
-              params: {
-                session: this.$store.state.session.sessionKey,
-              },
-            }
-          )
-          if (status === 200) {
-            this.$toast.success(
-              'Saved configuration and requested source reconfiguration!'
-            )
-            if (data.metrics.length !== 0) {
-              const answer = await this.$bvModal.msgBoxConfirm(
-                `${data.metrics.length} metrics created. Configure database storage for them?`,
-                {
-                  title: 'Please Confirm',
-                  buttonSize: 'sm',
-                  okVariant: 'danger',
-                  okTitle: 'YES',
-                  cancelTitle: 'NO',
-                  footerClass: 'p-2',
-                  hideHeaderClose: false,
-                  centered: true,
-                }
-              )
-              if (answer) {
-                Metric.commit((state) => {
-                  state.fetching = true
-                })
-                const loadingToast = this.$toast.info(
-                  'Loading database configuration. Please wait!',
-                  { duration: null }
-                )
-                // TODO find right method for getting metric subset
-                await Metric.api().post('/metrics', {
-                  requested_metrics: data.metrics,
-                })
-                Metric.commit((state) => {
-                  state.fetching = false
-                })
-                loadingToast.goAway()
-                this.$toast.success('Loaded database configuration.')
-                await this.$router.push({
-                  name: 'metric-metric_list',
-                  params: {
-                    loadMetrics: false,
-                  },
-                })
-                return
-              }
-            }
-          } else {
-            this.$toast.error(
-              'Saving configuration or source reconfiguration failed!'
-            )
-          }
-        }
         this.$router.back()
       }
     },
