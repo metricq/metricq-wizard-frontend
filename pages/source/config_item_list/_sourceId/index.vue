@@ -7,6 +7,7 @@
           <span class="text-capitalize">{{ source.configItemName }}s</span>
         </h1>
       </b-col>
+      <SessionManager :source-id="id" />
     </b-row>
     <b-row>
       <b-col>
@@ -87,9 +88,10 @@
 
 <script>
 import Source from '~/models/Source'
+import SessionManager from '~/components/SessionManager'
 
 export default {
-  components: {},
+  components: { SessionManager },
   async asyncData({ $axios, params, store }) {
     const { data } = await $axios.get(
       `/source/${params.sourceId}/config_items`,
