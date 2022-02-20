@@ -22,11 +22,20 @@
           </template>
           <template #cell(actions)="data">
             <b-button
-              size="sm float-right"
+              size="sm float-right ml-1"
               variant="danger"
               @click="reconfigureClient(data.item.id)"
             >
               <b-icon-bootstrap-reboot scale="1.5" />
+            </b-button>
+            <b-button
+              v-b-tooltip.hover
+              size="sm"
+              class="float-right"
+              title="Edit raw JSON config"
+              @click="editRawConfig(data.item.id)"
+            >
+              <b-icon-file-code scale="1.5" />
             </b-button>
           </template>
         </b-table>
@@ -47,6 +56,31 @@ export default {
   fetch() {},
   computed: {},
   methods: {
+    async editRawConfig(clientId) {
+      const answer = await this.$bvModal.msgBoxConfirm(
+        this.guiForConfigExists(clientId)
+          ? `The wizard has a better way to edit the config of client ${clientId}. Do you REALLY want to edit the raw JSON config?`
+          : `Do you really want to edit the raw JSON config of client ${clientId}?`,
+        {
+          title: 'Are you sure?',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          okTitle: this.guiForConfigExists(clientId)
+            ? 'Yes, I really want it'
+            : 'YES',
+          cancelTitle: 'NO',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true,
+        }
+      )
+      if (answer) {
+        await this.$router.push({
+          name: 'client-edit_json-clientId',
+          params: { clientId },
+        })
+      }
+    },
     async reconfigureClient(clientId) {
       const answer = await this.$bvModal.msgBoxConfirm(
         `Really reconfigure ${clientId}?`,
@@ -71,6 +105,13 @@ export default {
           this.$toast.error('Client reconfiguration failed!')
         }
       }
+    },
+    guiForConfigExists(clientId) {
+      return (
+        clientId.startsWith('db-') ||
+        clientId.startsWith('source-') ||
+        (clientId.startsWith('transformer') && clientId.endsWith('-combinator'))
+      )
     },
   },
 }
