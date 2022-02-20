@@ -9,13 +9,9 @@
     <b-row v-else align-v="center" class="border mr-1 mb-2 mt-2">
       <b-col cols="7">
         <p>
-          Current session id: {{ $store.state.session.sessionKey }} | age:
-          {{ currentSessionCreationTime | momentago }}
-        </p>
-        <p>
           Current source config status:
-          <span v-if="canSave" class="text-success"> Can be saved </span>
-          <span v-else class="text-danger">Can not be saved</span>
+          <span v-if="canSave" class="text-success">not saved</span>
+          <span v-else class="text-danger">can not be saved</span>
         </p>
         <p>
           Config loaded <em>{{ creationTime | momentago }}</em>
