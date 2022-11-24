@@ -32,6 +32,14 @@
         >
           Client Overview
         </b-nav-item>
+        <b-nav-item
+          :to="{
+            name: 'cluster-overview',
+          }"
+          active-class="active"
+        >
+          Cluster Overview
+        </b-nav-item>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
