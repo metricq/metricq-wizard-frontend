@@ -1,20 +1,20 @@
-FROM node:alpine
+FROM node:19 AS builder
 LABEL maintainer="franz.hoepfner@tu-dresden.de"
 
-RUN addgroup -S metricq && adduser -S metricq -G metricq
-RUN apk add --no-cache libc6-compat python3 make gcc build-base
+WORKDIR /wizard-frontend
 
-USER metricq
-COPY --chown=metricq:metricq . /home/metricq/wizard-frontend
+COPY .yarn ./.yarn
+COPY package.json yarn.lock .yarnrc.yml ./
 
-WORKDIR /home/metricq/wizard-frontend
+RUN yarn install --frozen-lockfile
 
 ARG api_url
 ENV API_URL=$api_url
-RUN yarn install && NODE_OPTIONS=--openssl-legacy-provider yarn build
 
-EXPOSE 3000
-ENV NUXT_HOST=0.0.0.0
-ENV NUXT_PORT=3000
+COPY . ./
 
-CMD [ "yarn", "start" ]
+RUN NODE_OPTIONS=--openssl-legacy-provider yarn build
+
+FROM nginx:alpine
+
+COPY --from=builder /wizard-frontend/dist /usr/share/nginx/html
