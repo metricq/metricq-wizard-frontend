@@ -48,9 +48,12 @@ export default {
   async asyncData({ $axios, params }) {
     const { data } = await $axios.get(`/source/${params.clientId}/raw_config`)
 
+    const { _rev, ...config } = data.config
+
     return {
       clientId: params.clientId,
-      jsonData: data.config,
+      jsonData: config,
+      configRev: _rev,
       updating: false,
       showJsonEditor: JSON.stringify(data.config).length < 10000,
     }
@@ -60,7 +63,7 @@ export default {
       this.updating = true
       const { status } = await this.$axios.post(
         `/source/${this.clientId}/raw_config`,
-        this.jsonData
+        { _rev: this.configRev, ...this.jsonData }
       )
       if (status === 200) {
         this.$toast.success('Saved config!')
