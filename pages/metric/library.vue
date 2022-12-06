@@ -212,7 +212,21 @@ export default {
     },
     onMetricData(metric, time, value) {
       if (this.hasSelectedMetric() && this.metric === metric) {
-        this.metricLiveData[0].data.push({ x: time.valueOf(), y: value })
+        if (!isNaN(value)) {
+          this.metricLiveData[0].data.push({ x: time.valueOf(), y: value })
+        } else {
+          this.metricLiveData[0].data.push({
+            x: time.valueOf(),
+            y: 0,
+            marker: {
+              size: 8,
+            },
+            label: {
+              borderColor: '#FF4560',
+              text: 'NaN',
+            },
+          })
+        }
         if (this.metricLiveData[0].data.length > 100) {
           this.metricLiveData = [
             { name: this.metric, data: this.metricLiveData[0].data.slice(1) },
