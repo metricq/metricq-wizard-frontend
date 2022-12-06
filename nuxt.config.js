@@ -32,6 +32,8 @@ export default {
     '@/plugins/vue-json-edit',
     '@/plugins/persistedState.client',
     '@/plugins/moment-filter',
+    '@/plugins/async-computed',
+    '@/plugins/apex-charts',
   ],
   /*
    ** Nuxt.js dev-modules

@@ -10,11 +10,20 @@
       <b-navbar-nav>
         <b-nav-item
           :to="{
-            name: 'metric-metric_list',
+            name: 'metric-library',
           }"
           active-class="active"
         >
-          Metrics Overview
+          Metric Library
+        </b-nav-item>
+
+        <b-nav-item
+          :to="{
+            name: 'metric-configure',
+          }"
+          active-class="active"
+        >
+          Metric Workshop
         </b-nav-item>
         <b-nav-item
           :to="{

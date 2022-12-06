@@ -22,11 +22,13 @@
     }
   },
   "dependencies": {
+    "@metricq/live": "^3.0.1",
     "@nuxtjs/axios": "^5.13.1",
     "@nuxtjs/toast": "^3.3.1",
     "@vuex-orm/core": "^0.36.3",
     "@vuex-orm/plugin-axios": "^0.9.3",
     "@vuex-orm/plugin-search": "^0.24.1",
+    "apexcharts": "^3.36.3",
     "axios": "^0.21.0",
     "bootstrap": "^4.5.3",
     "bootstrap-vue": "^2.21.1",
@@ -38,7 +40,10 @@
     "popper.js": "^1.16.1",
     "timestring": "^6.0.0",
     "vue": "^2.6.12",
+    "vue-apexcharts": "^1.6.2",
+    "vue-async-computed": "^3.9.0",
     "vue-json-edit": "^1.4.3",
+    "vue-json-tree": "^0.4.3",
     "vuex": "^3.6.0",
     "vuex-persistedstate": "^3.2.0"
   },

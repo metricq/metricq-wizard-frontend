@@ -2,7 +2,12 @@
   <div>
     <b-row>
       <b-col>
-        <h1>Metrics Overview</h1>
+        <h1>
+          Metric Workshop
+          <span class="lead">
+            Configure metric transformation, combination, and persistance
+          </span>
+        </h1>
       </b-col>
     </b-row>
     <b-card>
