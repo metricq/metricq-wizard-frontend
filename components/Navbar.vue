@@ -10,7 +10,7 @@
       <b-navbar-nav>
         <b-nav-item
           :to="{
-            name: 'metric-library',
+            name: 'metric',
           }"
           active-class="active"
         >

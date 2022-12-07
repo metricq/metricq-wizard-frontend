@@ -1,3 +1,5 @@
+import { sortRoutes } from '@nuxt/utils'
+
 export default {
   ssr: false,
   /*
@@ -87,5 +89,13 @@ export default {
   },
   router: {
     base: process.env.NODE_ENV === 'development' ? '/' : '/wizard',
+    extendRoutes(routes, resolve) {
+      routes.push({
+        name: 'metric',
+        path: '/metric',
+        redirect: { name: 'metric-metricId', metricId: '' },
+      })
+      sortRoutes(routes)
+    },
   },
 }

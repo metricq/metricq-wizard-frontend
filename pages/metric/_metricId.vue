@@ -54,6 +54,7 @@
             </b-col>
             <b-col>
               <source-actions
+                v-if="getMetricSource(selectedMetric.source)"
                 :source="getMetricSource(selectedMetric.source)"
               />
             </b-col>
@@ -90,7 +91,7 @@
 <script>
 import MetricQLive from '@metricq/live'
 
-import SourceActions from '../source/source_actions.vue'
+import SourceActions from '~/components/source_actions.vue'
 import Metric from '~/models/Metric'
 import Source from '~/models/Source'
 
@@ -120,9 +121,9 @@ export default {
       default: [],
     },
   },
-  data() {
+  asyncData({ params }) {
     return {
-      metric: '',
+      metric: params.metricId,
       metricLiveData: [{ data: [] }],
       metricqWebsocket: null,
       chartOptions: {
@@ -175,6 +176,11 @@ export default {
   watch: {
     async selectedMetric() {
       if (this.hasSelectedMetric()) {
+        this.$router.push({
+          name: 'metric-metricId',
+          params: { metricId: this.metric },
+        })
+
         this.metricqWebsocket = await MetricQLive.connect('ws://localhost:3003')
 
         this.metricqWebsocket.onData = (metric, time, value) => {

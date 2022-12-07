@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import SourceActions from './source_actions.vue'
+import SourceActions from '~/components/source_actions.vue'
 import Source from '~/models/Source'
 
 export default {

@@ -11,12 +11,12 @@
       <b-icon-bootstrap-reboot scale="1.5" />
     </b-button>
     <b-button
+      v-if="source.configurable"
       v-b-tooltip.hover
       :to="{
         name: 'source-config_item_list-sourceId',
         params: { sourceId: source.id },
       }"
-      :disabled="!source.configurable"
       size="sm"
       class="float-right ml-1"
       title="Edit source config"
@@ -39,8 +39,10 @@
 </template>
 
 <script>
+import Source from '~/models/Source'
+
 export default {
-  props: ['source'],
+  props: { source: Source },
   methods: {
     async reconfigureSource(sourceId) {
       const answer = await this.$bvModal.msgBoxConfirm(

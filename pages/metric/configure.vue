@@ -3,7 +3,7 @@
     <b-row>
       <b-col>
         <h1>
-          Metric Workshop
+          Metric Workshop 🧰
           <span class="lead">
             Configure metric transformation, combination, and persistance
           </span>
