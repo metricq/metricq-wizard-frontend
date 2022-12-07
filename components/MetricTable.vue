@@ -61,6 +61,16 @@
               {{ data.detailsShowing ? 'Hide' : 'Show' }} Metadata
             </b-button>
             <b-button
+              size="sm"
+              class="mr-2"
+              :to="{
+                name: 'metric-metricId',
+                params: { metricId: data.item.id },
+              }"
+            >
+              Show Details
+            </b-button>
+            <b-button
               v-if="data.item.sourceRef && data.item.sourceRef.isCombinator"
               size="sm"
               @click="editCombinedMetric(data.item)"
