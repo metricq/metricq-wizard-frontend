@@ -12,79 +12,80 @@
     </b-row>
 
     <b-row>
-      <b-col align="center" cols="6" offset="3"> </b-col>
-    </b-row>
-    <b-row>
       <b-col align="center">
-        <b-input
-          ref="metricInput"
-          v-model="metric"
-          class="searchBox"
-          placeholder="Enter metric name"
-          debounce="500"
-          type="search"
-          :state="isValidMetric()"
-          :autofocus="true"
-          @click="onSearchClick()"
-        />
-        <ul v-if="!hasSelectedMetric()" class="autocomplete-results">
-          <li
-            v-for="match in matchingMetrics"
-            :key="match.id"
-            class="autocomplete-result"
-            @click="onMetricSelect(match.id)"
-          >
-            {{ match.id }} - {{ match.description }}
-          </li>
-        </ul>
+        <b-card no-body>
+          <b-card-header>
+            <b-input
+              ref="metricInput"
+              v-model="metric"
+              class="searchBox"
+              placeholder="Enter metric name"
+              debounce="500"
+              type="search"
+              :state="isValidMetric()"
+              :autofocus="true"
+              @click="onSearchClick()"
+            />
+          </b-card-header>
+          <ul v-if="!hasSelectedMetric()" class="autocomplete-results">
+            <li
+              v-for="match in matchingMetrics"
+              :key="match.id"
+              class="autocomplete-result"
+              @click="onMetricSelect(match.id)"
+            >
+              {{ match.id }} - {{ match.description }}
+            </li>
+          </ul>
+
+          <div v-if="hasSelectedMetric()" align="center" class="box">
+            <b-row align="center" class="header">
+              <b-col>
+                <h2>Metadata</h2>
+                <json-tree :data="selectedMetricMetadata" />
+              </b-col>
+              <b-col>
+                <h2>Source</h2>
+                <b-row align="center">
+                  <b-col>
+                    <span class="lead">{{ selectedMetric.source }}</span>
+                  </b-col>
+                  <b-col>
+                    <source-actions
+                      v-if="getMetricSource(selectedMetric.source)"
+                      :source="getMetricSource(selectedMetric.source)"
+                    />
+                  </b-col>
+                </b-row>
+              </b-col>
+              <b-col>
+                <h2>Consumers</h2>
+                <b-list-group>
+                  <b-list-group-item
+                    v-for="consumer in selectedMetricConsumers"
+                    :key="consumer"
+                  >
+                    {{ consumer }}
+                  </b-list-group-item>
+                </b-list-group>
+              </b-col>
+            </b-row>
+            <b-row class="content">
+              <b-col>
+                <h2>Live Data Points</h2>
+                <apexchart
+                  type="line"
+                  width="95%"
+                  height="100%"
+                  :options="chartOptions"
+                  :series="metricLiveData"
+                ></apexchart>
+              </b-col>
+            </b-row>
+          </div>
+        </b-card>
       </b-col>
     </b-row>
-
-    <div v-if="hasSelectedMetric()" align="center" class="box">
-      <b-row align="center" class="header">
-        <b-col>
-          <h2>Metadata</h2>
-          <json-tree :data="selectedMetricMetadata" />
-        </b-col>
-        <b-col>
-          <h2>Source</h2>
-          <b-row align="center">
-            <b-col>
-              <span class="lead">{{ selectedMetric.source }}</span>
-            </b-col>
-            <b-col>
-              <source-actions
-                v-if="getMetricSource(selectedMetric.source)"
-                :source="getMetricSource(selectedMetric.source)"
-              />
-            </b-col>
-          </b-row>
-        </b-col>
-        <b-col>
-          <h2>Consumers</h2>
-          <b-list-group>
-            <b-list-group-item
-              v-for="consumer in selectedMetricConsumers"
-              :key="consumer"
-            >
-              {{ consumer }}
-            </b-list-group-item>
-          </b-list-group>
-        </b-col>
-      </b-row>
-      <b-row class="content">
-        <b-col>
-          <h2>Live Data Points</h2>
-          <apexchart
-            type="line"
-            width="95%"
-            height="100%"
-            :options="chartOptions"
-            :series="metricLiveData"
-          ></apexchart>
-        </b-col>
-      </b-row>
-    </div>
   </div>
 </template>
 
@@ -209,7 +210,7 @@ export default {
     },
     hasSelectedMetric() {
       return (
-        this.matchingMetrics.length === 1 &&
+        this.matchingMetrics.length > 0 &&
         this.metric === this.matchingMetrics[0].id
       )
     },
@@ -284,17 +285,7 @@ export default {
   width: 95%;
 }
 
-.box {
-  display: flex;
-  flex-flow: column;
-  height: 100%;
-}
-
-.header {
-  flex: 0 1 auto;
-}
-
-.content {
-  flex: 1 1 auto;
+.json-tree-root {
+  background-color: white;
 }
 </style>
