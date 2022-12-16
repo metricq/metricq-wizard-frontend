@@ -21,7 +21,7 @@
             <span class="float-right">{{ data.label }}</span>
           </template>
           <template #cell(actions)="data">
-            <source-actions :source="data.item" />
+            <client-actions :client="data.item" />
           </template>
         </b-table>
       </b-col>
@@ -30,11 +30,11 @@
 </template>
 
 <script>
-import SourceActions from '~/components/source_actions.vue'
+import ClientActions from '~/components/client_actions.vue'
 import Source from '~/models/Source'
 
 export default {
-  components: { SourceActions },
+  components: { ClientActions },
   layout: 'nonfluid',
   data() {
     return {

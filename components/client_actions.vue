@@ -5,49 +5,64 @@
       size="sm"
       class="float-right ml-1"
       variant="danger"
-      title="Send config to source"
-      @click="reconfigureSource(source.id)"
+      title="Send config to client"
+      @click="reconfigureClient(client.id)"
     >
       <b-icon-bootstrap-reboot scale="1.5" />
     </b-button>
     <b-button
+      v-if="showDetails"
+      v-b-tooltip.hover
+      :to="{
+        name: 'client-clientId',
+        params: { clientId: client.id },
+      }"
+      size="sm"
+      class="float-right ml-1"
+      title="Client Details"
+      variant="info"
+    >
+      <b-icon-search scale="1.5" />
+    </b-button>
+    <b-button
+      v-if="client.hasConfiguration"
       v-b-tooltip.hover
       :to="{
         name: 'client-edit_json-clientId',
-        params: { clientId: source.id },
+        params: { clientId: client.id },
       }"
       size="sm"
       class="float-right ml-1"
       title="Edit raw JSON config"
     >
-      <b-icon-file-code scale="1.5" />
+      <b-icon-file-text scale="1.5" />
     </b-button>
     <b-button
-      v-if="source.configurable"
+      v-if="client.configurable"
       v-b-tooltip.hover
       :to="{
         name: 'source-config_item_list-sourceId',
-        params: { sourceId: source.id },
+        params: { sourceId: client.id },
       }"
       variant="primary"
       size="sm"
       class="float-right ml-1"
-      title="Edit source config"
+      title="Edit client config"
     >
-      <b-icon-gear scale="1.5" />
+      <b-icon-wrench scale="1.5" />
     </b-button>
   </div>
 </template>
 
 <script>
-import Source from '~/models/Source'
+import Client from '~/models/Client'
 
 export default {
-  props: { source: Source },
+  props: { client: Client, showDetails: { type: Boolean, default: true } },
   methods: {
-    async reconfigureSource(sourceId) {
+    async reconfigureClient(clientId) {
       const answer = await this.$bvModal.msgBoxConfirm(
-        `Really reconfigure ${sourceId}?`,
+        `Really reconfigure ${clientId}?`,
         {
           title: 'Please Confirm',
           buttonSize: 'sm',
@@ -61,12 +76,12 @@ export default {
       )
       if (answer) {
         const { status } = await this.$axios.post(
-          `/client/${sourceId}/reconfigure`
+          `/client/${clientId}/reconfigure`
         )
         if (status === 200) {
-          this.$toast.success('Requested source reconfiguration!')
+          this.$toast.success('Requested Client reconfiguration!')
         } else {
-          this.$toast.error('Source reconfiguration failed!')
+          this.$toast.error('Client reconfiguration failed!')
         }
       }
     },

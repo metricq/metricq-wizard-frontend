@@ -58,9 +58,9 @@
                     <span class="lead">{{ selectedMetric.source }}</span>
                   </b-col>
                   <b-col>
-                    <source-actions
+                    <client-actions
                       v-if="getMetricSource(selectedMetric.source)"
-                      :source="getMetricSource(selectedMetric.source)"
+                      :client="getMetricSource(selectedMetric.source)"
                     />
                   </b-col>
                 </b-row>
@@ -99,12 +99,12 @@
 <script>
 import MetricQLive from '@metricq/live'
 
-import SourceActions from '~/components/source_actions.vue'
+import ClientActions from '~/components/client_actions.vue'
 import Metric from '~/models/Metric'
 import Source from '~/models/Source'
 
 export default {
-  components: { SourceActions },
+  components: { ClientActions },
   asyncComputed: {
     matchingMetrics: {
       async get() {

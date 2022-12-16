@@ -23,6 +23,7 @@ export class Client extends Model {
     return {
       id: this.string().nullable(),
       client_model_type: this.attr('CLIENT'),
+      hasConfiguration: this.boolean(false),
       hostname: this.string().nullable(),
       currentTime: this.string().nullable(),
       startingTime: this.string().nullable(),

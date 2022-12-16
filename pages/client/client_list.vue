@@ -8,6 +8,7 @@
         </h1>
       </b-col>
     </b-row>
+
     <b-row>
       <b-col>
         <b-overlay :show="showReScanOverlay" rounded="sm">
@@ -48,7 +49,7 @@
                 { key: 'hostname', sortable: true },
                 { key: 'version', sortable: true },
                 { key: 'metricqVersion', sortable: true },
-                { key: 'uptime', sortable: true },
+                { key: 'startingTime', sortable: true },
                 { key: 'lastseen', sortable: true },
                 { key: 'actions' },
               ]"
@@ -68,9 +69,10 @@
                   {{ data.item.discoverTime | momentAgo }} </span
                 ><span v-else>never seen</span>
               </template>
-              <template #cell(uptime)="data">
-                <span v-if="data.item.uptime">
-                  {{ data.item.uptime | momentDuration }}
+              <template #head(startingTime)> Started </template>
+              <template #cell(startingTime)="data">
+                <span v-if="data.item.startingTime">
+                  {{ data.item.startingTime | momentAgo }}
                 </span>
               </template>
 
@@ -78,26 +80,23 @@
                 <span class="float-right">{{ data.label }}</span>
               </template>
               <template #cell(actions)="data">
-                <source-actions :source="data.item" />
+                <client-actions :client="data.item" />
               </template>
             </b-table>
           </b-card>
         </b-overlay>
       </b-col>
     </b-row>
-    <b-row>
-      <b-col> </b-col>
-    </b-row>
   </div>
 </template>
 
 <script>
-import SourceActions from '~/components/source_actions.vue'
+import ClientActions from '~/components/client_actions.vue'
 import Source from '~/models/Source'
 import Client from '~/models/Client'
 
 export default {
-  components: { SourceActions },
+  components: { ClientActions },
   layout: 'nonfluid',
   data() {
     return {
