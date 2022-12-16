@@ -2,11 +2,19 @@
   <div>
     <b-row>
       <b-col>
-        <h1>Cluster Topology</h1>
+        <h1>
+          Cluster Topology
+          <span class="lead">
+            Gather information about the MetricQ Cluster
+          </span>
+        </h1>
       </b-col>
+    </b-row>
+    <b-row>
       <b-col>
-        <b-button class="float-right" variant="info" @click="updateTopology">
-          <b-icon-arrow-repeat></b-icon-arrow-repeat>
+        <b-button variant="info" @click="updateTopology">
+          <b-icon-arrow-repeat />
+          Re-scan Cluster for active Clients
         </b-button>
       </b-col>
     </b-row>
@@ -15,7 +23,10 @@
         <b-table
           ref="clustNodesTable"
           :items="clusterNodes"
-          :fields="['hostname', 'clients']"
+          :fields="[
+            { key: 'hostname', label: 'Host' },
+            { key: 'clients', label: 'Seen Clients on Host' },
+          ]"
           small
           primary-key="id"
           responsive="true"
@@ -23,17 +34,16 @@
           hover
         >
           <template #cell(clients)="data">
-            <div
+            <b-row
               v-for="client in data.item.clients"
               :key="client"
               class="container"
             >
-              <div class="row">
-                <div class="col-sm">
-                  {{ client._id }}
-                </div>
-              </div>
-            </div>
+              <b-col>
+                {{ client._id }}
+              </b-col>
+              <source-actions :source="client" />
+            </b-row>
           </template>
         </b-table>
       </b-col>
@@ -42,7 +52,10 @@
 </template>
 
 <script>
+import SourceActions from '~/components/source_actions.vue'
+
 export default {
+  components: { SourceActions },
   layout: 'nonfluid',
   async asyncData({ $axios }) {
     const { data } = await $axios.get(`/topology`)

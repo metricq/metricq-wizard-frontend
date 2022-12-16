@@ -26,8 +26,8 @@
     <b-button
       v-b-tooltip.hover
       :to="{
-        name: 'source-edit_json-sourceId',
-        params: { sourceId: source.id },
+        name: 'client-edit_json-clientId',
+        params: { clientId: source.id },
       }"
       size="sm"
       class="float-right"

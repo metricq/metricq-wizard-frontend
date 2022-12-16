@@ -1,7 +1,8 @@
-import { Model } from '@vuex-orm/core'
+import Client from './Client'
 
-export default class Transformer extends Model {
+export default class Transformer extends Client {
   static entity = 'transformer'
+  static baseEntity = 'client'
 
   static state() {
     return {
@@ -11,16 +12,8 @@ export default class Transformer extends Model {
 
   static fields() {
     return {
-      id: this.string().nullable(),
+      ...super.fields(),
       isCombinator: this.boolean(),
     }
-  }
-
-  static apiConfig = {
-    actions: {
-      reconfigureById(id) {
-        return this.post(`/client/${id}/reconfigure`)
-      },
-    },
   }
 }

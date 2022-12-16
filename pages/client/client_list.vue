@@ -7,36 +7,40 @@
     </b-row>
     <b-row>
       <b-col>
+        <b-card no-body>
+          <b-card-header align="right">
+            <b-button variant="info" @click="updateTopology">
+              <b-icon-arrow-repeat />
+              Re-scan Cluster for active Clients
+            </b-button>
+          </b-card-header>
+        </b-card>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
         <b-table
           ref="metricListTable"
           :items="clients"
-          :fields="['id', 'actions']"
+          :fields="['id', 'hostname', 'type', 'lastseen', 'actions']"
           small
           primary-key="id"
           responsive="true"
+          sort-by="id"
           striped
           hover
         >
+          <template #head(lastseen)> Last seen </template>
+          <template #cell(lastseen)="data">
+            <span v-if="data.item.discoverTime">
+              {{ data.item.discoverTime | momentago }} </span
+            ><span v-else>never seen</span>
+          </template>
           <template #head(actions)="data">
             <span class="float-right">{{ data.label }}</span>
           </template>
           <template #cell(actions)="data">
-            <b-button
-              size="sm float-right ml-1"
-              variant="danger"
-              @click="reconfigureClient(data.item.id)"
-            >
-              <b-icon-bootstrap-reboot scale="1.5" />
-            </b-button>
-            <b-button
-              v-b-tooltip.hover
-              size="sm"
-              class="float-right"
-              title="Edit raw JSON config"
-              @click="editRawConfig(data.item.id)"
-            >
-              <b-icon-file-code scale="1.5" />
-            </b-button>
+            <source-actions :source="data.item" />
           </template>
         </b-table>
       </b-col>
@@ -45,16 +49,76 @@
 </template>
 
 <script>
+import SourceActions from '~/components/source_actions.vue'
+import Source from '~/models/Source'
+import Client from '~/models/Client'
+
 export default {
+  components: { SourceActions },
   layout: 'nonfluid',
-  async asyncData({ $axios }) {
-    const { data } = await $axios.get(`/clients`)
-    return {
-      clients: data,
-    }
+  async fetch() {
+    Client.commit((state) => {
+      state.fetching = true
+    })
+    Source.commit((state) => {
+      state.fetching = true
+    })
+
+    // await Client.api().get('/clients')
+    // await Client.api().get('/clients/active')
+    // // await ActiveClient.api().get('/clients/active')
+    // // await Source.api().get('/sources')
+    // const sources = await Source.api().get('/sources', { save: false })
+
+    // sources.response.data.forEach((source) => {
+    //   if (Client.query().where('id', source.id).exists()) {
+    //     const client = Client.find(source.id)
+    //     Client.delete(source.id)
+
+    //     source = {
+    //       ...source,
+    //       hostname: client.hostname,
+    //       currentTime: client.currentTime,
+    //       startingTime: client.startingTime,
+    //       discoverTime: client.discoverTime,
+    //       uptime: client.uptime,
+    //       version: client.version,
+    //       metricqVersion: client.metricqVersion,
+    //     }
+    //     Source.insert({ where: source.id, data: source })
+    //   } else {
+    //     Source.insert({ data: source })
+    //   }
+    // })
+
+    const sources = await Source.api().get('/sources')
+    console.log(`sources: ${JSON.stringify(sources.response.data)}`)
+    console.log(`sources: ${JSON.stringify(sources.entities)}`)
+
+    // const activeClients = await Client.api().get('/clients/active', {
+    //   persistsBy: 'insert',
+    // })
+    // console.log(`activeClients: ${JSON.stringify(activeClients.response.data)}`)
+    // console.log(`activeClients: ${JSON.stringify(activeClients.entities)}`)
+
+    // const clients = await Client.api().get('/clients', { persistsBy: 'insert' })
+    // console.log(`clients: ${JSON.stringify(clients.response.data)}`)
+    // console.log(`clients: ${JSON.stringify(clients.entities.keys)}`)
+
+    // await sources.save()
+
+    Client.commit((state) => {
+      state.fetching = false
+    })
+    Source.commit((state) => {
+      state.fetching = false
+    })
   },
-  fetch() {},
-  computed: {},
+  computed: {
+    clients() {
+      return Client.query().all()
+    },
+  },
   methods: {
     async editRawConfig(clientId) {
       const answer = await this.$bvModal.msgBoxConfirm(
@@ -112,6 +176,9 @@ export default {
         clientId.startsWith('source-') ||
         (clientId.startsWith('transformer') && clientId.endsWith('-combinator'))
       )
+    },
+    async updateTopology() {
+      await this.$axios.post(`/topology/discover`)
     },
   },
 }

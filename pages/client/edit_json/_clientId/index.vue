@@ -164,10 +164,7 @@ export default {
       this.$bvModal.show('backupRestoreModal')
     },
     onBackupRestore() {
-      const rev = this.jsonData._rev
-      const data = this.backupJsonData
-      data._rev = rev
-      this.jsonData = data
+      this.jsonData = { _rev: this.jsonData._rev, ...this.backupJsonData }
     },
   },
 }

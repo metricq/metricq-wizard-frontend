@@ -1,28 +1,15 @@
-import { Model } from '@vuex-orm/core'
+import Client from './Client'
 
-export default class Source extends Model {
+export default class Source extends Client {
   static entity = 'source'
-
-  static state() {
-    return {
-      fetching: false,
-    }
-  }
+  static baseEntity = 'client'
 
   static fields() {
     return {
-      id: this.string().nullable(),
+      ...super.fields(),
       type: this.string().nullable(),
       configurable: this.boolean(false),
       configItemName: this.string('config item'),
     }
-  }
-
-  static apiConfig = {
-    actions: {
-      reconfigureById(id) {
-        return this.post(`/source/${id}/reconfigure`)
-      },
-    },
   }
 }
