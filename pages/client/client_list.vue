@@ -2,7 +2,10 @@
   <div>
     <b-row>
       <b-col>
-        <h1>Client Overview</h1>
+        <h1>
+          Client Overview 📟
+          <span class="lead">Configure clients running in the cluster</span>
+        </h1>
       </b-col>
     </b-row>
     <b-row>
@@ -12,7 +15,7 @@
             <b-card-header>
               <b-row>
                 <b-col>
-                  <b-input-group size="sm">
+                  <b-input-group size="sm" prepend="Filter">
                     <b-form-input
                       id="filter-input"
                       v-model="filter"
@@ -43,6 +46,9 @@
               :fields="[
                 { key: 'id', sortable: true },
                 { key: 'hostname', sortable: true },
+                { key: 'version', sortable: true },
+                { key: 'metricqVersion', sortable: true },
+                { key: 'uptime', sortable: true },
                 { key: 'lastseen', sortable: true },
                 { key: 'actions' },
               ]"
@@ -59,9 +65,15 @@
               <template #head(lastseen)> Last seen </template>
               <template #cell(lastseen)="data">
                 <span v-if="data.item.discoverTime">
-                  {{ data.item.discoverTime | momentago }} </span
+                  {{ data.item.discoverTime | momentAgo }} </span
                 ><span v-else>never seen</span>
               </template>
+              <template #cell(uptime)="data">
+                <span v-if="data.item.uptime">
+                  {{ data.item.uptime | momentDuration }}
+                </span>
+              </template>
+
               <template #head(actions)="data">
                 <span class="float-right">{{ data.label }}</span>
               </template>

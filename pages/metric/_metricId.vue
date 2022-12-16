@@ -15,17 +15,24 @@
       <b-col align="center">
         <b-card no-body>
           <b-card-header>
-            <b-input
-              ref="metricInput"
-              v-model="metric"
-              class="searchBox"
-              placeholder="Enter metric name"
-              debounce="500"
-              type="search"
-              :state="isValidMetric()"
-              :autofocus="true"
-              @click="onSearchClick()"
-            />
+            <b-input-group prepend="Metric" size="sm">
+              <b-input
+                ref="metricInput"
+                v-model="metric"
+                class="searchBox"
+                placeholder="Enter metric name"
+                debounce="500"
+                type="search"
+                :state="isValidMetric()"
+                :autofocus="true"
+                @click="onSearchClick()"
+              />
+              <b-input-group-append>
+                <b-button :disabled="!metric" @click="metric = ''"
+                  >Clear</b-button
+                >
+              </b-input-group-append>
+            </b-input-group>
           </b-card-header>
           <ul v-if="!hasSelectedMetric()" class="autocomplete-results">
             <li
@@ -279,10 +286,6 @@ export default {
 .autocomplete-result:hover {
   background-color: #4aae9b;
   color: white;
-}
-
-.searchBox {
-  width: 95%;
 }
 
 .json-tree-root {

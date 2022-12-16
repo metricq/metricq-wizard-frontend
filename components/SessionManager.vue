@@ -14,7 +14,7 @@
           <span v-else class="text-danger">can not be saved</span>
         </p>
         <p>
-          Config loaded <em>{{ creationTime | momentago }}</em>
+          Config loaded <em>{{ creationTime | momentAgo }}</em>
         </p>
       </b-col>
       <b-col>

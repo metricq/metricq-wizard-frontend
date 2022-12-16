@@ -21,7 +21,7 @@
             <span class="float-right">{{ data.label }}</span>
           </template>
           <template #cell(actions)="data">
-            <source-actions v-bind:source="data.item" />
+            <source-actions :source="data.item" />
           </template>
         </b-table>
       </b-col>
