@@ -1,7 +1,17 @@
 import { Model } from '@vuex-orm/core'
+import { Source } from './ClientHierarchy.js'
 
-export default class Client extends Model {
+export class Client extends Model {
   static entity = 'client'
+
+  static typeKey = 'client_model_type'
+
+  static types() {
+    return {
+      CLIENT: Client,
+      SOURCE: Source,
+    }
+  }
 
   static state() {
     return {
@@ -12,6 +22,7 @@ export default class Client extends Model {
   static fields() {
     return {
       id: this.string().nullable(),
+      client_model_type: this.attr('CLIENT'),
       hostname: this.string().nullable(),
       currentTime: this.string().nullable(),
       startingTime: this.string().nullable(),
@@ -30,3 +41,5 @@ export default class Client extends Model {
     },
   }
 }
+
+export default Client

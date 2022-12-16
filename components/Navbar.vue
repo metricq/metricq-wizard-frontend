@@ -27,27 +27,11 @@
         </b-nav-item>
         <b-nav-item
           :to="{
-            name: 'source-source_list',
-          }"
-          active-class="active"
-        >
-          Source Overview
-        </b-nav-item>
-        <b-nav-item
-          :to="{
             name: 'client-client_list',
           }"
           active-class="active"
         >
           Client Overview
-        </b-nav-item>
-        <b-nav-item
-          :to="{
-            name: 'cluster-overview',
-          }"
-          active-class="active"
-        >
-          Cluster Overview
         </b-nav-item>
       </b-navbar-nav>
 

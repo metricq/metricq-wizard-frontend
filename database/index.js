@@ -1,6 +1,5 @@
 import { Database } from '@vuex-orm/core'
-import Client from '~/models/Client'
-import Source from '~/models/Source'
+import { Client, Source } from '~/models/ClientHierarchy'
 import Metric from '~/models/Metric'
 import DatabaseModel from '~/models/Database'
 import Transformer from '~/models/Transformer'

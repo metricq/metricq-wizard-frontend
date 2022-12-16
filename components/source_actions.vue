@@ -11,29 +11,30 @@
       <b-icon-bootstrap-reboot scale="1.5" />
     </b-button>
     <b-button
-      v-if="source.configurable"
-      v-b-tooltip.hover
-      :to="{
-        name: 'source-config_item_list-sourceId',
-        params: { sourceId: source.id },
-      }"
-      size="sm"
-      class="float-right ml-1"
-      title="Edit source config"
-    >
-      <b-icon-gear scale="1.5" />
-    </b-button>
-    <b-button
       v-b-tooltip.hover
       :to="{
         name: 'client-edit_json-clientId',
         params: { clientId: source.id },
       }"
       size="sm"
-      class="float-right"
+      class="float-right ml-1"
       title="Edit raw JSON config"
     >
       <b-icon-file-code scale="1.5" />
+    </b-button>
+    <b-button
+      v-if="source.configurable"
+      v-b-tooltip.hover
+      :to="{
+        name: 'source-config_item_list-sourceId',
+        params: { sourceId: source.id },
+      }"
+      variant="primary"
+      size="sm"
+      class="float-right ml-1"
+      title="Edit source config"
+    >
+      <b-icon-gear scale="1.5" />
     </b-button>
   </div>
 </template>

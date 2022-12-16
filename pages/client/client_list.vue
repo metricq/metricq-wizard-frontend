@@ -7,43 +7,74 @@
     </b-row>
     <b-row>
       <b-col>
-        <b-card no-body>
-          <b-card-header align="right">
-            <b-button variant="info" @click="updateTopology">
-              <b-icon-arrow-repeat />
-              Re-scan Cluster for active Clients
-            </b-button>
-          </b-card-header>
-        </b-card>
+        <b-overlay :show="showReScanOverlay" rounded="sm">
+          <b-card no-body>
+            <b-card-header>
+              <b-row>
+                <b-col>
+                  <b-input-group size="sm">
+                    <b-form-input
+                      id="filter-input"
+                      v-model="filter"
+                      type="search"
+                      :autofocus="true"
+                      placeholder="Type to Search"
+                    ></b-form-input>
+
+                    <b-input-group-append>
+                      <b-button :disabled="!filter" @click="filter = ''"
+                        >Clear</b-button
+                      >
+                    </b-input-group-append>
+                  </b-input-group>
+                </b-col>
+                <b-col align="right">
+                  <b-button variant="info" @click="updateTopology">
+                    <b-icon-arrow-repeat />
+                    Re-scan Cluster for active Clients
+                  </b-button>
+                </b-col>
+              </b-row>
+            </b-card-header>
+
+            <b-table
+              ref="metricListTable"
+              :items="clients"
+              :fields="[
+                { key: 'id', sortable: true },
+                { key: 'hostname', sortable: true },
+                { key: 'lastseen', sortable: true },
+                { key: 'actions' },
+              ]"
+              small
+              :filter="filter"
+              :filter-included-fields="['id', 'hostname']"
+              primary-key="id"
+              responsive="true"
+              sort-by="id"
+              sort-icon-left
+              striped
+              hover
+            >
+              <template #head(lastseen)> Last seen </template>
+              <template #cell(lastseen)="data">
+                <span v-if="data.item.discoverTime">
+                  {{ data.item.discoverTime | momentago }} </span
+                ><span v-else>never seen</span>
+              </template>
+              <template #head(actions)="data">
+                <span class="float-right">{{ data.label }}</span>
+              </template>
+              <template #cell(actions)="data">
+                <source-actions :source="data.item" />
+              </template>
+            </b-table>
+          </b-card>
+        </b-overlay>
       </b-col>
     </b-row>
     <b-row>
-      <b-col>
-        <b-table
-          ref="metricListTable"
-          :items="clients"
-          :fields="['id', 'hostname', 'type', 'lastseen', 'actions']"
-          small
-          primary-key="id"
-          responsive="true"
-          sort-by="id"
-          striped
-          hover
-        >
-          <template #head(lastseen)> Last seen </template>
-          <template #cell(lastseen)="data">
-            <span v-if="data.item.discoverTime">
-              {{ data.item.discoverTime | momentago }} </span
-            ><span v-else>never seen</span>
-          </template>
-          <template #head(actions)="data">
-            <span class="float-right">{{ data.label }}</span>
-          </template>
-          <template #cell(actions)="data">
-            <source-actions :source="data.item" />
-          </template>
-        </b-table>
-      </b-col>
+      <b-col> </b-col>
     </b-row>
   </div>
 </template>
@@ -56,6 +87,12 @@ import Client from '~/models/Client'
 export default {
   components: { SourceActions },
   layout: 'nonfluid',
+  data() {
+    return {
+      filter: null,
+      showReScanOverlay: false,
+    }
+  },
   async fetch() {
     Client.commit((state) => {
       state.fetching = true
@@ -64,53 +101,14 @@ export default {
       state.fetching = true
     })
 
-    // await Client.api().get('/clients')
-    // await Client.api().get('/clients/active')
-    // // await ActiveClient.api().get('/clients/active')
-    // // await Source.api().get('/sources')
-    // const sources = await Source.api().get('/sources', { save: false })
+    await Source.api().get('/sources')
+    await Client.api().get('/clients/active', { persistsBy: 'insert' })
+    await Client.api().get('/clients', { persistsBy: 'insert' })
 
-    // sources.response.data.forEach((source) => {
-    //   if (Client.query().where('id', source.id).exists()) {
-    //     const client = Client.find(source.id)
-    //     Client.delete(source.id)
-
-    //     source = {
-    //       ...source,
-    //       hostname: client.hostname,
-    //       currentTime: client.currentTime,
-    //       startingTime: client.startingTime,
-    //       discoverTime: client.discoverTime,
-    //       uptime: client.uptime,
-    //       version: client.version,
-    //       metricqVersion: client.metricqVersion,
-    //     }
-    //     Source.insert({ where: source.id, data: source })
-    //   } else {
-    //     Source.insert({ data: source })
-    //   }
-    // })
-
-    const sources = await Source.api().get('/sources')
-    console.log(`sources: ${JSON.stringify(sources.response.data)}`)
-    console.log(`sources: ${JSON.stringify(sources.entities)}`)
-
-    // const activeClients = await Client.api().get('/clients/active', {
-    //   persistsBy: 'insert',
-    // })
-    // console.log(`activeClients: ${JSON.stringify(activeClients.response.data)}`)
-    // console.log(`activeClients: ${JSON.stringify(activeClients.entities)}`)
-
-    // const clients = await Client.api().get('/clients', { persistsBy: 'insert' })
-    // console.log(`clients: ${JSON.stringify(clients.response.data)}`)
-    // console.log(`clients: ${JSON.stringify(clients.entities.keys)}`)
-
-    // await sources.save()
-
-    Client.commit((state) => {
+    Source.commit((state) => {
       state.fetching = false
     })
-    Source.commit((state) => {
+    Client.commit((state) => {
       state.fetching = false
     })
   },
@@ -178,7 +176,16 @@ export default {
       )
     },
     async updateTopology() {
+      this.showReScanOverlay = true
       await this.$axios.post(`/topology/discover`)
+
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms))
+      }
+      await sleep(10000)
+
+      this.$nuxt.refresh()
+      this.showReScanOverlay = false
     },
   },
 }

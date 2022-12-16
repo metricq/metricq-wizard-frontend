@@ -1,6 +1,6 @@
-import Client from './Client'
+import { Client } from './ClientHierarchy'
 
-export default class Source extends Client {
+export class Source extends Client {
   static entity = 'source'
   static baseEntity = 'client'
 
@@ -13,3 +13,5 @@ export default class Source extends Client {
     }
   }
 }
+
+export default Source
