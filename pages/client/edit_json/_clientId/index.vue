@@ -9,7 +9,7 @@
       :title="backupModalTitle"
       @ok="onBackupRestore"
     >
-      <json-tree :data="backupJsonData" />
+      <JsonTree :data="backupJsonData" />
     </b-modal>
     <b-row>
       <b-col>

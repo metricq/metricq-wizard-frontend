@@ -53,7 +53,7 @@
             <b-card-group deck>
               <b-card no-body class="h-100" header="Metadata">
                 <b-card-text>
-                  <json-tree :data="selectedMetricMetadata" />
+                  <JsonTree :data="selectedMetricMetadata" />
                 </b-card-text>
               </b-card>
               <b-card no-body class="h-100" header="Source">
@@ -90,7 +90,7 @@
 
             <b-card no-body header="Live Data Points" class="mt-4 flex-grow-1">
               <b-card-body>
-                <apexchart
+                <ApexChart
                   type="line"
                   height="100%"
                   :options="chartOptions"

@@ -270,7 +270,7 @@
               :rate="filterRate"
               :page-size="pageSize"
               :disable-fuzzy="disableFuzzy"
-              :currentPage="currentPage"
+              :current-page="currentPage"
             />
           </b-card-text>
         </b-card>
