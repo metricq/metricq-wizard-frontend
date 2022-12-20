@@ -83,4 +83,10 @@ export default {
 }
 </script>
 
-<style />
+<style scoped>
+/* Fix positions of tooltips. Known issue, see:
+    https://github.com/bootstrap-vue/bootstrap-vue/issues/1732 */
+.tooltip {
+  top: 0;
+}
+</style>
