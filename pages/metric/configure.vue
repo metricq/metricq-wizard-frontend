@@ -10,299 +10,340 @@
         </h1>
       </b-col>
     </b-row>
-    <b-card>
-      <b-row>
-        <b-col cols="3">
-          <b-form-group
-            label="Load by database"
-            label-cols-sm="4"
-            label-align-sm="right"
-            label-size="sm"
-            label-for="loadByDatabase"
-            class="mb-0"
-          >
-            <b-input-group size="sm">
-              <b-form-select
-                id="loadByDatabase"
-                v-model="loadSelectedDatabase"
-                :options="databases"
-                :value="null"
-                disabled
-              >
-                <template #first>
-                  <b-form-select-option :value="null" disabled>
-                    Choose...
-                  </b-form-select-option>
-                </template>
-              </b-form-select>
-              <b-input-group-append>
-                <b-button
-                  :disabled="!loadSelectedDatabase"
-                  @click="loadByDatabase()"
+    <b-card no-body>
+      <b-card-header>
+        <b-row>
+          <b-col cols="3">
+            <b-form-group
+              label="Load by database"
+              label-cols-sm="4"
+              label-align-sm="right"
+              label-size="sm"
+              label-for="loadByDatabase"
+              class="mb-0"
+            >
+              <b-input-group size="sm">
+                <b-form-select
+                  id="loadByDatabase"
+                  v-model="loadSelectedDatabase"
+                  :options="databases"
+                  :value="null"
+                  disabled
                 >
-                  Load
-                </b-button>
-              </b-input-group-append>
-            </b-input-group>
-          </b-form-group>
-        </b-col>
-        <b-col cols="3">
-          <b-form-group
-            label="Load by source"
-            label-cols-sm="4"
-            label-align-sm="right"
-            label-size="sm"
-            label-for="loadBySource"
-            class="mb-0"
-          >
-            <b-input-group size="sm">
-              <b-form-select
-                id="loadBySource"
-                v-model="loadSelectedSource"
-                :options="sources"
-                :value="null"
-              >
-                <template #first>
-                  <b-form-select-option :value="null" disabled>
-                    Choose...
-                  </b-form-select-option>
-                </template>
-              </b-form-select>
-              <b-input-group-append>
-                <b-button
-                  :disabled="!loadSelectedSource"
-                  @click="loadBySource()"
+                  <template #first>
+                    <b-form-select-option :value="null" disabled>
+                      Choose...
+                    </b-form-select-option>
+                  </template>
+                </b-form-select>
+                <b-input-group-append>
+                  <b-button
+                    :disabled="!loadSelectedDatabase"
+                    @click="loadByDatabase()"
+                  >
+                    Load
+                  </b-button>
+                </b-input-group-append>
+              </b-input-group>
+            </b-form-group>
+          </b-col>
+          <b-col cols="3">
+            <b-form-group
+              label="Load by source"
+              label-cols-sm="4"
+              label-align-sm="right"
+              label-size="sm"
+              label-for="loadBySource"
+              class="mb-0"
+            >
+              <b-input-group size="sm">
+                <b-form-select
+                  id="loadBySource"
+                  v-model="loadSelectedSource"
+                  :options="sources"
+                  :value="null"
                 >
-                  Load
-                </b-button>
-              </b-input-group-append>
-            </b-input-group>
-          </b-form-group>
-        </b-col>
-        <b-col cols="3">
-          <b-form-group
-            label="Load by transformer"
-            label-cols-sm="4"
-            label-align-sm="right"
-            label-size="sm"
-            label-for="loadByTransformer"
-            class="mb-0"
-          >
-            <b-input-group size="sm">
-              <b-form-select
-                id="loadByTransformer"
-                v-model="loadSelectedTransformer"
-                :options="transformers"
-                :value="null"
-              >
-                <template #first>
-                  <b-form-select-option :value="null" disabled>
-                    Choose...
-                  </b-form-select-option>
-                </template>
-              </b-form-select>
-              <b-input-group-append>
-                <b-button
-                  :disabled="!loadSelectedTransformer"
-                  @click="loadByTransformer()"
+                  <template #first>
+                    <b-form-select-option :value="null" disabled>
+                      Choose...
+                    </b-form-select-option>
+                  </template>
+                </b-form-select>
+                <b-input-group-append>
+                  <b-button
+                    :disabled="!loadSelectedSource"
+                    @click="loadBySource()"
+                  >
+                    Load
+                  </b-button>
+                </b-input-group-append>
+              </b-input-group>
+            </b-form-group>
+          </b-col>
+          <b-col cols="3">
+            <b-form-group
+              label="Load by transformer"
+              label-cols-sm="4"
+              label-align-sm="right"
+              label-size="sm"
+              label-for="loadByTransformer"
+              class="mb-0"
+            >
+              <b-input-group size="sm">
+                <b-form-select
+                  id="loadByTransformer"
+                  v-model="loadSelectedTransformer"
+                  :options="transformers"
+                  :value="null"
                 >
-                  Load
-                </b-button>
-              </b-input-group-append>
-            </b-input-group>
-          </b-form-group>
-        </b-col>
-        <b-col>
-          <b-button
-            class="float-right"
-            :disabled="metricCount == 0"
-            size="sm"
-            @click="clearMetricList()"
-          >
-            Clear metric list
-          </b-button>
-        </b-col>
-      </b-row>
-    </b-card>
-    <b-card title="Filter">
-      <b-row>
-        <b-col lg="4">
-          <b-input-group size="sm">
-            <b-form-input
-              id="filterInput"
-              v-model="filterString"
-              type="search"
-              debounce="100"
-              placeholder="Type to Filter"
+                  <template #first>
+                    <b-form-select-option :value="null" disabled>
+                      Choose...
+                    </b-form-select-option>
+                  </template>
+                </b-form-select>
+                <b-input-group-append>
+                  <b-button
+                    :disabled="!loadSelectedTransformer"
+                    @click="loadByTransformer()"
+                  >
+                    Load
+                  </b-button>
+                </b-input-group-append>
+              </b-input-group>
+            </b-form-group>
+          </b-col>
+          <b-col>
+            <b-button
+              class="float-right"
+              :disabled="metricCount == 0"
               size="sm"
-            />
-            <b-input-group-append>
-              <b-button
-                :disabled="!filterString"
-                size="sm"
-                @click="filterString = ''"
+              @click="clearMetricList()"
+            >
+              Clear metric list
+            </b-button>
+          </b-col>
+        </b-row>
+      </b-card-header>
+
+      <b-card-body>
+        <b-card title="Filter">
+          <b-row>
+            <b-col lg="4">
+              <b-input-group size="sm">
+                <b-form-input
+                  id="filterInput"
+                  v-model="filterString"
+                  type="search"
+                  debounce="100"
+                  placeholder="Type to Filter"
+                  size="sm"
+                />
+                <b-input-group-append>
+                  <b-button
+                    :disabled="!filterString"
+                    size="sm"
+                    @click="filterString = ''"
+                  >
+                    Clear
+                  </b-button>
+                </b-input-group-append>
+              </b-input-group>
+              <b-form-checkbox id="disableFuzzyInput" v-model="disableFuzzy">
+                Only search id and source with disabled fuzzy search
+              </b-form-checkbox>
+            </b-col>
+            <b-col>
+              <b-form-group
+                label="Units"
+                label-cols-sm="3"
+                label-align-sm="right"
+                label-for="filterInput"
+                class="mb-0"
               >
-                Clear
-              </b-button>
-            </b-input-group-append>
-          </b-input-group>
-          <b-form-checkbox id="disableFuzzyInput" v-model="disableFuzzy">
-            Only search id and source with disabled fuzzy search
-          </b-form-checkbox>
-        </b-col>
-        <b-col>
-          <b-form-group
-            label="Units"
-            label-cols-sm="3"
-            label-align-sm="right"
-            label-for="filterInput"
-            class="mb-0"
-          >
-            <b-form-select
-              id="unitFilter"
-              v-model="filterUnits"
-              :options="metricUnits"
-              :value="null"
+                <b-form-select
+                  id="unitFilter"
+                  v-model="filterUnits"
+                  :options="metricUnits"
+                  :value="null"
+                />
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group
+                label="Rate"
+                label-cols-sm="3"
+                label-align-sm="right"
+                label-for="rateFilter"
+                class="mb-0"
+              >
+                <b-form-select
+                  id="rateFilter"
+                  v-model="filterRate"
+                  :options="metricRates"
+                  :value="null"
+                />
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group
+                label="DB Status"
+                label-cols-sm="3"
+                label-align-sm="right"
+                label-for="filterInput"
+                class="mb-0"
+              >
+                <b-form-select
+                  id="historicFilter"
+                  v-model="filterHistoric"
+                  :options="filterHistoricOptions"
+                  :value="null"
+                />
+              </b-form-group>
+            </b-col>
+          </b-row>
+        </b-card>
+      </b-card-body>
+
+      <b-card-body>
+        <b-card no-body>
+          <b-card-header>
+            <b-row class="my-1">
+              <b-col cols="5">
+                <b-button
+                  size="sm"
+                  @click="$refs.metricTable.selectCurrentPage()"
+                >
+                  Select this page
+                </b-button>
+                <b-button
+                  size="sm"
+                  @click="$refs.metricTable.selectAllFiltered()"
+                >
+                  Select all (filtered)
+                </b-button>
+                <b-button
+                  size="sm"
+                  @click="$refs.metricTable.deselectCurrentPage()"
+                >
+                  Deselect this page
+                </b-button>
+                <b-button
+                  size="sm"
+                  @click="$refs.metricTable.deselectAllFiltered()"
+                >
+                  Deselect all (filtered)
+                </b-button>
+                <b-button
+                  size="sm"
+                  variant="danger"
+                  @click="$refs.metricTable.deselectAll()"
+                >
+                  Deselect all
+                </b-button>
+              </b-col>
+              <b-col>
+                <b-form-group
+                  label="Items per page"
+                  label-cols="8"
+                  label-align="right"
+                  label-for="selectPageSize"
+                  label-size="sm"
+                >
+                  <b-form-select
+                    id="selectPageSize"
+                    v-model="pageSize"
+                    :options="[10, 20, 50, 100, 500]"
+                    size="sm"
+                  />
+                </b-form-group>
+              </b-col>
+            </b-row>
+          </b-card-header>
+
+          <b-card-text>
+            <MetricTable
+              ref="metricTable"
+              :filter="filterString"
+              :historic="filterHistoric"
+              :unit="filterUnits"
+              :rate="filterRate"
+              :page-size="pageSize"
+              :disable-fuzzy="disableFuzzy"
+              :currentPage="currentPage"
             />
-          </b-form-group>
-        </b-col>
-        <b-col>
-          <b-form-group
-            label="Rate"
-            label-cols-sm="3"
-            label-align-sm="right"
-            label-for="rateFilter"
-            class="mb-0"
-          >
-            <b-form-select
-              id="rateFilter"
-              v-model="filterRate"
-              :options="metricRates"
-              :value="null"
+          </b-card-text>
+        </b-card>
+      </b-card-body>
+
+      <b-card-footer>
+        <b-row class="pt-1 pb-1">
+          <b-col />
+          <b-col>
+            <b-pagination
+              v-model="currentPage"
+              :total-rows="metricCount"
+              :per-page="pageSize"
+              align="center"
+              first-number
+              last-number
             />
-          </b-form-group>
-        </b-col>
-        <b-col>
-          <b-form-group
-            label="DB Status"
-            label-cols-sm="3"
-            label-align-sm="right"
-            label-for="filterInput"
-            class="mb-0"
-          >
-            <b-form-select
-              id="historicFilter"
-              v-model="filterHistoric"
-              :options="filterHistoricOptions"
-              :value="null"
-            />
-          </b-form-group>
-        </b-col>
-      </b-row>
+          </b-col>
+          <b-col>
+            <b-button
+              :to="{
+                name: 'metric-database_configuration',
+              }"
+              :disabled="selected.length === 0"
+              class="float-right"
+            >
+              Configure database
+            </b-button>
+            <b-dropdown
+              split
+              :split-to="combinedMetricButtonTarget.defaultButton.to"
+              :text="combinedMetricButtonTarget.defaultButton.text"
+              class="float-right mr-1"
+            >
+              <b-dropdown-item
+                :to="combinedMetricButtonTarget.firstButton.to"
+                :disabled="selected.length === 0"
+              >
+                {{ combinedMetricButtonTarget.firstButton.text }}
+              </b-dropdown-item>
+              <b-dropdown-item
+                :to="{
+                  name: 'metric-create_combined_metric',
+                  params: {
+                    expression: {
+                      operation: 'min',
+                      inputs: selected.map((item) => item.id),
+                    },
+                  },
+                }"
+                :disabled="selected.length === 0"
+              >
+                Create min metric from selected
+              </b-dropdown-item>
+              <b-dropdown-item
+                :to="{
+                  name: 'metric-create_combined_metric',
+                  params: {
+                    expression: {
+                      operation: 'max',
+                      inputs: selected.map((item) => item.id),
+                    },
+                  },
+                }"
+                :disabled="selected.length === 0"
+              >
+                Create max metric from selected
+              </b-dropdown-item>
+            </b-dropdown>
+          </b-col>
+        </b-row>
+      </b-card-footer>
     </b-card>
-    <b-row class="my-1">
-      <b-col cols="5">
-        <b-button size="sm" @click="$refs.metricTable.selectCurrentPage()">
-          Select this page
-        </b-button>
-        <b-button size="sm" @click="$refs.metricTable.selectAllFiltered()">
-          Select all (filtered)
-        </b-button>
-        <b-button size="sm" @click="$refs.metricTable.deselectCurrentPage()">
-          Deselect this page
-        </b-button>
-        <b-button size="sm" @click="$refs.metricTable.deselectAllFiltered()">
-          Deselect all (filtered)
-        </b-button>
-        <b-button
-          size="sm"
-          variant="danger"
-          @click="$refs.metricTable.deselectAll()"
-        >
-          Deselect all
-        </b-button>
-      </b-col>
-      <b-col>
-        <b-form-group
-          label="Items per page"
-          label-cols="8"
-          label-align="right"
-          label-for="selectPageSize"
-          label-size="sm"
-        >
-          <b-form-select
-            id="selectPageSize"
-            v-model="pageSize"
-            :options="[10, 20, 50, 100, 500]"
-            size="sm"
-          />
-        </b-form-group>
-      </b-col>
-    </b-row>
-    <MetricTable
-      ref="metricTable"
-      :filter="filterString"
-      :historic="filterHistoric"
-      :unit="filterUnits"
-      :rate="filterRate"
-      :page-size="pageSize"
-      :disable-fuzzy="disableFuzzy"
-    />
-    <b-row class="pt-1 pb-1">
-      <b-col />
-      <b-col>
-        <b-button
-          :to="{
-            name: 'metric-database_configuration',
-          }"
-          :disabled="selected.length === 0"
-          class="float-right"
-        >
-          Configure database
-        </b-button>
-        <b-dropdown
-          split
-          :split-to="combinedMetricButtonTarget.defaultButton.to"
-          :text="combinedMetricButtonTarget.defaultButton.text"
-          class="float-right mr-1"
-        >
-          <b-dropdown-item
-            :to="combinedMetricButtonTarget.firstButton.to"
-            :disabled="selected.length === 0"
-          >
-            {{ combinedMetricButtonTarget.firstButton.text }}
-          </b-dropdown-item>
-          <b-dropdown-item
-            :to="{
-              name: 'metric-create_combined_metric',
-              params: {
-                expression: {
-                  operation: 'min',
-                  inputs: selected.map((item) => item.id),
-                },
-              },
-            }"
-            :disabled="selected.length === 0"
-          >
-            Create min metric from selected
-          </b-dropdown-item>
-          <b-dropdown-item
-            :to="{
-              name: 'metric-create_combined_metric',
-              params: {
-                expression: {
-                  operation: 'max',
-                  inputs: selected.map((item) => item.id),
-                },
-              },
-            }"
-            :disabled="selected.length === 0"
-          >
-            Create max metric from selected
-          </b-dropdown-item>
-        </b-dropdown>
-      </b-col>
-    </b-row>
   </div>
 </template>
 
@@ -332,6 +373,7 @@ export default {
       loadSelectedSource: null,
       loadSelectedTransformer: null,
       pageSize: 20,
+      currentPage: 1,
       disableFuzzy: false,
     }
   },

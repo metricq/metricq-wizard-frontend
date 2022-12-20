@@ -18,6 +18,7 @@
           striped
           hover
           show-empty
+          class="mb-0"
           @row-clicked="onRowClicked"
         >
           <template #cell(select)="data">
@@ -86,14 +87,6 @@
             }}</pre>
           </template>
         </b-table>
-        <b-pagination
-          v-model="currentPage"
-          :total-rows="rows"
-          :per-page="pageSize"
-          align="center"
-          first-number
-          last-number
-        />
       </b-col>
     </b-row>
   </div>
@@ -111,11 +104,11 @@ export default {
     disableFuzzy: { type: Boolean, default: false },
     unit: { type: String, default: null },
     rate: { type: Number, default: null },
+    currentPage: { type: Number, default: 1 },
   },
   data() {
     return {
       currentTableItems: [],
-      currentPage: 1,
       fields: [
         {
           key: 'select',
