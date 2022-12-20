@@ -1,5 +1,11 @@
 <template>
-  <b-navbar toggleable="lg" sticky fixed="top" variant="light">
+  <b-navbar
+    toggleable="lg"
+    sticky
+    fixed="top"
+    variant="light"
+    class="shadow-sm"
+  >
     <b-navbar-brand :to="{ name: 'index' }">
       MetricQ &#x1F9D9; ‍️
     </b-navbar-brand>
