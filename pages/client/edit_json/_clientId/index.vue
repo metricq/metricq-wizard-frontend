@@ -23,7 +23,7 @@
       <b-col>
         <b-card no-body>
           <b-tabs card>
-            <b-tab title="Graphical Editor" active>
+            <b-tab title="Graphical Editor" :active="showJsonEditor" lazy>
               <b-container>
                 <JsonEditor
                   v-model="jsonData"
@@ -32,7 +32,7 @@
                 />
               </b-container>
             </b-tab>
-            <b-tab title="Textual Editor" lazy>
+            <b-tab title="Textual Editor" :active="!showJsonEditor" lazy>
               <b-form-textarea
                 ref="rawInput"
                 :value="jsonData"
