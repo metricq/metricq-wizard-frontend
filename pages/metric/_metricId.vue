@@ -1,5 +1,5 @@
 <template>
-  <div class="metricLibrary">
+  <div class="metricLibrary d-flex flex-column">
     <b-row>
       <b-col>
         <h1>
@@ -11,9 +11,9 @@
       </b-col>
     </b-row>
 
-    <b-row>
-      <b-col align="center">
-        <b-card no-body>
+    <b-row class="pb-3 flex-grow-1">
+      <b-col align="center" class="d-flex flex-column">
+        <b-card no-body class="flex-grow-1">
           <b-card-header>
             <b-input-group prepend="Metric" size="sm">
               <b-input
@@ -45,51 +45,60 @@
             </li>
           </ul>
 
-          <div v-if="hasSelectedMetric()" align="center" class="box">
-            <b-row align="center" class="header">
-              <b-col>
-                <h2>Metadata</h2>
-                <json-tree :data="selectedMetricMetadata" />
-              </b-col>
-              <b-col>
-                <h2>Source</h2>
-                <b-row align="center">
-                  <b-col>
-                    <span class="lead">{{ selectedMetric.source }}</span>
-                  </b-col>
-                  <b-col>
-                    <client-actions
-                      v-if="getMetricSource(selectedMetric.source)"
-                      :client="getMetricSource(selectedMetric.source)"
-                    />
-                  </b-col>
-                </b-row>
-              </b-col>
-              <b-col>
-                <h2>Consumers</h2>
-                <b-list-group>
+          <b-card-body
+            v-if="hasSelectedMetric()"
+            align="center"
+            class="d-flex flex-column"
+          >
+            <b-card-group deck>
+              <b-card no-body class="h-100" header="Metadata">
+                <b-card-text>
+                  <json-tree :data="selectedMetricMetadata" />
+                </b-card-text>
+              </b-card>
+              <b-card no-body class="h-100" header="Source">
+                <b-card-body>
+                  <b-row>
+                    <b-col align="left">
+                      <span class="lead">
+                        {{ selectedMetric.source }}
+                      </span>
+                    </b-col>
+                    <b-col>
+                      <client-actions
+                        v-if="getMetricSource(selectedMetric.source)"
+                        :client="getMetricSource(selectedMetric.source)"
+                      />
+                    </b-col>
+                  </b-row>
+                </b-card-body>
+              </b-card>
+              <b-card no-body header="Consumers">
+                <b-list-group flush class="h-100">
                   <b-list-group-item
                     v-for="consumer in selectedMetricConsumers"
                     :key="consumer"
+                    align="left"
                   >
-                    {{ consumer }}
+                    <span class="lead">
+                      {{ consumer }}
+                    </span>
                   </b-list-group-item>
                 </b-list-group>
-              </b-col>
-            </b-row>
-            <b-row class="content">
-              <b-col>
-                <h2>Live Data Points</h2>
+              </b-card>
+            </b-card-group>
+
+            <b-card no-body header="Live Data Points" class="mt-4 flex-grow-1">
+              <b-card-body>
                 <apexchart
                   type="line"
-                  width="95%"
                   height="100%"
                   :options="chartOptions"
                   :series="metricLiveData"
-                ></apexchart>
-              </b-col>
-            </b-row>
-          </div>
+                />
+              </b-card-body>
+            </b-card>
+          </b-card-body>
         </b-card>
       </b-col>
     </b-row>
@@ -99,7 +108,7 @@
 <script>
 import MetricQLive from '@metricq/live'
 
-import ClientActions from '~/components/client_actions.vue'
+import ClientActions from '~/components/ClientActions.vue'
 import Metric from '~/models/Metric'
 import Source from '~/models/Source'
 
@@ -226,10 +235,12 @@ export default {
     },
     onMetricData(metric, time, value) {
       if (this.hasSelectedMetric() && this.metric === metric) {
+        const oldData = this.metricLiveData[0].data
+
         if (!isNaN(value)) {
-          this.metricLiveData[0].data.push({ x: time.valueOf(), y: value })
+          oldData.push({ x: time.valueOf(), y: value })
         } else {
-          this.metricLiveData[0].data.push({
+          oldData.push({
             x: time.valueOf(),
             y: 0,
             marker: {
@@ -241,14 +252,10 @@ export default {
             },
           })
         }
-        if (this.metricLiveData[0].data.length > 100) {
-          this.metricLiveData = [
-            { name: this.metric, data: this.metricLiveData[0].data.slice(1) },
-          ]
+        if (oldData.length > 100) {
+          this.metricLiveData = [{ name: this.metric, data: oldData.slice(1) }]
         } else {
-          this.metricLiveData = [
-            { name: this.metric, data: this.metricLiveData[0].data },
-          ]
+          this.metricLiveData = [{ name: this.metric, data: oldData }]
         }
       }
     },
@@ -258,8 +265,7 @@ export default {
 
 <style scoped>
 .metricLibrary {
-  max-height: calc(100vh - 56px);
-  overflow-y: visible;
+  height: calc(100vh - 56px);
 }
 
 .autocomplete {
@@ -272,8 +278,6 @@ export default {
   border: 1px solid #eeeeee;
   height: 100%;
   min-height: 1em;
-  /* max-height: 25em; */
-  /* overflow: auto; */
 }
 
 .autocomplete-result {
