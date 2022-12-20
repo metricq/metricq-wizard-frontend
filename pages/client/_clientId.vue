@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import ClientActions from '~/components/client_actions.vue'
+import ClientActions from '~/components/ClientActions.vue'
 import Source from '~/models/Source'
 import Client from '~/models/Client'
 
