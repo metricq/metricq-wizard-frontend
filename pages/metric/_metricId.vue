@@ -80,9 +80,16 @@
                     :key="consumer"
                     align="left"
                   >
-                    <span class="lead">
-                      {{ consumer }}
-                    </span>
+                    <b-row>
+                      <b-col align="left">
+                        <span class="lead">
+                          {{ consumer.id }}
+                        </span>
+                      </b-col>
+                      <b-col>
+                        <client-actions :client="consumer" />
+                      </b-col>
+                    </b-row>
                   </b-list-group-item>
                 </b-list-group>
               </b-card>
@@ -111,6 +118,7 @@ import MetricQLive from '@metricq/live'
 import ClientActions from '~/components/ClientActions.vue'
 import Metric from '~/models/Metric'
 import Source from '~/models/Source'
+import Client from '~/models/Client'
 
 export default {
   components: { ClientActions },
@@ -133,7 +141,18 @@ export default {
       async get() {
         if (!this.hasSelectedMetric()) return []
 
-        return (await this.$axios.get(`/metric/${this.metric}/consumers`)).data
+        function sleep(ms) {
+          return new Promise((resolve) => setTimeout(resolve, ms))
+        }
+
+        while (this.$fetchState.pending) {
+          await sleep(100)
+        }
+
+        const data = (await this.$axios.get(`/metric/${this.metric}/consumers`))
+          .data
+
+        return Client.findIn(data)
       },
       default: [],
     },
@@ -163,11 +182,15 @@ export default {
     }
   },
   async fetch() {
-    Source.commit((state) => {
+    Client.commit((state) => {
       state.fetching = true
     })
+
     await Source.api().get('/sources')
-    Source.commit((state) => {
+    await Client.api().get('/clients/active', { persistsBy: 'insert' })
+    await Client.api().get('/clients', { persistsBy: 'insert' })
+
+    Client.commit((state) => {
       state.fetching = false
     })
   },

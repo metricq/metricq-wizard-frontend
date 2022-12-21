@@ -108,17 +108,11 @@ export default {
     Client.commit((state) => {
       state.fetching = true
     })
-    Source.commit((state) => {
-      state.fetching = true
-    })
 
     await Source.api().get('/sources')
     await Client.api().get('/clients/active', { persistsBy: 'insert' })
     await Client.api().get('/clients', { persistsBy: 'insert' })
 
-    Source.commit((state) => {
-      state.fetching = false
-    })
     Client.commit((state) => {
       state.fetching = false
     })
