@@ -33,7 +33,7 @@
         </b-nav-item>
         <b-nav-item
           :to="{
-            name: 'client-client_list',
+            name: 'client-list',
           }"
           active-class="active"
         >

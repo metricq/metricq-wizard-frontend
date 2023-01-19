@@ -94,6 +94,12 @@
               </b-col>
             </b-row>
           </b-card-body>
+          <b-card-body v-else class="p-0">
+            <b-alert variant="warning" show class="p-3 m-0">
+              Could not find any information about this client. Maybe it does
+              not exist.
+            </b-alert>
+          </b-card-body>
         </b-card>
       </b-col>
     </b-row>
