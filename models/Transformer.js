@@ -1,8 +1,7 @@
-import { Client } from './Client'
+import { Model } from '@vuex-orm/core'
 
-export default class Transformer extends Client {
+export default class Transformer extends Model {
   static entity = 'transformer'
-  static baseEntity = 'client'
 
   static state() {
     return {
@@ -12,7 +11,7 @@ export default class Transformer extends Client {
 
   static fields() {
     return {
-      ...super.fields(),
+      id: this.string().nullable(),
       isCombinator: this.boolean(),
     }
   }

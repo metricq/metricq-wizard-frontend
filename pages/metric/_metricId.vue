@@ -56,28 +56,30 @@
                   <JsonTree :data="selectedMetricMetadata" />
                 </b-card-text>
               </b-card>
-              <b-card no-body class="h-100" header="Source">
-                <b-card-body>
-                  <b-row>
-                    <b-col align="left">
-                      <span class="lead">
-                        {{ selectedMetric.source }}
-                      </span>
-                    </b-col>
-                    <b-col>
-                      <client-actions
-                        v-if="getMetricSource(selectedMetric.source)"
-                        :client="getMetricSource(selectedMetric.source)"
-                      />
-                    </b-col>
-                  </b-row>
-                </b-card-body>
+              <b-card no-body header="Source">
+                <b-list-group flush class="h-100">
+                  <b-list-group-item>
+                    <b-row>
+                      <b-col align="left">
+                        <span class="lead">
+                          {{ selectedMetric.source }}
+                        </span>
+                      </b-col>
+                      <b-col>
+                        <client-actions
+                          v-if="getMetricSource(selectedMetric.source)"
+                          :client="getMetricSource(selectedMetric.source)"
+                        />
+                      </b-col>
+                    </b-row>
+                  </b-list-group-item>
+                </b-list-group>
               </b-card>
               <b-card no-body header="Consumers">
                 <b-list-group flush class="h-100">
                   <b-list-group-item
                     v-for="consumer in selectedMetricConsumers"
-                    :key="consumer"
+                    :key="consumer.id"
                     align="left"
                   >
                     <b-row>
@@ -97,11 +99,12 @@
 
             <b-card no-body header="Live Data Points" class="mt-4 flex-grow-1">
               <b-card-body>
-                <ApexChart
-                  type="line"
-                  height="100%"
-                  :options="chartOptions"
-                  :series="metricLiveData"
+                <line-chart
+                  :ytitle="selectedMetricMetadata.unit"
+                  :data="metricLiveData"
+                  :label="selectedMetric.id"
+                  :messages="{ empty: 'No data received yet' }"
+                  :curve="false"
                 />
               </b-card-body>
             </b-card>
@@ -141,16 +144,11 @@ export default {
       async get() {
         if (!this.hasSelectedMetric()) return []
 
-        function sleep(ms) {
-          return new Promise((resolve) => setTimeout(resolve, ms))
-        }
+        if (this.$fetchState.pending) return []
 
-        while (this.$fetchState.pending) {
-          await sleep(100)
-        }
-
-        const data = (await this.$axios.get(`/metric/${this.metric}/consumers`))
-          .data
+        const { data } = await this.$axios.get(
+          `/metric/${this.metric}/consumers`
+        )
 
         return Client.findIn(data)
       },
@@ -229,7 +227,7 @@ export default {
 
         this.metricqWebsocket.subscribe(this.metric)
 
-        this.metricLiveData = [{ name: this.metric, data: [] }]
+        this.metricLiveData = []
       }
     },
   },
@@ -254,14 +252,16 @@ export default {
       )
     },
     getMetricSource(sourceId) {
-      return Source.query().whereId(sourceId).first()
+      // A transformer can be the source of a metric, but isn't a Source in our model.
+      // Hence we use Client to query here, instead.
+      return Client.query().whereId(sourceId).first()
     },
     onMetricData(metric, time, value) {
       if (this.hasSelectedMetric() && this.metric === metric) {
-        const oldData = this.metricLiveData[0].data
+        const oldData = this.metricLiveData
 
         if (!isNaN(value)) {
-          oldData.push({ x: time.valueOf(), y: value })
+          oldData.push([time.toDate(), value])
         } else {
           oldData.push({
             x: time.valueOf(),
@@ -276,9 +276,9 @@ export default {
           })
         }
         if (oldData.length > 100) {
-          this.metricLiveData = [{ name: this.metric, data: oldData.slice(1) }]
+          this.metricLiveData = oldData.slice(1)
         } else {
-          this.metricLiveData = [{ name: this.metric, data: oldData }]
+          this.metricLiveData = oldData
         }
       }
     },

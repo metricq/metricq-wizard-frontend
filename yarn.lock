@@ -3117,20 +3117,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apexcharts@npm:^3.36.3":
-  version: 3.36.3
-  resolution: "apexcharts@npm:3.36.3"
-  dependencies:
-    svg.draggable.js: ^2.2.2
-    svg.easing.js: ^2.0.0
-    svg.filter.js: ^2.0.2
-    svg.pathmorphing.js: ^0.1.3
-    svg.resize.js: ^1.4.3
-    svg.select.js: ^3.0.1
-  checksum: 2b92f123cf3e52255d379d95411d12943c096a1575234ae90513d9dd9dd3f118fa1f08098b5acf142e1d119ac0c19a7ca2a62d3979cf7e333d361d582ec12daf
-  languageName: node
-  linkType: hard
-
 "aproba@npm:^1.0.3 || ^2.0.0":
   version: 2.0.0
   resolution: "aproba@npm:2.0.0"
@@ -4187,6 +4173,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chartkick@npm:^3.2.0":
+  version: 3.2.1
+  resolution: "chartkick@npm:3.2.1"
+  checksum: 72c4a86ef8a67599c0965bc37874918f0b224685af2d8a5007f5e392ceb3f772fbbce77383f51c74b4a33075ae16b9729f24db0897f4cdbab80e9abf10dfa235
+  languageName: node
+  linkType: hard
+
 "chokidar@npm:^2.1.8":
   version: 2.1.8
   resolution: "chokidar@npm:2.1.8"
@@ -5221,6 +5214,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"deep-equal@npm:^1.0.1":
+  version: 1.1.1
+  resolution: "deep-equal@npm:1.1.1"
+  dependencies:
+    is-arguments: ^1.0.4
+    is-date-object: ^1.0.1
+    is-regex: ^1.0.4
+    object-is: ^1.0.1
+    object-keys: ^1.1.1
+    regexp.prototype.flags: ^1.2.0
+  checksum: f92686f2c5bcdf714a75a5fa7a9e47cb374a8ec9307e717b8d1ce61f56a75aaebf5619c2a12b8087a705b5a2f60d0292c35f8b58cb1f72e3268a3a15cab9f78d
+  languageName: node
+  linkType: hard
+
 "deep-is@npm:^0.1.3, deep-is@npm:~0.1.3":
   version: 0.1.4
   resolution: "deep-is@npm:0.1.4"
@@ -5228,7 +5235,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deepmerge@npm:^4.2.2":
+"deepmerge@npm:^4.2.0, deepmerge@npm:^4.2.2":
   version: 4.2.2
   resolution: "deepmerge@npm:4.2.2"
   checksum: a8c43a1ed8d6d1ed2b5bf569fa4c8eb9f0924034baf75d5d406e47e157a451075c4db353efea7b6bcc56ec48116a8ce72fccf867b6e078e7c561904b5897530b
@@ -6865,6 +6872,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"functions-have-names@npm:^1.2.2":
+  version: 1.2.3
+  resolution: "functions-have-names@npm:1.2.3"
+  checksum: c3f1f5ba20f4e962efb71344ce0a40722163e85bee2101ce25f88214e78182d2d2476aa85ef37950c579eb6cf6ee811c17b3101bb84004bb75655f3e33f3fdb5
+  languageName: node
+  linkType: hard
+
 "fuse.js@npm:^3.4.6":
   version: 3.6.1
   resolution: "fuse.js@npm:3.6.1"
@@ -7290,6 +7304,23 @@ __metadata:
   version: 1.1.0
   resolution: "hex-color-regex@npm:1.1.0"
   checksum: 44fa1b7a26d745012f3bfeeab8015f60514f72d2fcf10dce33068352456b8d71a2e6bc5a17f933ab470da2c5ab1e3e04b05caf3fefe3c1cabd7e02e516fc8784
+  languageName: node
+  linkType: hard
+
+"highcharts-vue@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "highcharts-vue@npm:1.4.0"
+  peerDependencies:
+    highcharts: ">=5.0.0"
+    vue: ">=1.0.0"
+  checksum: 938ccb244e42697089d75bc7e60e57345403066501c1546c65a40a1438fe6e575e54588b1fe30d0b2ccdfc234f70a420b604d738cd7184c4fa1f01f05ab2e242
+  languageName: node
+  linkType: hard
+
+"highcharts@npm:^10.3.2":
+  version: 10.3.2
+  resolution: "highcharts@npm:10.3.2"
+  checksum: 43cb42b24c3d6effc03d021f410a760322092ebd7012b60c2c475aa48a426af6c2a0a2937707bfc1c7aab089f0cc968c9aec3a9a1147e87ffc463b0adfb61ad4
   languageName: node
   linkType: hard
 
@@ -7800,6 +7831,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-arguments@npm:^1.0.4":
+  version: 1.1.1
+  resolution: "is-arguments@npm:1.1.1"
+  dependencies:
+    call-bind: ^1.0.2
+    has-tostringtag: ^1.0.0
+  checksum: 7f02700ec2171b691ef3e4d0e3e6c0ba408e8434368504bb593d0d7c891c0dbfda6d19d30808b904a6cb1929bca648c061ba438c39f296c2a8ca083229c49f27
+  languageName: node
+  linkType: hard
+
 "is-arrayish@npm:^0.2.1":
   version: 0.2.1
   resolution: "is-arrayish@npm:0.2.1"
@@ -8109,7 +8150,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-regex@npm:^1.1.4":
+"is-regex@npm:^1.0.4, is-regex@npm:^1.1.4":
   version: 1.1.4
   resolution: "is-regex@npm:1.1.4"
   dependencies:
@@ -9559,7 +9600,6 @@ __metadata:
     "@vuex-orm/core": ^0.36.3
     "@vuex-orm/plugin-axios": ^0.9.3
     "@vuex-orm/plugin-search": ^0.24.1
-    apexcharts: ^3.36.3
     axios: ^0.21.0
     babel-jest: ^26.6.3
     bootstrap: ^4.5.3
@@ -9569,6 +9609,8 @@ __metadata:
     eslint-config-prettier: ^8.3.0
     eslint-plugin-nuxt: ">=2.0.0"
     eslint-plugin-prettier: ^3.4.0
+    highcharts: ^10.3.2
+    highcharts-vue: ^1.4.0
     husky: ^5.1.3
     jest: ^26.6.3
     jquery: ^3.6.0
@@ -9581,8 +9623,8 @@ __metadata:
     timestring: ^6.0.0
     typescript: ^4.2.4
     vue: ^2.6.12
-    vue-apexcharts: ^1.6.2
     vue-async-computed: ^3.9.0
+    vue-chartkick: 0.6.1
     vue-jest: ^3.0.7
     vue-json-edit: ^1.4.3
     vue-json-tree: ^0.4.3
@@ -10412,6 +10454,16 @@ __metadata:
   version: 1.11.0
   resolution: "object-inspect@npm:1.11.0"
   checksum: 8c64f89ce3a7b96b6925879ad5f6af71d498abc217e136660efecd97452991216f375a7eb47cb1cb50643df939bf0c7cc391567b7abc6a924d04679705e58e27
+  languageName: node
+  linkType: hard
+
+"object-is@npm:^1.0.1":
+  version: 1.1.5
+  resolution: "object-is@npm:1.1.5"
+  dependencies:
+    call-bind: ^1.0.2
+    define-properties: ^1.1.3
+  checksum: 989b18c4cba258a6b74dc1d74a41805c1a1425bce29f6cabb50dcb1a6a651ea9104a1b07046739a49a5bb1bc49727bcb00efd5c55f932f6ea04ec8927a7901fe
   languageName: node
   linkType: hard
 
@@ -12341,6 +12393,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"regexp.prototype.flags@npm:^1.2.0":
+  version: 1.4.3
+  resolution: "regexp.prototype.flags@npm:1.4.3"
+  dependencies:
+    call-bind: ^1.0.2
+    define-properties: ^1.1.3
+    functions-have-names: ^1.2.2
+  checksum: 51228bae732592adb3ededd5e15426be25f289e9c4ef15212f4da73f4ec3919b6140806374b8894036a86020d054a8d2657d3fee6bb9b4d35d8939c20030b7a6
+  languageName: node
+  linkType: hard
+
 "regexpp@npm:^3.0.0, regexpp@npm:^3.1.0":
   version: 3.2.0
   resolution: "regexpp@npm:3.2.0"
@@ -13686,77 +13749,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"svg.draggable.js@npm:^2.2.2":
-  version: 2.2.2
-  resolution: "svg.draggable.js@npm:2.2.2"
-  dependencies:
-    svg.js: ^2.0.1
-  checksum: b9068975d743be664695e7d4323624bba8ff2795b855a46a2f15c842827022684501d63239c99723238d39c9f991940dc04639b8f43ac124fd9ca44a34e6aab2
-  languageName: node
-  linkType: hard
-
-"svg.easing.js@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "svg.easing.js@npm:2.0.0"
-  dependencies:
-    svg.js: ">=2.3.x"
-  checksum: 0f7df78333d879dc00200ddbb4e9d7d745307c002b5dd242ddaf276e8d907067ab75383869ef1940975be1765d595d379ced491ff4bdf78d867bff8225544e92
-  languageName: node
-  linkType: hard
-
-"svg.filter.js@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "svg.filter.js@npm:2.0.2"
-  dependencies:
-    svg.js: ^2.2.5
-  checksum: f0e780bfe385336a7c9d1d8a3ebba1ca9712f6bf0917769fd30c9fd4e3559186ec18d4d6520d9841a9cceba2ac8ff1eacc76b98f7e8b15d5f4a58975a8ecdc64
-  languageName: node
-  linkType: hard
-
-"svg.js@npm:>=2.3.x, svg.js@npm:^2.0.1, svg.js@npm:^2.2.5, svg.js@npm:^2.4.0, svg.js@npm:^2.6.5":
-  version: 2.7.1
-  resolution: "svg.js@npm:2.7.1"
-  checksum: 945bfc9623985fefb4c7275a1b98b5168e5857291f46cbd299bd2e14ce7f4428fea6569c7446d37b75694c43dea01a5f179fbce4f770e7dcd136117bb8f1a3f3
-  languageName: node
-  linkType: hard
-
-"svg.pathmorphing.js@npm:^0.1.3":
-  version: 0.1.3
-  resolution: "svg.pathmorphing.js@npm:0.1.3"
-  dependencies:
-    svg.js: ^2.4.0
-  checksum: bcbe1ccea95c980fa127cb6ad955f1970d763143ab11576cca2fd8d13616deedf933bc17a6310754cd0cb404ac501d627afb5805c578878e4c8f24e1818a7de6
-  languageName: node
-  linkType: hard
-
-"svg.resize.js@npm:^1.4.3":
-  version: 1.4.3
-  resolution: "svg.resize.js@npm:1.4.3"
-  dependencies:
-    svg.js: ^2.6.5
-    svg.select.js: ^2.1.2
-  checksum: 8f4116f4422b72c66bb1110dca2d77ab2cc0665db1e0cd1c0020e06fe9684f53d9bc7aca3b90ce82ce35103ff8ea83a93df1db5d88c889e511d7622c9b000884
-  languageName: node
-  linkType: hard
-
-"svg.select.js@npm:^2.1.2":
-  version: 2.1.2
-  resolution: "svg.select.js@npm:2.1.2"
-  dependencies:
-    svg.js: ^2.2.5
-  checksum: 1dbbb44d16170aad1372e0f8f0d109a21e4216e1e4e28a566738c6cb6b4519b37e44cd1f7de06f3c8eec5e588845d8cbb0e37efc89b8d27401e4c6a0a13564a4
-  languageName: node
-  linkType: hard
-
-"svg.select.js@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "svg.select.js@npm:3.0.1"
-  dependencies:
-    svg.js: ^2.6.5
-  checksum: 0ce3bda86f4b527ce1add02d0ac61ac26678db24c0e4126c584b752e65a1c3458bbe958e29eb4604b3157ef1fdace37b727eccbc2ccdb4fce0015e0ad196fc1c
-  languageName: node
-  linkType: hard
-
 "svgo@npm:^1.0.0":
   version: 1.3.2
   resolution: "svgo@npm:1.3.2"
@@ -14638,21 +14630,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue-apexcharts@npm:^1.6.2":
-  version: 1.6.2
-  resolution: "vue-apexcharts@npm:1.6.2"
-  peerDependencies:
-    apexcharts: ^3.26.0
-  checksum: 20eac6d523a9c8e416e7ba834e051b5592f30d4dd25c1931bda1ad493ed663b0e43a53004d48dc011c6c49a8e8cb38fe2639303d9441fc020b744351bb7aeade
-  languageName: node
-  linkType: hard
-
 "vue-async-computed@npm:^3.9.0":
   version: 3.9.0
   resolution: "vue-async-computed@npm:3.9.0"
   peerDependencies:
     vue: ~2
   checksum: f2acd2941713e8b2a128b7577857d5904f0404ec768baba0c8e8e4abb386d8c1569bed6c97019bd2d6b0cfc724b64c2f8fba6783dfed63be51c3c75ade807f79
+  languageName: node
+  linkType: hard
+
+"vue-chartkick@npm:0.6.1":
+  version: 0.6.1
+  resolution: "vue-chartkick@npm:0.6.1"
+  dependencies:
+    chartkick: ^3.2.0
+    deep-equal: ^1.0.1
+    deepmerge: ^4.2.0
+  peerDependencies:
+    vue: ">=2.0.0"
+  checksum: b7c4e412f4313bbe841da43ad490f8d017239d33aa1e890f12ae1ddab4001097aadb1d171e0cd89adcec57e335b495bcb7d975421bb891ad506dd933e6f51e01
   languageName: node
   linkType: hard
 

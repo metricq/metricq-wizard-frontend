@@ -35,7 +35,7 @@ export default {
     '@/plugins/persistedState.client',
     '@/plugins/moment-filter',
     '@/plugins/async-computed',
-    '@/plugins/apex-charts',
+    '@/plugins/chartkick',
   ],
   /*
    ** Nuxt.js dev-modules

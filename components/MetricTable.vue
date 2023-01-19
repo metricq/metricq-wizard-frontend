@@ -62,15 +62,18 @@
               {{ data.detailsShowing ? 'Hide' : 'Show' }} Metadata
             </b-button>
             <b-button
-              size="sm"
-              class="mr-2"
+              v-b-tooltip.hover
               :to="{
                 name: 'metric-metricId',
                 params: { metricId: data.item.id },
               }"
+              variant="info"
+              title="Metric Details"
+              size="sm"
             >
-              Show Details
+              <b-icon-search scale="1.5" />
             </b-button>
+
             <b-button
               v-if="data.item.sourceRef && data.item.sourceRef.isCombinator"
               size="sm"

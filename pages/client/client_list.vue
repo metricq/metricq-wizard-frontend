@@ -9,10 +9,18 @@
       </b-col>
     </b-row>
 
+    <b-row v-if="chartOptions !== null" class="mb-4">
+      <b-col>
+        <b-card no-body header="Dependency Graph">
+          <highcharts :options="chartOptions" />
+        </b-card>
+      </b-col>
+    </b-row>
+
     <b-row>
       <b-col>
         <b-overlay :show="showReScanOverlay" rounded="sm">
-          <b-card no-body>
+          <b-card no-body class="mb-3">
             <b-card-header>
               <b-row>
                 <b-col>
@@ -62,6 +70,8 @@
               sort-icon-left
               striped
               hover
+              class="mb-0"
+              show-empty
             >
               <template #head(lastseen)> Last seen </template>
               <template #cell(lastseen)="data">
@@ -82,11 +92,41 @@
               <template #cell(actions)="data">
                 <client-actions :client="data.item" />
               </template>
+              <template #emptyfiltered>
+                <b-jumbotron
+                  header="No client matches the input"
+                  bg-variant="grey"
+                >
+                  <b-button
+                    v-b-modal.new-client-modal
+                    variant="primary"
+                    href="#"
+                    size="lg"
+                  >
+                    <b-icon-plus />
+                  </b-button>
+
+                  Create an empty configuration for the token
+                  <span class="p-1 text-monospace">"{{ filter }}"</span>
+                  instead?
+                </b-jumbotron>
+              </template>
             </b-table>
           </b-card>
         </b-overlay>
       </b-col>
     </b-row>
+    <b-modal
+      id="new-client-modal"
+      title="Create Client"
+      lazy="true"
+      @ok="createClient"
+    >
+      <p class="my-4">
+        Create empty config for <span class="lead">{{ filter }}</span>
+        ?
+      </p>
+    </b-modal>
   </div>
 </template>
 
@@ -97,7 +137,6 @@ import Client from '~/models/Client'
 
 export default {
   components: { ClientActions },
-  layout: 'nonfluid',
   data() {
     return {
       filter: null,
@@ -116,6 +155,21 @@ export default {
     Client.commit((state) => {
       state.fetching = false
     })
+  },
+  asyncComputed: {
+    async chartOptions() {
+      return {
+        title: null,
+        series: [
+          {
+            keys: ['from', 'to', 'weight'],
+            data: (await this.$axios.get(`/clients/dependencies`)).data,
+            type: 'dependencywheel',
+            name: 'Amount of metrics consumed',
+          },
+        ],
+      }
+    },
   },
   computed: {
     clients() {
@@ -182,7 +236,7 @@ export default {
     },
     async updateTopology() {
       this.showReScanOverlay = true
-      await this.$axios.post(`/topology/discover`)
+      await this.$axios.put(`/topology/discover`)
 
       function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms))
@@ -191,6 +245,10 @@ export default {
 
       this.$nuxt.refresh()
       this.showReScanOverlay = false
+    },
+    async createClient() {
+      await this.$axios.put(`/client/${this.filter}`)
+      this.$nuxt.refresh()
     },
   },
 }
