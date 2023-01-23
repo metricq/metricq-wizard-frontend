@@ -84,6 +84,6 @@ export default {
     theme: 'outline',
   },
   router: {
-    base: process.env.NODE_ENV === 'development' ? '/' : '/wizard',
+    base: '/',
   },
 }
