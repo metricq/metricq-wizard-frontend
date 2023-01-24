@@ -32,6 +32,7 @@ export default {
   plugins: [
     '@/plugins/vuex-orm-axios',
     '@/plugins/vue-json-edit',
+    '@/plugins/vue-json-tree',
     '@/plugins/persistedState.client',
     '@/plugins/moment-filter',
     '@/plugins/async-computed',
