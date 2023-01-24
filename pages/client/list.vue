@@ -132,7 +132,6 @@
 
 <script>
 import ClientActions from '~/components/ClientActions.vue'
-import Source from '~/models/Source'
 import Client from '~/models/Client'
 
 const DISCOVER_WAIT_TIME = 10
@@ -146,17 +145,7 @@ export default {
     }
   },
   async fetch() {
-    Client.commit((state) => {
-      state.fetching = true
-    })
-
-    await Source.api().get('/sources')
-    await Client.api().get('/clients/active', { persistsBy: 'insert' })
-    await Client.api().get('/clients', { persistsBy: 'insert' })
-
-    Client.commit((state) => {
-      state.fetching = false
-    })
+    await this.$fetchClients()
   },
   asyncComputed: {
     async chartOptions() {

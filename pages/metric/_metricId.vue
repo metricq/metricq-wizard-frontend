@@ -120,7 +120,6 @@ import MetricQLive from '@metricq/live'
 
 import ClientActions from '~/components/ClientActions.vue'
 import Metric from '~/models/Metric'
-import Source from '~/models/Source'
 import Client from '~/models/Client'
 
 export default {
@@ -180,17 +179,7 @@ export default {
     }
   },
   async fetch() {
-    Client.commit((state) => {
-      state.fetching = true
-    })
-
-    await Source.api().get('/sources')
-    await Client.api().get('/clients/active', { persistsBy: 'insert' })
-    await Client.api().get('/clients', { persistsBy: 'insert' })
-
-    Client.commit((state) => {
-      state.fetching = false
-    })
+    await this.$fetchClients()
   },
   computed: {
     selectedMetricMetadata() {
