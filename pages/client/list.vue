@@ -135,6 +135,8 @@ import ClientActions from '~/components/ClientActions.vue'
 import Source from '~/models/Source'
 import Client from '~/models/Client'
 
+const DISCOVER_WAIT_TIME = 10
+
 export default {
   components: { ClientActions },
   data() {
@@ -238,10 +240,7 @@ export default {
       this.showReScanOverlay = true
       await this.$axios.post(`/topology/discover`)
 
-      function sleep(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms))
-      }
-      await sleep(10000)
+      await this.$sleep(DISCOVER_WAIT_TIME)
 
       this.$nuxt.refresh()
       this.showReScanOverlay = false

@@ -37,6 +37,7 @@ export default {
     '@/plugins/moment-filter',
     '@/plugins/async-computed',
     '@/plugins/chartkick',
+    '@/plugins/sleep',
   ],
   /*
    ** Nuxt.js dev-modules
