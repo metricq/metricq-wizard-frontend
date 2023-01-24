@@ -41,8 +41,6 @@
                 autocorrect="off"
                 spellcheck="false"
                 data-gramm="false"
-                data-gramm_editor="false"
-                data-enable-grammarly="false"
                 @input="onRawEdit($event)"
               />
             </b-tab>
