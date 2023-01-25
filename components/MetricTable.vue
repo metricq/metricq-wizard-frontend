@@ -27,21 +27,21 @@
               @change="onRowSelected(data.item, $event)"
             />
           </template>
-          <template #cell(source)="data">
+          <template #cell(id)="data">
             <b-link
-              v-if="data.item.sourceRef && data.item.sourceRef.configurable"
               :to="{
-                name: 'source-config_item_list-sourceId',
-                params: { sourceId: data.item.source },
+                name: 'metric-metricId',
+                params: { metricId: data.item.id },
               }"
             >
-              {{ data.item.source }}
+              {{ data.item.id }}
             </b-link>
+          </template>
+          <template #cell(source)="data">
             <b-link
-              v-else
               :to="{
-                name: 'source-edit_json-sourceId',
-                params: { sourceId: data.item.source },
+                name: 'client-clientId',
+                params: { clientId: data.item.source },
               }"
             >
               {{ data.item.source }}
@@ -61,19 +61,6 @@
             <b-button size="sm" class="mr-2" @click="data.toggleDetails">
               {{ data.detailsShowing ? 'Hide' : 'Show' }} Metadata
             </b-button>
-            <b-button
-              v-b-tooltip.hover
-              :to="{
-                name: 'metric-metricId',
-                params: { metricId: data.item.id },
-              }"
-              variant="info"
-              title="Metric Details"
-              size="sm"
-            >
-              <b-icon-search scale="1.5" />
-            </b-button>
-
             <b-button
               v-if="data.item.sourceRef && data.item.sourceRef.isCombinator"
               size="sm"
