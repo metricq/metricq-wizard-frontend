@@ -352,6 +352,7 @@ import MetricTable from '~/components/MetricTable'
 import Metric from '~/models/Metric'
 import Database from '~/models/Database'
 import Source from '~/models/Source'
+import Client from '~/models/Client'
 import Transformer from '~/models/Transformer'
 
 export default {
@@ -376,6 +377,9 @@ export default {
       currentPage: 1,
       disableFuzzy: false,
     }
+  },
+  async fetch() {
+    await Client.fetchAll()
   },
   computed: {
     selected() {

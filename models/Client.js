@@ -1,5 +1,5 @@
 import { Model } from '@vuex-orm/core'
-import { Source } from './ClientHierarchy.js'
+import { Source, Transformer } from './ClientHierarchy.js'
 
 export class Client extends Model {
   static entity = 'client'
@@ -10,6 +10,7 @@ export class Client extends Model {
     return {
       CLIENT: Client,
       SOURCE: Source,
+      TRANSFORMER: Transformer,
     }
   }
 
@@ -21,22 +22,38 @@ export class Client extends Model {
 
   static fields() {
     return {
-      id: this.string().nullable(),
+      id: this.string(null).nullable(),
       client_model_type: this.attr('CLIENT'),
       hasConfiguration: this.boolean(false),
-      hostname: this.string().nullable(),
-      currentTime: this.string().nullable(),
-      startingTime: this.string().nullable(),
-      discoverTime: this.string().nullable(),
-      uptime: this.number().nullable(),
-      version: this.string().nullable(),
-      metricqVersion: this.string().nullable(),
+      hostname: this.string(null).nullable(),
+      currentTime: this.string(null).nullable(),
+      startingTime: this.string(null).nullable(),
+      discoverTime: this.string(null).nullable(),
+      uptime: this.number(null).nullable(),
+      version: this.string(null).nullable(),
+      metricqVersion: this.string(null).nullable(),
     }
   }
 
   async reconfigure() {
     return await Client.api().post(`/client/${this.id}/reconfigure`, null, {
       save: false,
+    })
+  }
+
+  static async fetchAll() {
+    Client.commit((state) => {
+      state.fetching = true
+    })
+
+    await Promise.all([
+      Client.api().get('/clients'),
+      Source.api().get('/sources'),
+      Client.api().get('/clients/active'),
+    ])
+
+    Client.commit((state) => {
+      state.fetching = false
     })
   }
 }
