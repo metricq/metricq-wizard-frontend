@@ -9,7 +9,7 @@
       </b-col>
     </b-row>
 
-    <b-row v-if="chartOptions !== null" class="mb-4">
+    <b-row v-if="chartOptions !== null && !showReScanOverlay" class="mb-4">
       <b-col>
         <b-card no-body header="Dependency Graph">
           <highcharts :options="chartOptions" />
@@ -119,7 +119,7 @@
     <b-modal
       id="new-client-modal"
       title="Create Client"
-      lazy="true"
+      :lazy="true"
       @ok="createClient"
     >
       <p class="my-4">
