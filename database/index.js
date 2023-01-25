@@ -6,11 +6,16 @@ import Transformer from '~/models/Transformer'
 
 const database = new Database()
 
-// do registration of models
+// The registration of models in no particular order
+// but the base class for client models before the inherited ones
+
 database.register(Client)
-database.register(Metric)
-database.register(DatabaseModel)
 database.register(Source)
 database.register(Transformer)
+
+// doesn't inherit from Client, yet
+database.register(DatabaseModel)
+
+database.register(Metric)
 
 export default database
