@@ -7,7 +7,7 @@ export class Source extends Client {
   static fields() {
     return {
       ...super.fields(),
-      type: this.string().nullable(),
+      type: this.string(null).nullable(),
       configurable: this.boolean(false),
       configItemName: this.string('config item'),
     }
