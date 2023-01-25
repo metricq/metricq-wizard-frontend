@@ -118,14 +118,22 @@ export default {
       return await Client.find(this.clientId)
     },
     async producedMetrics() {
-      return (
-        await this.$axios.get(`/client/${this.clientId}/produced_metrics`)
-      ).data
+      if (this.clientId === undefined) return []
+
+      const { data } = await this.$axios.get(
+        `/client/${this.clientId}/produced_metrics`
+      )
+
+      return data
     },
     async consumedMetrics() {
-      return (
-        await this.$axios.get(`/client/${this.clientId}/consumed_metrics`)
-      ).data
+      if (this.clientId === undefined) return []
+
+      const { data } = await this.$axios.get(
+        `/client/${this.clientId}/consumed_metrics`
+      )
+
+      return data
     },
   },
   asyncData({ params }) {
