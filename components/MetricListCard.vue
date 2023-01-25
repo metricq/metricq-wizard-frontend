@@ -1,12 +1,12 @@
 <template>
   <b-card no-body :header="title">
-    <b-list-group v-if="metrics.length" flush align="left">
+    <b-list-group v-if="metrics.length" flush>
       <b-list-group-item v-for="metric in metrics" :key="metric">
         <b-row>
-          <b-col class="text-nowrap">
+          <b-col class="text-nowrap text-left">
             {{ metric }}
           </b-col>
-          <b-col align="right" class="float-right">
+          <b-col class="text-right float-right">
             <b-button
               v-b-tooltip.hover
               :to="{
