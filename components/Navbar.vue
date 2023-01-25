@@ -55,6 +55,10 @@
           <b-spinner class="ml-auto" small />
           <strong>Fetching sources...</strong>
         </b-nav-text>
+        <b-nav-text v-if="fetchingClients" class="mr-sm-2">
+          <b-spinner class="ml-auto" small />
+          <strong>Fetching clients...</strong>
+        </b-nav-text>
         <b-nav-text v-if="fetchingTransformers" class="mr-sm-2">
           <b-spinner class="ml-auto" small />
           <strong>Fetching transformers...</strong>
@@ -68,6 +72,7 @@
 import Metric from '~/models/Metric'
 import Database from '~/models/Database'
 import Source from '~/models/Source'
+import Client from '~/models/Client'
 import Transformer from '~/models/Transformer'
 
 export default {
@@ -81,6 +86,9 @@ export default {
     },
     fetchingSources() {
       return Source.store().state.entities.source.fetching
+    },
+    fetchingClients() {
+      return Client.store().state.entities.source.fetching
     },
     fetchingTransformers() {
       return Transformer.store().state.entities.transformer.fetching
