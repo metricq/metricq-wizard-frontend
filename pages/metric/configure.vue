@@ -10,7 +10,7 @@
         </h1>
       </b-col>
     </b-row>
-    <b-card no-body>
+    <b-card no-body class="mb-3">
       <b-card-header>
         <b-row>
           <b-col cols="3">
