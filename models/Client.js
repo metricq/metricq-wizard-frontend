@@ -42,13 +42,34 @@ export class Client extends Model {
   }
 
   static async fetchAll() {
+    // this order of sequence is important, because wix is shitz.
+    // Need to load the inherited objects first
+
+    Source.commit((state) => {
+      state.fetching = true
+    })
+    Transformer.commit((state) => {
+      state.fetching = true
+    })
+
+    await Promise.all([
+      Source.api().get('/sources'),
+      Transformer.api().get('/transformers'),
+    ])
+
+    Source.commit((state) => {
+      state.fetching = false
+    })
+    Transformer.commit((state) => {
+      state.fetching = false
+    })
+
     Client.commit((state) => {
       state.fetching = true
     })
 
     await Promise.all([
       Client.api().get('/clients'),
-      Source.api().get('/sources'),
       Client.api().get('/clients/active'),
     ])
 

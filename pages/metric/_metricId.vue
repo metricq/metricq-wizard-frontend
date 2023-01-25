@@ -179,7 +179,7 @@ export default {
     }
   },
   async fetch() {
-    await this.$fetchClients()
+    await Client.fetchAll()
   },
   computed: {
     selectedMetricMetadata() {

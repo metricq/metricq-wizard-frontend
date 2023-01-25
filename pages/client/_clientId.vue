@@ -108,7 +108,6 @@
 
 <script>
 import ClientActions from '~/components/ClientActions'
-import Source from '~/models/Source'
 import Client from '~/models/Client'
 import MetricListCard from '~/components/MetricListCard'
 
@@ -135,23 +134,7 @@ export default {
     }
   },
   async fetch() {
-    Client.commit((state) => {
-      state.fetching = true
-    })
-    Source.commit((state) => {
-      state.fetching = true
-    })
-
-    await Source.api().get('/sources')
-    await Client.api().get('/clients/active', { persistsBy: 'insert' })
-    await Client.api().get('/clients', { persistsBy: 'insert' })
-
-    Source.commit((state) => {
-      state.fetching = false
-    })
-    Client.commit((state) => {
-      state.fetching = false
-    })
+    await Client.fetchAll()
   },
   computed: {},
 

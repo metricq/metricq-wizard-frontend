@@ -486,7 +486,7 @@ export default {
       }
     },
   },
-  async mounted() {
+  mounted() {
     Database.commit((state) => {
       state.fetching = true
     })
@@ -494,26 +494,6 @@ export default {
       .get('/databases')
       .finally(() => {
         Database.commit((state) => {
-          state.fetching = false
-        })
-      })
-    Source.commit((state) => {
-      state.fetching = true
-    })
-    await Source.api()
-      .get('/sources')
-      .finally(() => {
-        Source.commit((state) => {
-          state.fetching = false
-        })
-      })
-    Transformer.commit((state) => {
-      state.fetching = true
-    })
-    await Transformer.api()
-      .get('/transformers')
-      .finally(() => {
-        Transformer.commit((state) => {
           state.fetching = false
         })
       })
