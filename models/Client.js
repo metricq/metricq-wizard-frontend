@@ -34,12 +34,10 @@ export class Client extends Model {
     }
   }
 
-  static apiConfig = {
-    actions: {
-      reconfigureById(id) {
-        return this.post(`/client/${id}/reconfigure`)
-      },
-    },
+  async reconfigure() {
+    return await Client.api().post(`/client/${this.id}/reconfigure`, null, {
+      save: false,
+    })
   }
 }
 

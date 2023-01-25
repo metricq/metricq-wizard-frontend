@@ -40,7 +40,7 @@
         v-b-tooltip.hover
         variant="danger"
         title="Send config to client"
-        @click="reconfigureClient(client.id)"
+        @click="reconfigureClient(client)"
       >
         <b-icon-bootstrap-reboot scale="1.5" />
       </b-button>
@@ -54,9 +54,9 @@ import Client from '~/models/Client'
 export default {
   props: { client: Client, showDetails: { type: Boolean, default: true } },
   methods: {
-    async reconfigureClient(clientId) {
-      const answer = await this.$bvModal.msgBoxConfirm(
-        `Really reconfigure ${clientId}?`,
+    async reconfigureClient(client) {
+      const reconfigureConfirmed = await this.$bvModal.msgBoxConfirm(
+        `Really reconfigure ${client.id}?`,
         {
           title: 'Please Confirm',
           buttonSize: 'sm',
@@ -68,11 +68,11 @@ export default {
           centered: true,
         }
       )
-      if (answer) {
-        const { status } = await this.$axios.post(
-          `/client/${clientId}/reconfigure`
-        )
-        if (status === 200) {
+
+      if (reconfigureConfirmed) {
+        const { response } = await client.reconfigure()
+
+        if (response.status / 100 === 2) {
           this.$toast.success('Requested Client reconfiguration!')
         } else {
           this.$toast.error('Client reconfiguration failed!')
