@@ -41,6 +41,30 @@ export class Client extends Model {
     })
   }
 
+  static async fetchProducedMetrics(clientId) {
+    const { response } = await Client.api().get(
+      `/client/${clientId}/produced_metrics`,
+      {
+        // don't interpret this as a list of client entities
+        // and DO NOT save it as such
+        save: false,
+      }
+    )
+    return response.data
+  }
+
+  static async fetchConsumedMetrics(clientId) {
+    const { response } = await Client.api().get(
+      `/client/${clientId}/consumed_metrics`,
+      {
+        // don't interpret this as a list of client entities
+        // and DO NOT save it as such
+        save: false,
+      }
+    )
+    return response.data
+  }
+
   static async fetchAll() {
     // this order of sequence is important, because wix is shitz.
     // Need to load the inherited objects first
