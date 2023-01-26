@@ -1,6 +1,6 @@
 <template>
-  <div align="right">
-    <b-button-group size="sm" class="shadow-sm">
+  <div class="text-right">
+    <b-button-group v-if="client" size="sm" class="shadow-sm">
       <b-button
         v-if="client.configurable"
         v-b-tooltip.hover
@@ -45,6 +45,7 @@
         <b-icon-bootstrap-reboot scale="1.5" />
       </b-button>
     </b-button-group>
+    <b-icon-exclamation-diamond v-else variant="danger" />
   </div>
 </template>
 

@@ -92,11 +92,13 @@ export default {
   router: {
     base: process.env.NODE_ENV === 'development' ? '/' : '/wizard',
     extendRoutes(routes, resolve) {
+      // add redirect from /metric to /metric/{id} with empty id
       routes.push({
         name: 'metric',
         path: '/metric',
         redirect: { name: 'metric-metricId', metricId: '' },
       })
+      // it's voodoo needed to make the /metric/{id} magic work
       sortRoutes(routes)
     },
   },

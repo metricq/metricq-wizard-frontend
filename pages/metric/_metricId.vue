@@ -67,7 +67,6 @@
                       </b-col>
                       <b-col>
                         <client-actions
-                          v-if="getMetricSource(selectedMetric.source)"
                           :client="getMetricSource(selectedMetric.source)"
                         />
                       </b-col>

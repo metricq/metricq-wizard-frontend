@@ -47,6 +47,9 @@
               {{ data.item.source }}
             </b-link>
           </template>
+          <template #cell(rate)="data">
+            {{ data.item.rate | humanizeRate }}
+          </template>
           <template #cell(lastMetadataUpdate)="data">
             {{
               data.item.lastMetadataUpdate

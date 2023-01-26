@@ -78,19 +78,15 @@
                   title="Produced Metrics"
                   empty-message="No produced metrics."
                 />
-                <b-card v-else no-body header="Produced Metrics">
-                  <b-list-group flush align="left">
-                    <b-list-group-item>
-                      <b-skeleton width="85%" />
-                    </b-list-group-item>
-                    <b-list-group-item>
-                      <b-skeleton width="55%" />
-                    </b-list-group-item>
-                    <b-list-group-item>
-                      <b-skeleton width="70%" />
-                    </b-list-group-item>
-                  </b-list-group>
-                </b-card>
+                <div
+                  v-else
+                  no-body
+                  header="Produced Metrics"
+                  class="text-center m-3"
+                >
+                  <span class="lead">Loading...</span
+                  ><b-spinner type="grow" label="Loading..." />
+                </div>
               </b-col>
             </b-row>
           </b-card-body>
@@ -113,40 +109,33 @@ import MetricListCard from '~/components/MetricListCard'
 
 export default {
   components: { MetricListCard, ClientActions },
-  asyncComputed: {
-    async client() {
-      return await Client.find(this.clientId)
-    },
-    async producedMetrics() {
-      if (this.clientId === undefined) return []
-
-      const { data } = await this.$axios.get(
-        `/client/${this.clientId}/produced_metrics`
-      )
-
-      return data
-    },
-    async consumedMetrics() {
-      if (this.clientId === undefined) return []
-
-      const { data } = await this.$axios.get(
-        `/client/${this.clientId}/consumed_metrics`
-      )
-
-      return data
-    },
-  },
   asyncData({ params }) {
     return {
       clientId: params.clientId,
+      client: null,
+      producedMetrics: [],
+      consumedMetrics: [],
     }
   },
   async fetch() {
-    await Client.fetchAll()
-  },
-  computed: {},
+    await Promise.all([
+      Client.fetchAll(),
+      async () => {
+        const { data } = await this.$axios.get(
+          `/client/${this.clientId}/consumed_metrics`
+        )
+        this.consumedMetrics = data
+      },
+      async () => {
+        const { data } = await this.$axios.get(
+          `/client/${this.clientId}/produced_metrics`
+        )
+        this.producedMetrics = data
+      },
+    ])
 
-  methods: {},
+    this.client = await Client.find(this.clientId)
+  },
 }
 </script>
 
