@@ -34,13 +34,13 @@
             </b-tab>
             <b-tab title="Textual Editor" :active="!showJsonEditor" lazy>
               <b-form-textarea
-                ref="rawInput"
                 :value="jsonData"
                 max-rows="25"
                 class="rawInput"
                 autocorrect="off"
                 spellcheck="false"
                 data-gramm="false"
+                :state="isValidJsonTextareaInput"
                 @input="onRawEdit($event)"
               />
             </b-tab>
@@ -70,9 +70,9 @@
             </b-col>
             <b-col>
               <b-button
-                ref="saveButton"
                 class="float-right"
                 variant="primary"
+                :disabled="!isValidJsonTextareaInput"
                 @click="saveConfig"
               >
                 <b-spinner v-if="updating" class="ml-auto" small />
@@ -103,6 +103,7 @@ export default {
       backupIds,
       updating: false,
       showJsonEditor: JSON.stringify(data.config).length < 10000,
+      isValidJsonTextareaInput: true,
     }
   },
   computed: {
@@ -151,11 +152,9 @@ export default {
     onRawEdit(input) {
       try {
         this.jsonData = JSON.parse(input)
-        this.$refs.rawInput.state = true
-        this.$refs.saveButton.disabled = false
+        this.isValidJsonTextareaInput = true
       } catch (error) {
-        this.$refs.rawInput.state = false
-        this.$refs.saveButton.disabled = true
+        this.isValidJsonTextareaInput = false
       }
     },
     async onBackupClick(backupId) {
