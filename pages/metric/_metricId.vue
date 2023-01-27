@@ -28,9 +28,9 @@
                 @click="onSearchClick()"
               />
               <b-input-group-append>
-                <b-button :disabled="!metric" @click="metric = ''"
-                  >Clear</b-button
-                >
+                <b-button :disabled="!metric" @click="metric = ''">
+                  Clear
+                </b-button>
               </b-input-group-append>
             </b-input-group>
           </b-card-header>
@@ -42,7 +42,9 @@
               @click="onMetricSelect(match.id)"
             >
               {{ match.id }}
-              <span v-if="match.description"> - {{ match.description }}</span>
+              <template v-if="match.description">
+                - {{ match.description }}
+              </template>
             </li>
           </ul>
 

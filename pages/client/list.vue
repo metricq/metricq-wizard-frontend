@@ -88,15 +88,16 @@
             >
               <template #head(lastseen)> Last seen </template>
               <template #cell(lastseen)="data">
-                <span v-if="data.item.discoverTime">
-                  {{ data.item.discoverTime | momentAgo }} </span
-                ><span v-else>never seen</span>
+                <template v-if="data.item.discoverTime">
+                  {{ data.item.discoverTime | momentAgo }}
+                </template>
+                <template v-else>never seen</template>
               </template>
               <template #head(startingTime)> Started </template>
               <template #cell(startingTime)="data">
-                <span v-if="data.item.startingTime">
+                <template v-if="data.item.startingTime">
                   {{ data.item.startingTime | momentAgo }}
-                </span>
+                </template>
               </template>
 
               <template #head(actions)="data">
@@ -128,7 +129,7 @@
             <b-card-footer class="d-flex justify-content-between">
               <span class="lead">
                 Total clients: {{ clients.length }}
-                <span v-if="filter">({{ totalRows }} matching)</span>
+                <template v-if="filter">({{ totalRows }} matching)</template>
               </span>
               <b-pagination
                 v-if="clients.length > perPage"
