@@ -130,7 +130,7 @@
         <b-card title="Filter">
           <b-row>
             <b-col lg="4">
-              <b-input-group size="sm">
+              <b-input-group size="sm" prepend="Filter">
                 <b-form-input
                   id="filterInput"
                   v-model="filterString"
@@ -150,56 +150,38 @@
                 </b-input-group-append>
               </b-input-group>
               <b-form-checkbox id="disableFuzzyInput" v-model="disableFuzzy">
-                Only search id and source with disabled fuzzy search
+                Only search in Id and Source columns with disabled fuzzy search
               </b-form-checkbox>
             </b-col>
             <b-col>
-              <b-form-group
-                label="Units"
-                label-cols-sm="3"
-                label-align-sm="right"
-                label-for="filterInput"
-                class="mb-0"
-              >
+              <b-input-group prepend="Units">
                 <b-form-select
                   id="unitFilter"
                   v-model="filterUnits"
                   :options="metricUnits"
                   :value="null"
                 />
-              </b-form-group>
+              </b-input-group>
             </b-col>
             <b-col>
-              <b-form-group
-                label="Rate"
-                label-cols-sm="3"
-                label-align-sm="right"
-                label-for="rateFilter"
-                class="mb-0"
-              >
+              <b-input-group prepend="Rate">
                 <b-form-select
                   id="rateFilter"
                   v-model="filterRate"
                   :options="metricRates"
                   :value="null"
                 />
-              </b-form-group>
+              </b-input-group>
             </b-col>
             <b-col>
-              <b-form-group
-                label="DB Status"
-                label-cols-sm="3"
-                label-align-sm="right"
-                label-for="filterInput"
-                class="mb-0"
-              >
+              <b-input-group prepend="DB Status">
                 <b-form-select
                   id="historicFilter"
                   v-model="filterHistoric"
                   :options="filterHistoricOptions"
                   :value="null"
                 />
-              </b-form-group>
+              </b-input-group>
             </b-col>
           </b-row>
         </b-card>
@@ -364,7 +346,7 @@ export default {
       filterString: '',
       filterHistoric: null,
       filterHistoricOptions: [
-        { value: null, text: 'Any' },
+        { value: null, text: '--' },
         { value: true, text: 'Saved in DB' },
         { value: false, text: 'Not in DB' },
       ],
@@ -415,11 +397,12 @@ export default {
                 return value.unit
               }
             })
+            .concat([null])
         )
       )
         .map((value) => {
           if (value == null) {
-            return { value: null, text: 'Any' }
+            return { value: null, text: '--' }
           } else {
             return { value, text: value }
           }
@@ -452,12 +435,21 @@ export default {
       )
         .map((value) => {
           if (value == null) {
-            return { value: null, text: 'Any' }
+            return { value: null, text: '--' }
           } else {
-            return { value, text: value }
+            return { value, text: `${value}` }
           }
         })
-        .sort()
+        .sort(({ text: aText }, { text: bText }) => {
+          if (aText < bText) {
+            return -1
+          }
+          if (aText > bText) {
+            return 1
+          }
+
+          return 0
+        })
     },
     combinedMetricButtonTarget() {
       const emptyMetricButton = {
@@ -561,6 +553,13 @@ export default {
     },
     async clearMetricList() {
       await Metric.deleteAll()
+      this.resetFilterSettings()
+    },
+    resetFilterSettings() {
+      this.filterUnits = null
+      this.filterRate = null
+      this.filterHistoric = null
+      this.filterString = ''
     },
   },
 }
