@@ -20,6 +20,7 @@
           show-empty
           class="mb-0"
           @row-clicked="onRowClicked"
+          @filtered="onFiltered"
         >
           <template #cell(select)="data">
             <b-checkbox
@@ -48,7 +49,7 @@
             </b-link>
           </template>
           <template #cell(rate)="data">
-            {{ data.item.rate | humanizeRate }}
+            {{ data.item.rate }}
           </template>
           <template #cell(lastMetadataUpdate)="data">
             {{
@@ -99,6 +100,7 @@ export default {
     rate: { type: Number, default: null },
     currentPage: { type: Number, default: 1 },
   },
+  emits: ['filtered'],
   data() {
     return {
       currentTableItems: [],
@@ -150,6 +152,14 @@ export default {
           })
         }
       }
+
+      // I want to be compatible with the signature of the Table::filtered
+      // event, but we don't use the actual items in the handler, so for
+      // now, we emit null instead of metricQuery.get(). I don't want to
+      // think about the performance implications of calling that magic
+      // twice.
+      this.$emit('filtered', null, metricQuery.count())
+
       return metricQuery.get()
     },
     selected() {

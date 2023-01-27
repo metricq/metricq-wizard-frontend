@@ -253,6 +253,7 @@
               :page-size="pageSize"
               :disable-fuzzy="disableFuzzy"
               :current-page="currentPage"
+              @filtered="onFiltered"
             />
           </b-card-text>
         </b-card>
@@ -260,11 +261,16 @@
 
       <b-card-footer>
         <b-row class="pt-1 pb-1">
-          <b-col />
+          <b-col class="lead"
+            >Total metrics loaded: {{ metricCount }}
+            <span v-if="totalRows < metricCount">
+              ({{ totalRows }} matching)
+            </span>
+          </b-col>
           <b-col>
             <b-pagination
               v-model="currentPage"
-              :total-rows="metricCount"
+              :total-rows="totalRows"
               :per-page="pageSize"
               align="center"
               first-number
@@ -357,11 +363,12 @@ export default {
       loadSelectedTransformer: null,
       pageSize: 20,
       currentPage: 1,
+      totalRows: 0,
       disableFuzzy: false,
     }
   },
   async fetch() {
-    await Client.fetchAll()
+    await Promise.all([Client.fetchAll(), Database.fetchAll()])
   },
   computed: {
     selected() {
@@ -478,19 +485,12 @@ export default {
       }
     },
   },
-  mounted() {
-    Database.commit((state) => {
-      state.fetching = true
-    })
-    Database.api()
-      .get('/databases')
-      .finally(() => {
-        Database.commit((state) => {
-          state.fetching = false
-        })
-      })
-  },
   methods: {
+    onFiltered(_filteredItems, filteredItemsCount) {
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      this.totalRows = filteredItemsCount
+      this.currentPage = 1
+    },
     async loadByDatabase() {
       Metric.commit((state) => {
         state.fetching = true

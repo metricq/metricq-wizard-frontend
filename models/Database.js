@@ -24,4 +24,14 @@ export default class Database extends Model {
       },
     },
   }
+
+  static async fetchAll() {
+    Database.commit((state) => {
+      state.fetching = true
+    })
+    await Database.api().get('/databases')
+    Database.commit((state) => {
+      state.fetching = false
+    })
+  }
 }
