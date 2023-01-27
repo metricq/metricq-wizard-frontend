@@ -251,21 +251,11 @@ export default {
       if (this.hasSelectedMetric() && this.metric === metric) {
         const oldData = this.metricLiveData
 
-        if (!isNaN(value)) {
-          oldData.push([time.toDate(), value])
-        } else {
-          oldData.push({
-            x: time.valueOf(),
-            y: 0,
-            marker: {
-              size: 8,
-            },
-            label: {
-              borderColor: '#FF4560',
-              text: 'NaN',
-            },
-          })
-        }
+        // value can never be non-finite, the sink-websocket filters that.
+        // I'd love to notify users, that there are NaN values, but that
+        // needs to wait.
+        oldData.push([time.toDate(), value])
+
         if (oldData.length > MAX_DATA_POINTS) {
           this.metricLiveData = oldData.slice(1)
         } else {
