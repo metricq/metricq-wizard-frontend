@@ -14,104 +14,77 @@
       <b-card-header>
         <b-row>
           <b-col cols="3">
-            <b-form-group
-              label="Load by database"
-              label-cols-sm="4"
-              label-align-sm="right"
-              label-size="sm"
-              label-for="loadByDatabase"
-              class="mb-0"
-            >
-              <b-input-group size="sm">
-                <b-form-select
-                  id="loadByDatabase"
-                  v-model="loadSelectedDatabase"
-                  :options="databases"
-                  :value="null"
-                  disabled
+            <b-input-group size="sm" prepend="Load by database">
+              <b-form-select
+                id="loadByDatabase"
+                v-model="loadSelectedDatabase"
+                :options="databases"
+                :value="null"
+                disabled
+              >
+                <template #first>
+                  <b-form-select-option :value="null" disabled>
+                    Choose...
+                  </b-form-select-option>
+                </template>
+              </b-form-select>
+              <b-input-group-append>
+                <b-button
+                  :disabled="!loadSelectedDatabase"
+                  @click="loadByDatabase()"
                 >
-                  <template #first>
-                    <b-form-select-option :value="null" disabled>
-                      Choose...
-                    </b-form-select-option>
-                  </template>
-                </b-form-select>
-                <b-input-group-append>
-                  <b-button
-                    :disabled="!loadSelectedDatabase"
-                    @click="loadByDatabase()"
-                  >
-                    Load
-                  </b-button>
-                </b-input-group-append>
-              </b-input-group>
-            </b-form-group>
+                  Load
+                </b-button>
+              </b-input-group-append>
+            </b-input-group>
           </b-col>
           <b-col cols="3">
-            <b-form-group
-              label="Load by source"
-              label-cols-sm="4"
-              label-align-sm="right"
-              label-size="sm"
-              label-for="loadBySource"
-              class="mb-0"
-            >
-              <b-input-group size="sm">
-                <b-form-select
-                  id="loadBySource"
-                  v-model="loadSelectedSource"
-                  :options="sources"
-                  :value="null"
+            <b-input-group size="sm" prepend="Load by source">
+              <b-form-select
+                id="loadBySource"
+                v-model="loadSelectedSource"
+                :options="sources"
+                :value="null"
+              >
+                <template #first>
+                  <b-form-select-option :value="null" disabled>
+                    Choose...
+                  </b-form-select-option>
+                </template>
+              </b-form-select>
+              <b-input-group-append>
+                <b-button
+                  :disabled="!loadSelectedSource"
+                  @click="loadBySource()"
                 >
-                  <template #first>
-                    <b-form-select-option :value="null" disabled>
-                      Choose...
-                    </b-form-select-option>
-                  </template>
-                </b-form-select>
-                <b-input-group-append>
-                  <b-button
-                    :disabled="!loadSelectedSource"
-                    @click="loadBySource()"
-                  >
-                    Load
-                  </b-button>
-                </b-input-group-append>
-              </b-input-group>
-            </b-form-group>
+                  Load
+                </b-button>
+              </b-input-group-append>
+            </b-input-group>
           </b-col>
           <b-col cols="3">
-            <b-form-group
-              label="Load by transformer"
-              label-cols-sm="4"
-              label-align-sm="right"
-              label-size="sm"
-              label-for="loadByTransformer"
-              class="mb-0"
-            >
-              <b-input-group size="sm">
-                <b-form-select
-                  id="loadByTransformer"
-                  v-model="loadSelectedTransformer"
-                  :options="transformers"
-                  :value="null"
+            <b-input-group size="sm" prepend="Load by transformer">
+              <b-form-select
+                id="loadByTransformer"
+                v-model="loadSelectedTransformer"
+                :options="transformers"
+                :value="null"
+              >
+                <template #first>
+                  <b-form-select-option :value="null" disabled>
+                    Choose...
+                  </b-form-select-option>
+                </template>
+              </b-form-select>
+              <b-input-group-append>
+                <b-button
+                  :disabled="!loadSelectedTransformer"
+                  @click="loadByTransformer()"
                 >
-                  <template #first>
-                    <b-form-select-option :value="null" disabled>
-                      Choose...
-                    </b-form-select-option>
-                  </template>
-                </b-form-select>
-                <b-input-group-append>
-                  <b-button
-                    :disabled="!loadSelectedTransformer"
-                    @click="loadByTransformer()"
-                  >
-                    Load
-                  </b-button>
-                </b-input-group-append>
-              </b-input-group>
-            </b-form-group>
+                  Load
+                </b-button>
+              </b-input-group-append>
+            </b-input-group>
           </b-col>
           <b-col>
             <b-button
@@ -126,7 +99,14 @@
         </b-row>
       </b-card-header>
 
-      <b-card-body>
+      <b-card-body v-if="fetchingMetrics" class="p-0 text-center">
+        <b-alert variant="info" show class="p-3 m-0">
+          <b-spinner varian="primary" label="Loading data..." class="mr-2" />
+          Loading data...
+        </b-alert>
+      </b-card-body>
+
+      <b-card-body v-if="metricCount > 0">
         <b-card title="Filter">
           <b-row>
             <b-col lg="4">
@@ -187,7 +167,7 @@
         </b-card>
       </b-card-body>
 
-      <b-card-body>
+      <b-card-body v-if="metricCount > 0">
         <b-card no-body>
           <b-card-header>
             <b-row class="my-1">
@@ -259,13 +239,13 @@
         </b-card>
       </b-card-body>
 
-      <b-card-footer>
+      <b-card-footer v-if="metricCount > 0">
         <b-row class="pt-1 pb-1">
-          <b-col class="lead"
-            >Total metrics loaded: {{ metricCount }}
-            <span v-if="totalRows < metricCount">
+          <b-col class="lead">
+            Total metrics loaded: {{ metricCount }}
+            <template v-if="totalRows < metricCount">
               ({{ totalRows }} matching)
-            </span>
+            </template>
           </b-col>
           <b-col>
             <b-pagination
@@ -331,6 +311,14 @@
           </b-col>
         </b-row>
       </b-card-footer>
+      <b-card-body
+        v-if="metricCount === 0 && !fetchingMetrics"
+        class="text-center p-0"
+      >
+        <b-alert variant="warning" show class="m-0">
+          No metrics loaded! Please use the controls above.
+        </b-alert>
+      </b-card-body>
     </b-card>
   </div>
 </template>
@@ -424,6 +412,9 @@ export default {
 
           return 0
         })
+    },
+    fetchingMetrics() {
+      return Metric.store().state.entities.metric.fetching
     },
     metricRates() {
       return Array.from(

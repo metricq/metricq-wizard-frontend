@@ -62,7 +62,12 @@
             <b-badge v-if="data.item.historic"> Saved in DB </b-badge>
           </template>
           <template #cell(actions)="data">
-            <b-button size="sm" class="mr-2" @click="data.toggleDetails">
+            <b-button
+              size="sm"
+              class="mr-2"
+              variant="info"
+              @click="data.toggleDetails"
+            >
               {{ data.detailsShowing ? 'Hide' : 'Show' }} Metadata
             </b-button>
             <b-button
@@ -167,7 +172,7 @@ export default {
     },
     emptyText() {
       if (this.historic == null && !this.filter) {
-        return 'No metrics loaded! Please use the controlls at the top.'
+        return 'No metrics loaded! Please use the controls at the top.'
       }
       return 'There are no metrics matching your filter.'
     },
