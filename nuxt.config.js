@@ -96,7 +96,7 @@ export default {
     theme: 'outline',
   },
   router: {
-    base: process.env.NODE_ENV === 'development' ? '/' : '/wizard',
+    base: '/',
     extendRoutes(routes, resolve) {
       // add redirect from /metric to /metric/{id} with empty id
       routes.push({
