@@ -73,7 +73,13 @@ export default {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {},
+    extend(config, { isClient }) {
+      // The internet told me to do this to fix the missing source-maps:
+      // https://stackoverflow.com/questions/69206509/nuxt-how-can-i-get-sourcemap-files-and-where-can-i-find-them-in-production
+      if (isClient) {
+        config.devtool = 'source-map'
+      }
+    },
     extractCSS: true,
     analyze: false,
   },
