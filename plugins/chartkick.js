@@ -23,6 +23,7 @@ Vue.use(HighchartsVue)
 
 Highcharts.setOptions({
   global: {
+    // Display chart timestamps in local time instead of UTC
     useUTC: false,
   },
   plotOptions: {

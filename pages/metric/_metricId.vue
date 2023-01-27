@@ -23,7 +23,7 @@
                 placeholder="Enter metric name"
                 debounce="500"
                 type="search"
-                :state="isValidMetric()"
+                :state="metricValidationState()"
                 :autofocus="true"
                 @click="onSearchClick()"
               />
@@ -41,7 +41,8 @@
               class="autocomplete-result"
               @click="onMetricSelect(match.id)"
             >
-              {{ match.id }} - {{ match.description }}
+              {{ match.id }}
+              <span v-if="match.description"> - {{ match.description }}</span>
             </li>
           </ul>
 
@@ -120,6 +121,8 @@ import MetricQLive from '@metricq/live'
 import ClientActions from '~/components/ClientActions.vue'
 import Metric from '~/models/Metric'
 import Client from '~/models/Client'
+
+const MAX_DATA_POINTS = 100
 
 export default {
   components: { ClientActions },
@@ -209,9 +212,7 @@ export default {
 
         this.metricqWebsocket = await MetricQLive.connect('ws://localhost:3003')
 
-        this.metricqWebsocket.onData = (metric, time, value) => {
-          this.onMetricData(metric, time, value)
-        }
+        this.metricqWebsocket.onData = this.onMetricData
 
         this.metricqWebsocket.subscribe(this.metric)
 
@@ -226,7 +227,7 @@ export default {
     onSearchClick() {
       this.$refs.metricInput.select()
     },
-    isValidMetric() {
+    metricValidationState() {
       if (this.hasSelectedMetric()) return true
 
       if (this.matchingMetrics.length > 0) return null
@@ -263,7 +264,7 @@ export default {
             },
           })
         }
-        if (oldData.length > 100) {
+        if (oldData.length > MAX_DATA_POINTS) {
           this.metricLiveData = oldData.slice(1)
         } else {
           this.metricLiveData = oldData
