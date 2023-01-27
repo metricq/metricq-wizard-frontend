@@ -50,12 +50,12 @@
             <b-tab title="Backups">
               <b-list-group>
                 <b-list-group-item
-                  v-for="backup in backups"
-                  :key="backup"
+                  v-for="backupId in backupIds"
+                  :key="backupId"
                   button
-                  @click="onBackupClick(backup)"
+                  @click="onBackupClick(backupId)"
                 >
-                  {{ backup }}
+                  {{ backupId }}
                 </b-list-group-item>
               </b-list-group>
             </b-tab>
@@ -92,7 +92,7 @@ export default {
   layout: 'nonfluid',
   async asyncData({ $axios, params }) {
     const { data } = await $axios.get(`/source/${params.clientId}/raw_config`)
-    const backups = (await $axios.get(`/client/${params.clientId}/backups`))
+    const backupIds = (await $axios.get(`/client/${params.clientId}/backups`))
       .data
 
     return {
@@ -100,7 +100,7 @@ export default {
       jsonData: data.config,
       backupJsonData: undefined,
       backupId: undefined,
-      backups,
+      backupIds,
       updating: false,
       showJsonEditor: JSON.stringify(data.config).length < 10000,
     }
