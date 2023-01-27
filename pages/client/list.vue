@@ -9,10 +9,19 @@
       </b-col>
     </b-row>
 
-    <b-row v-if="chartOptions !== null && !showReScanOverlay" class="mb-4">
+    <b-row class="mb-4">
       <b-col>
         <b-card no-body header="Dependency Graph">
-          <highcharts :options="chartOptions" />
+          <b-alert
+            v-if="dependencies === null"
+            variant="info"
+            show
+            class="p-3 m-0 d-flex justify-content-center"
+          >
+            <b-spinner varian="primary" label="Loading graph data..." />
+            Loading data...
+          </b-alert>
+          <highcharts v-else :options="chartOptions" />
         </b-card>
       </b-col>
     </b-row>
@@ -29,6 +38,7 @@
                       id="filter-input"
                       v-model="filter"
                       type="search"
+                      debounce="200"
                       :autofocus="true"
                       placeholder="Type to Search"
                     ></b-form-input>
@@ -62,6 +72,8 @@
                 { key: 'actions' },
               ]"
               small
+              :per-page="perPage"
+              :current-page="currentPage"
               :filter="filter"
               :filter-included-fields="['id', 'hostname']"
               primary-key="id"
@@ -72,6 +84,7 @@
               hover
               class="mb-0"
               show-empty
+              @filtered="onFiltered"
             >
               <template #head(lastseen)> Last seen </template>
               <template #cell(lastseen)="data">
@@ -112,6 +125,22 @@
                 </b-jumbotron>
               </template>
             </b-table>
+            <b-card-footer class="d-flex justify-content-between">
+              <span class="lead">
+                Total clients: {{ clients.length }}
+                <span v-if="filter">({{ totalRows }} matching)</span>
+              </span>
+              <b-pagination
+                v-if="clients.length > perPage"
+                v-model="currentPage"
+                :total-rows="totalRows"
+                :per-page="perPage"
+                first-number
+                last-number
+                class="d-flex justify-content-center"
+              />
+              <div />
+            </b-card-footer>
           </b-card>
         </b-overlay>
       </b-col>
@@ -142,19 +171,31 @@ export default {
     return {
       filter: null,
       showReScanOverlay: false,
+      perPage: 16,
+      currentPage: 1,
+      totalRows: 0,
+      dependencies: null,
     }
   },
   async fetch() {
     await Client.fetchAll()
+    this.totalRows = Client.query().count()
+    this.$axios
+      .get(`/clients/dependencies`)
+      .then(({ data }) => (this.dependencies = data))
   },
-  asyncComputed: {
-    async chartOptions() {
+  computed: {
+    clients() {
+      return Client.query().all()
+    },
+    chartOptions() {
+      if (this.dependencies === null) return {}
       return {
         title: null,
         series: [
           {
             keys: ['from', 'to', 'weight'],
-            data: (await this.$axios.get(`/clients/dependencies`)).data,
+            data: this.dependencies,
             type: 'dependencywheel',
             name: 'Amount of metrics consumed',
           },
@@ -162,12 +203,12 @@ export default {
       }
     },
   },
-  computed: {
-    clients() {
-      return Client.query().all()
-    },
-  },
   methods: {
+    onFiltered(_filteredItems, filteredItemsCount) {
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      this.totalRows = filteredItemsCount
+      this.currentPage = 1
+    },
     async editRawConfig(clientId) {
       const answer = await this.$bvModal.msgBoxConfirm(
         this.guiForConfigExists(clientId)
