@@ -63,7 +63,17 @@ export default {
    */
   axios: {
     prefix: '/api',
-    port: process.env.NODE_ENV === 'development' ? 8000 : undefined,
+  },
+
+  dev: process.env.NODE_ENV !== 'production',
+
+  /*
+   * local configuration for
+   */
+  publicRuntimeConfig: {
+    metricq: {
+      websocketURL: process.env.METRICQ_WEBSOCKET_URL || 'ws://localhost:3003',
+    },
   },
 
   /*

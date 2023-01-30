@@ -11,6 +11,12 @@ RUN yarn install --frozen-lockfile
 ARG api_url
 ENV API_URL=$api_url
 
+ARG metricq_websocket_url
+ENV METRICQ_WEBSOCKET_URL=$metricq_websocket_url
+
+ARG node_env=production
+ENV NODE_ENV=$node_env
+
 COPY . ./
 
 RUN NODE_OPTIONS=--openssl-legacy-provider yarn build

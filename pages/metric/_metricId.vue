@@ -212,7 +212,9 @@ export default {
           params: { metricId: this.metric },
         })
 
-        this.metricqWebsocket = await MetricQLive.connect('ws://localhost:3003')
+        this.metricqWebsocket = await MetricQLive.connect(
+          this.$config.metricq.websocketURL
+        )
 
         this.metricqWebsocket.onData = this.onMetricData
 
