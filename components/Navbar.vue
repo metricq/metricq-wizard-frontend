@@ -1,5 +1,11 @@
 <template>
-  <b-navbar toggleable="lg" sticky fixed="top" variant="light">
+  <b-navbar
+    toggleable="lg"
+    sticky
+    fixed="top"
+    variant="light"
+    class="shadow-sm"
+  >
     <b-navbar-brand :to="{ name: 'index' }">
       MetricQ &#x1F9D9; ‍️
     </b-navbar-brand>
@@ -10,23 +16,24 @@
       <b-navbar-nav>
         <b-nav-item
           :to="{
-            name: 'metric-metric_list',
+            name: 'metric',
           }"
           active-class="active"
         >
-          Metrics Overview
+          Metric Library
         </b-nav-item>
+
         <b-nav-item
           :to="{
-            name: 'source-source_list',
+            name: 'metric-configure',
           }"
           active-class="active"
         >
-          Source Overview
+          Metric Workshop
         </b-nav-item>
         <b-nav-item
           :to="{
-            name: 'client-client_list',
+            name: 'client-list',
           }"
           active-class="active"
         >
@@ -48,6 +55,10 @@
           <b-spinner class="ml-auto" small />
           <strong>Fetching sources...</strong>
         </b-nav-text>
+        <b-nav-text v-if="fetchingClients" class="mr-sm-2">
+          <b-spinner class="ml-auto" small />
+          <strong>Fetching clients...</strong>
+        </b-nav-text>
         <b-nav-text v-if="fetchingTransformers" class="mr-sm-2">
           <b-spinner class="ml-auto" small />
           <strong>Fetching transformers...</strong>
@@ -61,6 +72,7 @@
 import Metric from '~/models/Metric'
 import Database from '~/models/Database'
 import Source from '~/models/Source'
+import Client from '~/models/Client'
 import Transformer from '~/models/Transformer'
 
 export default {
@@ -74,6 +86,9 @@ export default {
     },
     fetchingSources() {
       return Source.store().state.entities.source.fetching
+    },
+    fetchingClients() {
+      return Client.store().state.entities.source.fetching
     },
     fetchingTransformers() {
       return Transformer.store().state.entities.transformer.fetching

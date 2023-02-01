@@ -18,6 +18,7 @@
           striped
           hover
           show-empty
+          class="mb-0"
           @row-clicked="onRowClicked"
         >
           <template #cell(select)="data">
@@ -26,25 +27,28 @@
               @change="onRowSelected(data.item, $event)"
             />
           </template>
+          <template #cell(id)="data">
+            <b-link
+              :to="{
+                name: 'metric-metricId',
+                params: { metricId: data.item.id },
+              }"
+            >
+              {{ data.item.id }}
+            </b-link>
+          </template>
           <template #cell(source)="data">
             <b-link
-              v-if="data.item.sourceRef && data.item.sourceRef.configurable"
               :to="{
-                name: 'source-config_item_list-sourceId',
-                params: { sourceId: data.item.source },
+                name: 'client-clientId',
+                params: { clientId: data.item.source },
               }"
             >
               {{ data.item.source }}
             </b-link>
-            <b-link
-              v-else
-              :to="{
-                name: 'source-edit_json-sourceId',
-                params: { sourceId: data.item.source },
-              }"
-            >
-              {{ data.item.source }}
-            </b-link>
+          </template>
+          <template #cell(rate)="data">
+            {{ data.item.rate }}
           </template>
           <template #cell(lastMetadataUpdate)="data">
             {{
@@ -57,7 +61,12 @@
             <b-badge v-if="data.item.historic"> Saved in DB </b-badge>
           </template>
           <template #cell(actions)="data">
-            <b-button size="sm" class="mr-2" @click="data.toggleDetails">
+            <b-button
+              size="sm"
+              class="mr-2"
+              variant="info"
+              @click="data.toggleDetails"
+            >
               {{ data.detailsShowing ? 'Hide' : 'Show' }} Metadata
             </b-button>
             <b-button
@@ -76,14 +85,6 @@
             }}</pre>
           </template>
         </b-table>
-        <b-pagination
-          v-model="currentPage"
-          :total-rows="rows"
-          :per-page="pageSize"
-          align="center"
-          first-number
-          last-number
-        />
       </b-col>
     </b-row>
   </div>
@@ -101,11 +102,12 @@ export default {
     disableFuzzy: { type: Boolean, default: false },
     unit: { type: String, default: null },
     rate: { type: Number, default: null },
+    currentPage: { type: Number, default: 1 },
   },
+  emits: ['filtered'],
   data() {
     return {
       currentTableItems: [],
-      currentPage: 1,
       fields: [
         {
           key: 'select',
@@ -154,6 +156,14 @@ export default {
           })
         }
       }
+
+      // I want to be compatible with the signature of the Table::filtered
+      // event, but we don't use the actual items in the handler, so for
+      // now, we emit null instead of metricQuery.get(). I don't want to
+      // think about the performance implications of calling that magic
+      // twice.
+      this.$emit('filtered', null, metricQuery.count())
+
       return metricQuery.get()
     },
     selected() {
@@ -161,7 +171,7 @@ export default {
     },
     emptyText() {
       if (this.historic == null && !this.filter) {
-        return 'No metrics loaded! Please use the controlls at the top.'
+        return 'No metrics loaded! Please use the controls at the top.'
       }
       return 'There are no metrics matching your filter.'
     },

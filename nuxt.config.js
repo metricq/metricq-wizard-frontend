@@ -1,3 +1,5 @@
+import { sortRoutes } from '@nuxt/utils'
+
 export default {
   ssr: false,
   /*
@@ -30,8 +32,12 @@ export default {
   plugins: [
     '@/plugins/vuex-orm-axios',
     '@/plugins/vue-json-edit',
+    '@/plugins/vue-json-tree',
     '@/plugins/persistedState.client',
     '@/plugins/moment-filter',
+    '@/plugins/async-computed',
+    '@/plugins/chartkick',
+    '@/plugins/sleep',
   ],
   /*
    ** Nuxt.js dev-modules
@@ -60,6 +66,17 @@ export default {
     port: process.env.NODE_ENV === 'development' ? 8000 : undefined,
   },
 
+  dev: process.env.NODE_ENV !== 'production',
+
+  /*
+   * local configuration for
+   */
+  publicRuntimeConfig: {
+    metricq: {
+      websocketURL: process.env.METRICQ_WEBSOCKET_URL || 'ws://localhost:3003',
+    },
+  },
+
   /*
    ** Build configuration
    */
@@ -67,7 +84,13 @@ export default {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {},
+    extend(config, { isClient }) {
+      // The internet told me to do this to fix the missing source-maps:
+      // https://stackoverflow.com/questions/69206509/nuxt-how-can-i-get-sourcemap-files-and-where-can-i-find-them-in-production
+      if (isClient) {
+        config.devtool = 'source-map'
+      }
+    },
     extractCSS: true,
     analyze: false,
   },
@@ -85,5 +108,15 @@ export default {
   },
   router: {
     base: '/',
+    extendRoutes(routes, resolve) {
+      // add redirect from /metric to /metric/{id} with empty id
+      routes.push({
+        name: 'metric',
+        path: '/metric',
+        redirect: { name: 'metric-metricId', metricId: '' },
+      })
+      // it's voodoo needed to make the /metric/{id} magic work
+      sortRoutes(routes)
+    },
   },
 }
