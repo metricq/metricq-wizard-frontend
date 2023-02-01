@@ -23,4 +23,5 @@ RUN NODE_OPTIONS=--openssl-legacy-provider yarn build
 
 FROM nginx:alpine
 
+COPY docker/nginx-default.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /wizard-frontend/dist /usr/share/nginx/html
