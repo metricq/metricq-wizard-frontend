@@ -20,7 +20,6 @@
           show-empty
           class="mb-0"
           @row-clicked="onRowClicked"
-          @filtered="onFiltered"
         >
           <template #cell(select)="data">
             <b-checkbox
