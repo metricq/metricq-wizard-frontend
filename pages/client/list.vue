@@ -269,7 +269,7 @@ export default {
     },
     async updateTopology() {
       this.showReScanOverlay = true
-      await this.$axios.post(`/topology/discover`)
+      await this.$axios.post(`/discover`)
 
       await this.$sleep(DISCOVER_WAIT_TIME)
 

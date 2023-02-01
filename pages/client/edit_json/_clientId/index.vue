@@ -159,7 +159,7 @@ export default {
     },
     async onBackupClick(backupId) {
       const { data } = await this.$axios.get(
-        `/client/${this.clientId}/backup/${backupId}`
+        `/client/${this.clientId}/backups/${backupId}`
       )
       this.backupId = backupId
       this.backupJsonData = data
