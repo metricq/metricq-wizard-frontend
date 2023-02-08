@@ -65,9 +65,6 @@
               :fields="[
                 { key: 'id', sortable: true },
                 { key: 'hostname', sortable: true },
-                { key: 'version', sortable: true },
-                { key: 'metricqVersion', sortable: true },
-                { key: 'startingTime', sortable: true },
                 { key: 'lastseen', sortable: true },
                 { key: 'actions' },
               ]"
@@ -93,13 +90,6 @@
                 </template>
                 <template v-else>never seen</template>
               </template>
-              <template #head(startingTime)> Started </template>
-              <template #cell(startingTime)="data">
-                <template v-if="data.item.startingTime">
-                  {{ data.item.startingTime | momentAgo }}
-                </template>
-              </template>
-
               <template #head(actions)="data">
                 <span class="float-right">{{ data.label }}</span>
               </template>

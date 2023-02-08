@@ -44,13 +44,22 @@
             <b-card no-body>
               <b-row v-if="client.discoverTime">
                 <b-col v-if="client.hostname" align="left" class="m-3">
-                  Runs on {{ client.hostname }}
-                  <template v-if="client.version">
-                    (Version {{ client.version }})
-                  </template>
-                  <template v-if="client.metricqVersion">
-                    using MetricQ {{ client.metricqVersion }}
-                  </template>
+                  <p class="lead pb-2">
+                    Runs on <b-icon-hdd-network />
+                    <strong>{{ client.hostname }}</strong>
+                    since {{ client.startingTime | momentAgo }}
+                  </p>
+                  <p>
+                    <template v-if="client.version">
+                      Version <b-icon-box-seam /> {{ client.version }}
+                    </template>
+                    <template v-if="client.metricqVersion">
+                      using MetricQ {{ client.metricqVersion }}
+                    </template>
+                  </p>
+                  <p class="text-right blockquote-footer">
+                    Last update from {{ client.lastseen | momentAgo }}
+                  </p>
                 </b-col>
               </b-row>
               <b-alert v-else variant="warning" show class="mb-0">
