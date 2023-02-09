@@ -50,12 +50,9 @@
                     since {{ client.startingTime | momentAgo }}
                   </p>
                   <p>
-                    <template v-if="client.version">
-                      Version <b-icon-box-seam /> {{ client.version }}
-                    </template>
-                    <template v-if="client.metricqVersion">
-                      using MetricQ {{ client.metricqVersion }}
-                    </template>
+                    <b-icon-box-seam /> Version
+                    {{ client.version || 'unknown' }} with MetricQ version
+                    {{ client.metricqVersion || 'unknown' }}
                   </p>
                   <p class="text-right blockquote-footer">
                     Last update from {{ client.lastseen | momentAgo }}
