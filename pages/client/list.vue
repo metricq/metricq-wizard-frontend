@@ -125,21 +125,37 @@
                 </b-jumbotron>
               </template>
             </b-table>
-            <b-card-footer class="d-flex justify-content-between">
-              <span class="lead">
-                Total clients: {{ clients.length }}
-                <template v-if="filter">({{ totalRows }} matching)</template>
-              </span>
-              <b-pagination
-                v-if="clients.length > perPage"
-                v-model="currentPage"
-                :total-rows="totalRows"
-                :per-page="perPage"
-                first-number
-                last-number
-                class="d-flex justify-content-center"
-              />
-              <div />
+            <b-card-footer>
+              <b-row align-v="center">
+                <b-col>
+                  <span>
+                    Total clients: {{ clients.length }}
+                    <template v-if="filter">
+                      ({{ totalRows }} matching)
+                    </template>
+                  </span>
+                </b-col>
+                <b-col>
+                  <b-pagination
+                    v-if="clients.length > perPage"
+                    v-model="currentPage"
+                    :total-rows="totalRows"
+                    :per-page="perPage"
+                    first-number
+                    last-number
+                    class="justify-content-center"
+                  />
+                </b-col>
+                <b-col class="text-right">
+                  Clients per page
+                  <b-form-select
+                    v-model="perPage"
+                    :options="[10, 20, 50, 100, 200, 500]"
+                    size="sm"
+                    class="w-25"
+                  />
+                </b-col>
+              </b-row>
             </b-card-footer>
           </b-card>
         </b-overlay>
@@ -171,7 +187,7 @@ export default {
     return {
       filter: null,
       showReScanOverlay: false,
-      perPage: 16,
+      perPage: 20,
       currentPage: 1,
       totalRows: 0,
       dependencies: null,
