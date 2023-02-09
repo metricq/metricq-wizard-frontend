@@ -55,6 +55,7 @@
               <b-input-group-append>
                 <b-button
                   :disabled="!loadSelectedSource"
+                  variant="primary"
                   @click="loadBySource()"
                 >
                   Load
@@ -79,6 +80,7 @@
               <b-input-group-append>
                 <b-button
                   :disabled="!loadSelectedTransformer"
+                  variant="primary"
                   @click="loadByTransformer()"
                 >
                   Load
@@ -129,9 +131,6 @@
                   </b-button>
                 </b-input-group-append>
               </b-input-group>
-              <b-form-checkbox id="disableFuzzyInput" v-model="disableFuzzy">
-                Only search in Id and Source columns with disabled fuzzy search
-              </b-form-checkbox>
             </b-col>
             <b-col>
               <b-input-group prepend="Units">
@@ -162,6 +161,13 @@
                   :value="null"
                 />
               </b-input-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col>
+              <b-form-checkbox id="disableFuzzyInput" v-model="disableFuzzy">
+                Only search in Id and Source columns with disabled fuzzy search
+              </b-form-checkbox>
             </b-col>
           </b-row>
         </b-card>
@@ -265,14 +271,18 @@
               :disabled="selected.length === 0"
               class="float-right"
             >
-              Configure database
+              <b-icon-server />
+              Add to database
             </b-button>
             <b-dropdown
               split
               :split-to="combinedMetricButtonTarget.defaultButton.to"
-              :text="combinedMetricButtonTarget.defaultButton.text"
               class="float-right mr-1"
             >
+              <template #button-content>
+                <b-icon-calculator />
+                {{ combinedMetricButtonTarget.defaultButton.text }}
+              </template>
               <b-dropdown-item
                 :to="combinedMetricButtonTarget.firstButton.to"
                 :disabled="selected.length === 0"
@@ -291,7 +301,7 @@
                 }"
                 :disabled="selected.length === 0"
               >
-                Create min metric from selected
+                Add min metric from selected
               </b-dropdown-item>
               <b-dropdown-item
                 :to="{
@@ -305,7 +315,7 @@
                 }"
                 :disabled="selected.length === 0"
               >
-                Create max metric from selected
+                Add max metric from selected
               </b-dropdown-item>
             </b-dropdown>
           </b-col>
@@ -451,13 +461,13 @@ export default {
     },
     combinedMetricButtonTarget() {
       const emptyMetricButton = {
-        text: 'Create new combined metric',
+        text: 'Add combined metric',
         to: {
           name: 'metric-create_combined_metric',
         },
       }
       const sumMetricButton = {
-        text: 'Create sum metric from selected',
+        text: 'Add sum metric from selected',
         to: {
           name: 'metric-create_combined_metric',
           params: {
