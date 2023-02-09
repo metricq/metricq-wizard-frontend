@@ -174,6 +174,11 @@ export default {
     this.totalRows = Client.query().count()
     this.$axios.get(`/clients/dependencies`).then(({ data }) => {
       this.dependencies = data
+
+      // hide the loading displayed in the highcharts chart
+      // $ref.chart is the vue tag, chart is the Highchart instance,
+      // which we call hideLoading() on
+      // See also: https://github.com/highcharts/highcharts-vue/issues/100
       this.$refs.chart.chart.hideLoading()
     })
   },
@@ -187,6 +192,8 @@ export default {
         chart: {
           events: {
             load() {
+              // once the chart is mounted, we directly show
+              // a "loading" message while the data is being fetched
               this.showLoading()
             },
           },
