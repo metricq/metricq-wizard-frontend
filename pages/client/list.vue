@@ -65,6 +65,9 @@
               :fields="[
                 { key: 'id', sortable: true },
                 { key: 'hostname', sortable: true },
+                { key: 'version', sortable: true },
+                { key: 'metricqVersion', sortable: true },
+                { key: 'startingTime', sortable: true },
                 { key: 'lastseen', sortable: true },
                 { key: 'actions' },
               ]"
@@ -95,6 +98,12 @@
               </template>
               <template #cell(actions)="data">
                 <client-actions :client="data.item" />
+              </template>
+              <template #head(startingTime)> Started </template>
+              <template #cell(startingTime)="data">
+                <template v-if="data.item.startingTime">
+                  {{ data.item.startingTime | momentAgo }}
+                </template>
               </template>
               <template #emptyfiltered>
                 <b-jumbotron
