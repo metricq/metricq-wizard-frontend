@@ -93,17 +93,17 @@
                 </template>
                 <template v-else>never seen</template>
               </template>
-              <template #head(actions)="data">
-                <span class="float-right">{{ data.label }}</span>
-              </template>
-              <template #cell(actions)="data">
-                <client-actions :client="data.item" />
-              </template>
               <template #head(startingTime)> Started </template>
               <template #cell(startingTime)="data">
                 <template v-if="data.item.startingTime">
                   {{ data.item.startingTime | momentAgo }}
                 </template>
+              </template>
+              <template #head(actions)="data">
+                <span class="float-right">{{ data.label }}</span>
+              </template>
+              <template #cell(actions)="data">
+                <client-actions :client="data.item" />
               </template>
               <template #emptyfiltered>
                 <b-jumbotron
