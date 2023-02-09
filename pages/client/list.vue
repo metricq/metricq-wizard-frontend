@@ -41,12 +41,11 @@
                       debounce="200"
                       :autofocus="true"
                       placeholder="Type to Search"
-                    ></b-form-input>
-
+                    />
                     <b-input-group-append>
-                      <b-button :disabled="!filter" @click="filter = ''"
-                        >Clear</b-button
-                      >
+                      <b-button :disabled="!filter" @click="filter = ''">
+                        Clear
+                      </b-button>
                     </b-input-group-append>
                   </b-input-group>
                 </b-col>
