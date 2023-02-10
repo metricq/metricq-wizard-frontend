@@ -58,7 +58,14 @@
             }}
           </template>
           <template #cell(state)="data">
-            <b-badge v-if="data.item.historic"> Saved in DB </b-badge>
+            <b-badge
+              v-if="data.item.sourceRef && data.item.sourceRef.isCombinator"
+            >
+              <b-icon-calculator v-b-tooltip.hover title="Combined Metric" />
+            </b-badge>
+            <b-badge v-if="data.item.historic">
+              <b-icon-server v-b-tooltip.hover title="Saved in DB" />
+            </b-badge>
           </template>
           <template #cell(actions)="data">
             <b-button
@@ -67,14 +74,15 @@
               variant="info"
               @click="data.toggleDetails"
             >
-              {{ data.detailsShowing ? 'Hide' : 'Show' }} Metadata
+              <b-icon-clipboard-data /> Metadata
             </b-button>
             <b-button
               v-if="data.item.sourceRef && data.item.sourceRef.isCombinator"
               size="sm"
               @click="editCombinedMetric(data.item)"
             >
-              Edit expression
+              <b-icon-pencil-square />
+              Expression
             </b-button>
           </template>
 
