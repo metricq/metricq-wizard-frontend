@@ -34,7 +34,7 @@ export default {
     '@/plugins/vue-json-edit',
     '@/plugins/vue-json-tree',
     '@/plugins/persistedState.client',
-    '@/plugins/moment-filter',
+    '@/plugins/filters',
     '@/plugins/async-computed',
     '@/plugins/chartkick',
     '@/plugins/sleep',
