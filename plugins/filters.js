@@ -20,8 +20,9 @@ Vue.filter('momentDuration', function (duration) {
 })
 
 Vue.filter('humanizeRate', function (rate) {
-  // we get a float representing the sampling rate
-  // so let's calculate an interval
+  // get a rate as Number and return a human-readable
+  // string representation of that rate
+
   const interval = moment.duration(1 / rate, 'seconds')
 
   if (interval.asHours() >= 1) {
@@ -31,6 +32,8 @@ Vue.filter('humanizeRate', function (rate) {
   } else if (interval.asSeconds() > 1) {
     return `1 / ${interval.asSeconds()} s`
   } else {
+    // JavaScript is weird. This abomination prints floats
+    // with at most two fractional digits, but no trailing zeros.
     return `${parseFloat(rate.toFixed(2))} Hz`
   }
 })
