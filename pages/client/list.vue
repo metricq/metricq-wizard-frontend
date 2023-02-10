@@ -12,16 +12,7 @@
     <b-row class="mb-4">
       <b-col>
         <b-card no-body header="Dependency Graph">
-          <b-alert
-            v-if="dependencies === null"
-            variant="info"
-            show
-            class="p-3 m-0 d-flex justify-content-center"
-          >
-            <b-spinner varian="primary" label="Loading graph data..." />
-            Loading data...
-          </b-alert>
-          <highcharts v-else :options="chartOptions" />
+          <highcharts ref="chart" :options="chartOptions" />
         </b-card>
       </b-col>
     </b-row>
@@ -195,18 +186,32 @@ export default {
   async fetch() {
     await Client.fetchAll()
     this.totalRows = Client.query().count()
-    this.$axios
-      .get(`/clients/dependencies`)
-      .then(({ data }) => (this.dependencies = data))
+    this.$axios.get(`/clients/dependencies`).then(({ data }) => {
+      this.dependencies = data
+
+      // hide the loading displayed in the highcharts chart
+      // $ref.chart is the vue tag, chart is the Highchart instance,
+      // which we call hideLoading() on
+      // See also: https://github.com/highcharts/highcharts-vue/issues/100
+      this.$refs.chart.chart.hideLoading()
+    })
   },
   computed: {
     clients() {
       return Client.query().all()
     },
     chartOptions() {
-      if (this.dependencies === null) return {}
       return {
         title: null,
+        chart: {
+          events: {
+            load() {
+              // once the chart is mounted, we directly show
+              // a "loading" message while the data is being fetched
+              this.showLoading()
+            },
+          },
+        },
         series: [
           {
             keys: ['from', 'to', 'weight'],
