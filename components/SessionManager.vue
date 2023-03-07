@@ -28,7 +28,7 @@
             Save changes
           </b-button>
           <b-button variant="danger" class="mb-1" @click="reset">
-            Reset changes
+            Discard changes
           </b-button>
         </div>
       </b-col>
@@ -142,7 +142,7 @@ export default {
     },
     async reset() {
       const answer = await this.$bvModal.msgBoxConfirm(
-        `Are you sure you want to reset the config for ${this.sourceId} and delete your unsaved modifications?`,
+        `Are you sure you want to discard your unsaved configuration changes for ${this.sourceId}?`,
         {
           title: 'Please Confirm',
           buttonSize: 'sm',
@@ -170,7 +170,7 @@ export default {
             name: 'source-source_list',
           })
         } else {
-          this.$toast.error('Resetting your modifications failed!')
+          this.$toast.error('Discarding your modifications failed!')
         }
       }
     },
