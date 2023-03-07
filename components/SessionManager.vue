@@ -167,7 +167,7 @@ export default {
         if (status === 200) {
           this.$toast.success('Success!')
           await this.$router.push({
-            name: 'source-source_list',
+            name: 'client-list',
           })
         } else {
           this.$toast.error('Discarding your modifications failed!')
