@@ -218,6 +218,7 @@ export default {
             data: this.dependencies,
             type: 'dependencywheel',
             name: 'Amount of metrics consumed',
+            minLinkWidth: 1,
           },
         ],
       }
