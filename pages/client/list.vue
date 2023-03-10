@@ -31,10 +31,15 @@
                       type="search"
                       debounce="200"
                       :autofocus="true"
+                      :disabled="clientFilterList !== null"
                       placeholder="Type to Search"
                     />
                     <b-input-group-append>
-                      <b-button :disabled="!filter" @click="filter = ''">
+                      <b-button
+                        :disabled="!filter"
+                        :variant="filter ? 'primary' : 'secondary'"
+                        @click=";(filter = ''), (clientFilterList = null)"
+                      >
                         Clear
                       </b-button>
                     </b-input-group-append>
@@ -65,7 +70,7 @@
               :per-page="perPage"
               :current-page="currentPage"
               :filter="filter"
-              :filter-included-fields="['id', 'hostname']"
+              :filter-function="clientFilterFunction"
               primary-key="id"
               responsive="true"
               sort-by="id"
@@ -181,6 +186,7 @@ export default {
       currentPage: 1,
       totalRows: 0,
       dependencies: null,
+      clientFilterList: null,
     }
   },
   async fetch() {
@@ -219,6 +225,9 @@ export default {
             type: 'dependencywheel',
             name: 'Amount of metrics consumed',
             minLinkWidth: 1,
+            events: {
+              click: this.onChartClick,
+            },
           },
         ],
       }
@@ -229,6 +238,33 @@ export default {
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItemsCount
       this.currentPage = 1
+    },
+    onChartClick({ point }) {
+      if (point.formatPrefix === 'node') {
+        const metrics = [point.id]
+
+        for (const { from } of point.linksTo) {
+          metrics.push(from)
+        }
+        for (const { to } of point.linksFrom) {
+          metrics.push(to)
+        }
+        this.clientFilterList = metrics
+        this.filter = `$dependencies(${point.id})`
+      } else {
+        this.clientFilterList = [point.fromNode.id, point.toNode.id]
+        this.filter = `$link(${point.fromNode.id}, ${point.toNode.id})`
+      }
+    },
+    clientFilterFunction(data, filter) {
+      if (this.clientFilterList === null) {
+        return (
+          data.id.includes(filter) ||
+          (data.hostname != null && data.hostname.includes(filter))
+        )
+      } else {
+        return this.clientFilterList.includes(data.id)
+      }
     },
     async editRawConfig(clientId) {
       const answer = await this.$bvModal.msgBoxConfirm(
