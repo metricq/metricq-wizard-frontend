@@ -253,7 +253,7 @@
               ({{ totalRows }} matching)
             </template>
           </b-col>
-          <b-col>
+          <b-col class="col-auto">
             <b-pagination
               v-model="currentPage"
               :total-rows="totalRows"
@@ -263,21 +263,10 @@
               last-number
             />
           </b-col>
-          <b-col>
-            <b-button
-              :to="{
-                name: 'metric-database_configuration',
-              }"
-              :disabled="selected.length === 0"
-              class="float-right"
-            >
-              <b-icon-server />
-              Add to database
-            </b-button>
+          <b-col class="text-right">
             <b-dropdown
               split
               :split-to="combinedMetricButtonTarget.defaultButton.to"
-              class="float-right mr-1"
             >
               <template #button-content>
                 <b-icon-calculator />
@@ -318,6 +307,15 @@
                 Add max metric from selected
               </b-dropdown-item>
             </b-dropdown>
+            <b-button
+              :to="{
+                name: 'metric-database_configuration',
+              }"
+              :disabled="selected.length === 0"
+            >
+              <b-icon-server />
+              Add to database
+            </b-button>
           </b-col>
         </b-row>
       </b-card-footer>
