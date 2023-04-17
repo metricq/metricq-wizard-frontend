@@ -264,6 +264,25 @@
             />
           </b-col>
           <b-col class="text-right">
+            <span id="delete-tooltip-target">
+              <b-button
+                :disabled="selected.length === 0 || numSelectedHistoric > 0"
+                @click="onDeleteClicked"
+              >
+                <b-icon-trash />
+                Delete selected
+              </b-button>
+            </span>
+            <b-tooltip
+              v-if="numSelectedHistoric > 0"
+              target="delete-tooltip-target"
+              triggers="hover"
+              variant="warning"
+            >
+              You have selected one ore more metrics that are saved to a
+              database. <br />
+              Such metrics cannot be deleted.
+            </b-tooltip>
             <b-dropdown
               split
               :split-to="combinedMetricButtonTarget.defaultButton.to"
@@ -369,6 +388,13 @@ export default {
   computed: {
     selected() {
       return Metric.query().with('database').where('selected', true).get()
+    },
+    numSelectedHistoric() {
+      return Metric.query()
+        .with('database')
+        .where('selected', true)
+        .where('historic', true)
+        .count()
     },
     metricCount() {
       return Metric.query().count()
@@ -489,6 +515,71 @@ export default {
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItemsCount
       this.currentPage = 1
+    },
+    async onDeleteClicked() {
+      if (this.numSelectedHistoric > 0) {
+        this.$toast.error(
+          'Cannot delete metrics that are saved to any database!'
+        )
+      } else {
+        // You think this is ugly? Yes it is, but it's the only way to get an
+        // awaitable modal box with HTML in it.
+        // https://bootstrap-vue.org/docs/components/modal#message-box-notes
+        // "The Message Box message currently does not support HTML strings,
+        // however, you can pass an array of VNodes [...]"
+
+        // make a list of the first 10 metrics to be deleted
+        const metricList = this.selected
+          .slice(0, 10)
+          .map((metric) => this.$createElement('li', metric.id))
+
+        // if there are more than 10 metrics to be deleted, add "and x more ..."
+        if (this.selected.length > 10) {
+          metricList.push(
+            this.$createElement(
+              'li',
+              `and ${this.selected.length - 10} more ...`
+            )
+          )
+        }
+
+        const confirmed = await this.$bvModal.msgBoxConfirm(
+          [this.$createElement('ul', metricList)],
+          {
+            titleHtml: `Are you sure you want to delete <b>${this.selected.length}</b> metrics?`,
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            okTitle: 'Yes, delete',
+            cancelTitle: 'No, cancel',
+            footerClass: 'p-2',
+            hideHeaderClose: false,
+            centered: true,
+          }
+        )
+
+        if (confirmed) {
+          const response = await Metric.deleteMetadata(
+            this.selected.map((metric) => metric.id)
+          )
+
+          if (response.status === 200) {
+            this.$toast.success('Successfully deleted metrics!')
+          } else {
+            const { data } = response
+            if (data.status === 'partial') {
+              this.$toast.error(
+                `Failed to delete ${data.failed.length} of ${
+                  data.failed.length + data.deleted.length
+                } metrics!`
+              )
+            } else {
+              // Unless response.status === 500, this case would be a bug
+              // in the frontend, as it would indicate an invalid request.
+              this.$toast.error(`Failed to delete metrics!`)
+            }
+          }
+        }
+      }
     },
     async loadByDatabase() {
       Metric.commit((state) => {
