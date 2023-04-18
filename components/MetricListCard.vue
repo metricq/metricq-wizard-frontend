@@ -39,7 +39,7 @@
           </b-col>
           <b-col class="text-right float-right">
             <b-button
-              v-b-tooltip.hover
+              v-b-tooltip.hover.noninteractive
               :to="{
                 name: 'metric-metricId',
                 params: { metricId: metric },
