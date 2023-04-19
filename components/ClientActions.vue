@@ -15,7 +15,7 @@
       </b-button>
       <b-button
         v-if="client.hasConfiguration"
-        v-b-tooltip.hover
+        v-b-tooltip.hover.noninteractive
         :to="{
           name: 'client-edit_json-clientId',
           params: { clientId: client.id },
@@ -26,7 +26,7 @@
       </b-button>
       <b-button
         v-if="showDetails"
-        v-b-tooltip.hover
+        v-b-tooltip.hover.noninteractive
         :to="{
           name: 'client-clientId',
           params: { clientId: client.id },
@@ -37,7 +37,7 @@
         <b-icon-search scale="1.5" />
       </b-button>
       <b-button
-        v-b-tooltip.hover
+        v-b-tooltip.hover.noninteractive
         variant="danger"
         title="Send config to client"
         @click="reconfigureClient(client)"
