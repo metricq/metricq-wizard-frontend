@@ -252,6 +252,9 @@
             <template v-if="totalRows < metricCount">
               ({{ totalRows }} matching)
             </template>
+            <template v-if="selected.length > 0">
+              ({{ selected.length }} selected)
+            </template>
           </b-col>
           <b-col class="col-auto">
             <b-pagination
