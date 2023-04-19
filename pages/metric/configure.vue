@@ -490,7 +490,15 @@ export default {
     onFiltered(_filteredItems, filteredItemsCount) {
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItemsCount
-      this.currentPage = 1
+
+      // We need to update the currentPage to be within the bounds
+      // of the filtered items. But, we shouldn't change the page
+      // unless it is absolutely necessary, because this method
+      // will also be called, when a user selects a metric.
+      this.currentPage = Math.min(
+        this.currentPage,
+        Math.ceil(filteredItemsCount / this.pageSize)
+      )
     },
     async loadByDatabase() {
       Metric.commit((state) => {
