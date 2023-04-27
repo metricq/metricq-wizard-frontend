@@ -20,7 +20,7 @@ export default class Database extends Model {
   static apiConfig = {
     actions: {
       reconfigureById(id) {
-        return this.post(`/database/${id}/reconfigure`)
+        return this.post(`/database/${id}/reconfigure`, {}, { save: false })
       },
     },
   }
