@@ -76,7 +76,7 @@
       <b-col>
         <b-button
           :to="{
-            name: 'metric-metric_list',
+            name: 'metric-configure',
           }"
           variant="danger"
         >

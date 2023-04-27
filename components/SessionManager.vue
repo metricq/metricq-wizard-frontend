@@ -126,7 +126,7 @@ export default {
               loadingToast.goAway()
               this.$toast.success('Loaded database configuration.')
               await this.$router.push({
-                name: 'metric-metric_list',
+                name: 'metric-configure',
                 params: {
                   loadMetrics: false,
                 },
