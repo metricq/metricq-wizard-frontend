@@ -38,6 +38,7 @@ export class Client extends Model {
   async reconfigure() {
     return await Client.api().post(`/client/${this.id}/reconfigure`, null, {
       save: false,
+      validateStatus: null,
     })
   }
 
