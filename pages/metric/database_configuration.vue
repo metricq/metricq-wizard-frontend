@@ -120,7 +120,7 @@
       <b-col>
         <b-button
           :to="{
-            name: 'metric-metric_list',
+            name: 'metric-configure',
           }"
           variant="danger"
         >
@@ -140,11 +140,11 @@
       <b-col>
         <b-button
           variant="primary"
-          :disabled="saving || !selectedDatabase"
+          :disabled="saveInProgress || !selectedDatabase"
           class="float-right"
           @click="saveAll"
         >
-          <b-spinner v-if="saving" class="ml-auto" small />
+          <b-spinner v-if="saveInProgress" class="ml-auto" small />
           Save database settings for all metrics
         </b-button>
       </b-col>
@@ -156,6 +156,7 @@
 import timestring from 'timestring'
 import Metric from '~/models/Metric'
 import Database from '~/models/Database'
+import Client from '~/models/Client'
 
 export default {
   components: {},
@@ -201,14 +202,12 @@ export default {
         { key: 'intervalMax' },
         { key: 'intervalFactor' },
       ],
+      saveInProgress: false,
     }
   },
   computed: {
     selected() {
       return Metric.query().with('database').where('selected', true).all()
-    },
-    saving() {
-      return Metric.query().where('saving', true).count() !== 0
     },
     databases() {
       return Database.query()
@@ -221,77 +220,86 @@ export default {
       return this.selected.length
     },
   },
-  watch: {
-    saving(newValue, oldValue) {
-      if (
-        newValue === false &&
-        oldValue === true &&
-        this.errorCount < this.rows
-      ) {
-        this.$bvModal
-          .msgBoxConfirm(
-            `Reconfigure following database?\n${this.selectedDatabase}`,
-            {
-              title: 'Please Confirm',
-              buttonSize: 'sm',
-              okVariant: 'danger',
-              okTitle: 'YES',
-              cancelTitle: 'NO',
-              footerClass: 'p-2',
-              hideHeaderClose: false,
-              centered: true,
-            }
-          )
-          .then((value) => {
-            if (value) {
-              Database.api().reconfigureById(this.selectedDatabase)
-            }
-          })
-      }
-    },
-  },
   methods: {
-    saveAll() {
+    async saveAll() {
       if (!this.selectedDatabase) {
         return
       }
       if (!this.$refs.databaseForm.reportValidity()) {
         return
       }
-      this.errorCount = 0
-      const databaseConfigurations = this.selected.map((metric) => {
-        if (metric.historic) {
-          return null
-        }
-        Metric.update({
-          where: metric.id,
-          data: { saving: true },
-        })
-        const data = {
+
+      this.saveInProgress = true
+
+      const databaseConfigurations = this.selected
+        .filter((metric) => !metric.historic)
+        .map((metric) => ({
           id: metric.id,
           databaseId: this.selectedDatabase,
           intervalMin: metric.intervalMin,
           intervalMax: metric.intervalMax,
           intervalFactor: metric.intervalFactor,
-        }
-        return data
-      })
-      Metric.api()
-        .post('/metrics/database', {
+        }))
+
+      const { response } = await Metric.api().post(
+        '/metrics/database',
+        {
           databaseConfigurations,
+        },
+        {
+          validateStatus: null,
+          save: false,
+        }
+      )
+
+      if (response.status !== 200) {
+        this.$toast.error(`Saving database configurations failed!`)
+        this.saveInProgress = false
+        return
+      }
+
+      // Fake historic attribute for added metrics to make them appear updated
+      // In the actual metadata, they are only marked as historic when the
+      // corresponding database is reconfigured.
+      this.selected.forEach((metric) => {
+        Metric.update({
+          where: metric.id,
+          data: { historic: true },
         })
-        .catch(() => {
-          this.errorCount++
-          this.$toast.error(`Saving database configurations failed!`)
-        })
-        .finally(() => {
-          databaseConfigurations.forEach((config) => {
-            Metric.update({
-              where: config.id,
-              data: { saving: false },
-            })
-          })
-        })
+      })
+
+      const shouldReconfigure = await this.$bvModal.msgBoxConfirm(
+        [
+          'Reconfigure the database ',
+          this.$createElement('b', this.selectedDatabase),
+          ' now?',
+        ],
+        {
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          okTitle: 'YES',
+          cancelTitle: 'NO',
+          footerClass: 'p-2',
+          centered: true,
+        }
+      )
+
+      if (shouldReconfigure) {
+        // the database gets selected from a dropdown filled with all databases
+        // so it should be safe to assume that the database exists
+        const database = Client.find(this.selectedDatabase)
+
+        const { response } = await database.reconfigure()
+        if (response.status === 200) {
+          this.$toast.success('Successfully reconfigured the database!')
+        } else {
+          this.$toast.error('Failed to reconfigure the database!')
+        }
+      }
+
+      await this.$router.push({
+        name: 'metric-configure',
+      })
     },
     verifyInterval(ref, interval) {
       try {
