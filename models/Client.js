@@ -42,6 +42,13 @@ export class Client extends Model {
     })
   }
 
+  async delete() {
+    return await Client.api().delete(`/client/${this.id}`, {
+      save: false,
+      validateStatus: null,
+    })
+  }
+
   static async fetchProducedMetrics(clientId) {
     const { response } = await Client.api().get(
       `/client/${clientId}/produced_metrics`,

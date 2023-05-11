@@ -3,7 +3,7 @@
     <b-button-group v-if="client" size="sm" class="shadow-sm">
       <b-button
         v-if="client.configurable"
-        v-b-tooltip.hover
+        v-b-tooltip.hover.noninteractive
         :to="{
           name: 'source-config_item_list-sourceId',
           params: { sourceId: client.id },
@@ -44,6 +44,15 @@
       >
         <b-icon-bootstrap-reboot scale="1.5" />
       </b-button>
+      <b-button
+        v-if="showDelete"
+        v-b-tooltip.hover.noninteractive
+        variant="warning"
+        title="Delete the client"
+        @click="deleteClient(client)"
+      >
+        <b-icon-trash scale="1.5" />
+      </b-button>
     </b-button-group>
     <b-icon-exclamation-diamond v-else variant="danger" />
   </div>
@@ -53,7 +62,11 @@
 import Client from '~/models/Client'
 
 export default {
-  props: { client: Client, showDetails: { type: Boolean, default: true } },
+  props: {
+    client: Client,
+    showDetails: { type: Boolean, default: true },
+    showDelete: { type: Boolean, default: false },
+  },
   methods: {
     async reconfigureClient(client) {
       const reconfigureConfirmed = await this.$bvModal.msgBoxConfirm(
@@ -73,10 +86,38 @@ export default {
       if (reconfigureConfirmed) {
         const { response } = await client.reconfigure()
 
-        if (response.status / 100 === 2) {
+        if (response.status === 200) {
           this.$toast.success('Requested Client reconfiguration!')
         } else {
           this.$toast.error('Client reconfiguration failed!')
+        }
+      }
+    },
+    async deleteClient(client) {
+      const deleteConfirmed = await this.$bvModal.msgBoxConfirm(
+        `Really delete ${client.id}?`,
+        {
+          title: 'Please Confirm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          okTitle: 'YES',
+          cancelTitle: 'NO',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true,
+        }
+      )
+
+      if (deleteConfirmed) {
+        const { response } = await client.delete()
+
+        if (response.status === 200) {
+          this.$toast.success('Successfully deleted the client configuration!')
+          this.$router.push({
+            name: 'client-list',
+          })
+        } else {
+          this.$toast.error('Failed to delete the client!')
         }
       }
     },

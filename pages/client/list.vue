@@ -98,7 +98,7 @@
                 <span class="float-right">{{ data.label }}</span>
               </template>
               <template #cell(actions)="data">
-                <client-actions :client="data.item" />
+                <client-actions :show-delete="true" :client="data.item" />
               </template>
               <template #emptyfiltered>
                 <b-jumbotron
