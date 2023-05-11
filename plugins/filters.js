@@ -23,6 +23,8 @@ Vue.filter('humanizeRate', function (rate) {
   // get a rate as Number and return a human-readable
   // string representation of that rate
 
+  if (rate === undefined) return 'N/A'
+
   const interval = moment.duration(1 / rate, 'seconds')
 
   if (interval.asHours() >= 1) {
