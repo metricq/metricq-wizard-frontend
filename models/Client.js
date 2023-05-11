@@ -48,7 +48,7 @@ export class Client extends Model {
       validateStatus: null,
     })
 
-    this.$delete()
+    if (response.response.status === 200) this.$delete()
 
     return response
   }
