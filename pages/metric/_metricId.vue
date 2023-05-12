@@ -190,15 +190,15 @@ export default {
       if (!this.hasSelectedMetric()) return {}
 
       const metric = this.matchingMetrics[0]
-
-      const metadata = metric.additionalMetadata
-      metadata.description = metric.description
-      metadata.unit = metric.unit
-      metadata.source = metric.source
-      metadata.historic = metric.historic
-      metadata.rate = metric.rate
-
-      return metadata
+      const { description, unit, source, historic, rate } = metric
+      return {
+        ...(description && { description }),
+        ...(unit && { unit }),
+        ...(source && { source }),
+        ...(historic && { historic }),
+        ...(rate && { rate }),
+        ...metric.additionalMetadata,
+      }
     },
     selectedMetric() {
       return this.hasSelectedMetric() ? this.matchingMetrics[0] : undefined
