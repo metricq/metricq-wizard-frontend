@@ -3,8 +3,8 @@
     <b-row>
       <b-col>
         <h1>
-          Source {{ id }}:
-          <span class="text-capitalize">{{ source.configItemName }}s</span>
+          Source {{ id }} 🔧
+          <span class="lead">{{ source.configItemName }}s</span>
         </h1>
       </b-col>
       <SessionManager :source-id="id" />

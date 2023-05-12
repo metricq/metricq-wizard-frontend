@@ -2,7 +2,10 @@
   <div>
     <b-row>
       <b-col>
-        <h1>Source {{ sourceId }}: Add new {{ source.configItemName }}</h1>
+        <h1>
+          Source {{ sourceId }} 🔧
+          <span class="lead">Add new {{ source.configItemName }}</span>
+        </h1>
       </b-col>
     </b-row>
     <b-row>

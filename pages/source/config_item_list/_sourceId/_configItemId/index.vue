@@ -2,7 +2,10 @@
   <div>
     <b-row>
       <b-col>
-        <h1>Source {{ id }}: Available Metrics</h1>
+        <h1>
+          Source {{ id }} 🔧
+          <span class="lead">Available Metrics for {{ configItem }}</span>
+        </h1>
       </b-col>
       <SessionManager :source-id="id" />
     </b-row>
@@ -86,6 +89,7 @@ export default {
     )
     return {
       id: params.sourceId,
+      configItem: params.configItemId,
       availableMetrics: data.metrics.map((item) => {
         if (item.selected === undefined) {
           item.selected = item.isActive

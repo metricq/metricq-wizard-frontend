@@ -2,7 +2,10 @@
   <div>
     <b-row>
       <b-col>
-        <h1>Source {{ sourceId }}: Global Configuration</h1>
+        <h1>
+          Source {{ sourceId }} 🔧
+          <span class="lead">Global Configuration</span>
+        </h1>
       </b-col>
     </b-row>
     <b-row>

@@ -2,7 +2,10 @@
   <div>
     <b-row>
       <b-col>
-        <h1>Source {{ sourceId }}: Edit {{ source.configItemName }}</h1>
+        <h1>
+          Source {{ sourceId }} 🔧
+          <span class="lead"> Edit {{ source.configItemName }}</span>
+        </h1>
       </b-col>
     </b-row>
     <b-row>
