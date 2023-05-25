@@ -42,6 +42,17 @@ export class Client extends Model {
     })
   }
 
+  async delete() {
+    const response = await Client.api().delete(`/client/${this.id}`, {
+      save: false,
+      validateStatus: null,
+    })
+
+    if (response.response.status === 200) this.$delete()
+
+    return response
+  }
+
   static async fetchProducedMetrics(clientId) {
     const { response } = await Client.api().get(
       `/client/${clientId}/produced_metrics`,

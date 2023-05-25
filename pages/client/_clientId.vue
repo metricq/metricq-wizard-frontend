@@ -25,6 +25,7 @@
                 <client-actions
                   v-if="client"
                   :show-details="false"
+                  :show-delete="true"
                   :client="client"
                 />
               </b-col>
