@@ -112,11 +112,30 @@
             </b-card-group>
 
             <b-card-group columns class="d-flex">
-              <b-card
-                no-body
-                header="Live Data Points"
-                class="mt-4 flex-grow-1 h-100"
-              >
+              <b-card no-body class="mt-4 flex-grow-1 h-100">
+                <b-card-header>
+                  <b-row>
+                    <b-col></b-col>
+                    <b-col>Live Data Points</b-col>
+                    <b-col class="text-right">
+                      <b-button
+                        v-if="selectedMetricMetadata.historic"
+                        size="sm"
+                        variant="info"
+                        :href="
+                          $config.metricq.webviewURL +
+                          '#.now-1h*now*' +
+                          selectedMetric.id
+                        "
+                        target="_blank"
+                      >
+                        <b-icon-graph-up /> Open in Webview<sup>
+                          <b-icon-box-arrow-up-right scale="0.6" />
+                        </sup>
+                      </b-button>
+                    </b-col>
+                  </b-row>
+                </b-card-header>
                 <b-card-body>
                   <line-chart
                     :ytitle="selectedMetricMetadata.unit"
