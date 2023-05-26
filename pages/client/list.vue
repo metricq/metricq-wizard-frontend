@@ -63,7 +63,7 @@
                 { key: 'version', sortable: true },
                 { key: 'metricqVersion', sortable: true },
                 { key: 'startingTime', sortable: true },
-                { key: 'lastseen', sortable: true },
+                { key: 'discoverTime', sortable: true },
                 { key: 'actions' },
               ]"
               small
@@ -75,14 +75,15 @@
               responsive="true"
               sort-by="id"
               sort-icon-left
+              sort-null-last="true"
               striped
               hover
               class="mb-0"
               show-empty
               @filtered="onFiltered"
             >
-              <template #head(lastseen)> Last seen </template>
-              <template #cell(lastseen)="data">
+              <template #head(discoverTime)> Last seen </template>
+              <template #cell(discoverTime)="data">
                 <template v-if="data.item.discoverTime">
                   {{ data.item.discoverTime | momentAgo }}
                 </template>
