@@ -74,6 +74,8 @@ export default {
   publicRuntimeConfig: {
     metricq: {
       websocketURL: process.env.METRICQ_WEBSOCKET_URL || 'ws://localhost:3003',
+      webviewURL:
+        process.env.METRICQ_WEBVIEW_URL || 'http://localhost:3002/webview/',
     },
   },
 
