@@ -269,18 +269,17 @@
           <b-col class="text-right">
             <span id="webview-tooltip-target">
               <b-button
+                v-b-tooltip.hover.noninteractive
                 :disabled="
                   selected.length === 0 ||
                   numSelectedHistoric !== selected.length
                 "
                 :href="webviewLink"
                 target="_blank"
-                variant="info"
+                variant="outline-info"
+                title="Open selected metrics in WebView"
               >
                 <b-icon-graph-up />
-                Webview<sup>
-                  <b-icon-box-arrow-up-right scale="0.6" />
-                </sup>
               </b-button>
             </span>
             <b-tooltip
@@ -291,7 +290,7 @@
             >
               You have selected one or more metrics that are not saved to a
               database. <br />
-              Such metrics cannot be opened in Webview.
+              Such metrics cannot be opened in WebView.
             </b-tooltip>
             <span id="archive-tooltip-target">
               <b-button
