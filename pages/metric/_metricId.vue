@@ -23,6 +23,7 @@
                 placeholder="Enter metric name"
                 debounce="500"
                 type="search"
+                :trim="true"
                 :state="metricValidationState()"
                 :autofocus="true"
                 @click="onSearchClick()"
