@@ -76,14 +76,7 @@
             >
               <b-icon-clipboard-data /> Metadata
             </b-button>
-            <b-button
-              v-if="data.item.sourceRef && data.item.sourceRef.isCombinator"
-              size="sm"
-              @click="editCombinedMetric(data.item)"
-            >
-              <b-icon-pencil-square />
-              Expression
-            </b-button>
+            <MetricActions :metric="data.item" :show-delete="false" />
           </template>
 
           <template #row-details="data">
@@ -100,9 +93,13 @@
 
 <script>
 import Metric from '~/models/Metric'
+import MetricActions from '~/components/MetricActions.vue'
 
 export default {
   name: 'MetricTable',
+  components: {
+    MetricActions,
+  },
   props: {
     filter: { type: String, default: null },
     historic: { type: Boolean, default: null },

@@ -55,7 +55,16 @@
             class="d-flex flex-column"
           >
             <b-card-group deck>
-              <b-card no-body class="h-100" header="Metadata">
+              <b-card no-body class="h-100">
+                <b-card-header>
+                  Details
+                  <MetricActions
+                    v-if="selectedMetric"
+                    :metric="selectedMetric"
+                    :show-details="false"
+                    class="float-right"
+                  />
+                </b-card-header>
                 <b-card-text>
                   <JsonTree :data="selectedMetricMetadata" />
                 </b-card-text>
@@ -122,13 +131,14 @@
 import MetricQLive from '@metricq/live'
 
 import ClientActions from '~/components/ClientActions.vue'
+import MetricActions from '~/components/MetricActions.vue'
 import Metric from '~/models/Metric'
 import Client from '~/models/Client'
 
 const MAX_DATA_POINTS = 100
 
 export default {
-  components: { ClientActions },
+  components: { ClientActions, MetricActions },
   asyncComputed: {
     matchingMetrics: {
       async get() {
@@ -202,7 +212,37 @@ export default {
       }
     },
     selectedMetric() {
-      return this.hasSelectedMetric() ? this.matchingMetrics[0] : undefined
+      if (!this.hasSelectedMetric()) return null
+
+      // matchingMetrics only contains json data, not model instances.
+      // However, we need a model instance to use the MetricActions component.
+      // So we insert the metric into the store and then return the model
+      // instance.
+      // This has the side-effect of adding the selected metric to the list
+      // of loaded metrics in the "Metric Workshop" page. While this is a bit
+      // surprising, it accidentally makes sense. If you are looking for a
+      // metric, you likely want to work with it in the workshop as well.
+      // To avoid user confusion, we show a toast message.
+
+      const metric = this.matchingMetrics[0]
+
+      // this is a dumb heuristic, but if the source token starts with
+      // "transformer", we assume it is a transformer and set the source
+      // type accordingly so we can use the `.with('source')` relation.
+      if (metric.source && metric.source.startsWith('transformer')) {
+        metric.sourceType = 'transformer'
+      }
+
+      // stupidly, this gets called a lot, so we only show the toast once.
+      if (!Metric.query().where('id', metric.id).exists()) {
+        this.$toast.info(`Metric ${metric.id} loaded into Metric Workshop.`)
+      }
+
+      // Always adding the metric to the store is fine, so we always have the
+      // latest data.
+      Metric.insert({ data: metric })
+
+      return Metric.find(metric.id)
     },
   },
   watch: {
