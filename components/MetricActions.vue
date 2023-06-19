@@ -60,7 +60,12 @@
       <b-icon-trash scale="1.2" />
     </b-button>
   </b-button-group>
-  <b-icon-exclamation-diamond v-else variant="danger" />
+  <b-icon-exclamation-diamond
+    v-else
+    v-b-tooltip.hover.noninteractive
+    variant="danger"
+    title="Fuzzy cats. Something went wrong. Cannot show metric actions."
+  />
 </template>
 
 <script>
