@@ -1,6 +1,24 @@
 <template>
   <b-button-group v-if="metric" size="sm" class="shadow-sm">
     <b-button
+      v-if="isInStore"
+      v-b-tooltip.hover.noninteractive
+      title="Unload from Metric Workshop"
+      variant="dark"
+      @click="unloadMetric"
+    >
+      <b-icon-bookmark-dash-fill scale="1.2" />
+    </b-button>
+    <b-button
+      v-else
+      v-b-tooltip.hover.noninteractive
+      title="Load into Metric Workshop"
+      variant="dark"
+      @click="loadMetric()"
+    >
+      <b-icon-bookmark-plus scale="1.2" />
+    </b-button>
+    <b-button
       v-if="showDetails"
       v-b-tooltip.hover.noninteractive
       :to="{
@@ -13,7 +31,7 @@
       <b-icon-search />
     </b-button>
     <b-button
-      v-if="source && source.isCombinator"
+      v-if="metric.source && sourceIsCombinator"
       v-b-tooltip.hover.noninteractive
       title="Edit Combinator Expression"
       @click="editCombinedMetric(metric)"
@@ -30,7 +48,7 @@
       }"
       variant="info"
     >
-      <b-icon-broadcast-pin scale="1.3" />
+      <b-icon-broadcast-pin scale="1.2" />
     </b-button>
     <b-button
       v-if="showDelete && !metric.historic"
@@ -39,7 +57,7 @@
       title="Delete the metric"
       @click="deleteMetric(metric)"
     >
-      <b-icon-trash scale="1.5" />
+      <b-icon-trash scale="1.2" />
     </b-button>
   </b-button-group>
   <b-icon-exclamation-diamond v-else variant="danger" />
@@ -50,21 +68,31 @@ import Metric from '~/models/Metric'
 
 export default {
   props: {
-    metric: Metric,
+    metric: { type: Object, required: true },
     showDetails: { type: Boolean, default: true },
     showDelete: { type: Boolean, default: true },
   },
   computed: {
-    source() {
-      const metric = Metric.query()
-        .with('sourceRef')
-        .where('id', this.metric.id)
-        .first()
-      if (metric !== null) return metric.sourceRef
-      return null
+    sourceIsCombinator() {
+      if (this.metric.source === null) return false
+
+      // just a heuristic, we may want to rethink this when reworking the backend
+      return (
+        this.metric.source.startsWith('transformer-') &&
+        this.metric.source.endsWith('-combinator')
+      )
+    },
+    isInStore() {
+      return Metric.query().where('id', this.metric.id).exists()
     },
   },
   methods: {
+    loadMetric() {
+      Metric.insert({ data: this.metric })
+    },
+    unloadMetric() {
+      Metric.delete(this.metric.id)
+    },
     async editCombinedMetric({ source, id }) {
       try {
         const { status, data } = await this.$axios.get(
