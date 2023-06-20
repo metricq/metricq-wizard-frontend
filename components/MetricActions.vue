@@ -100,20 +100,17 @@ export default {
     },
     async editCombinedMetric({ source, id }) {
       try {
-        const { status, data } = await this.$axios.get(
-          `/transformer/${source}/${id}`
-        )
-        if (status === 200) {
-          await this.$router.push({
-            name: 'metric-create_combined_metric',
-            params: {
-              expression: data.expression,
-              combinator: data.transformerId,
-              metric: data.metric,
-              configHash: data.configHash,
-            },
-          })
-        }
+        const { data } = await this.$axios.get(`/transformer/${source}/${id}`)
+
+        await this.$router.push({
+          name: 'metric-create_combined_metric',
+          params: {
+            expression: data.expression,
+            combinator: data.transformerId,
+            metric: data.metric,
+            configHash: data.configHash,
+          },
+        })
       } catch (error) {
         if (error.response.status === 404) {
           this.$toast.error(`Metric not found in combinator config!`)
@@ -135,9 +132,9 @@ export default {
       })
 
       if (confirmed) {
-        const response = await Metric.deleteMetadata([this.metric.id])
+        try {
+          await Metric.deleteMetadata([this.metric.id])
 
-        if (response.status === 200) {
           this.$toast.success(`Successfully deleted ${this.metric.id}!`)
 
           // remove the metric from the vuex store
@@ -145,7 +142,7 @@ export default {
 
           // go back to where the user came from. I hope that is still a valid.
           this.$router.go(-1)
-        } else {
+        } catch (error) {
           this.$toast.error(`Failed to delete the metric!`)
         }
       }
