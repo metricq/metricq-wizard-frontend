@@ -1,155 +1,151 @@
 <template>
-  <div>
-    <b-row>
-      <b-col>
-        <h1>Metrics Database Configuration</h1>
-      </b-col>
-    </b-row>
-    <b-row class="mb-1">
-      <b-col cols="4">
-        <b-form-group
-          label="Database"
-          label-cols="4"
-          label-align="right"
-          label-for="selectDatabase"
-          class="mb-0"
-        >
-          <b-form-select
-            id="selectDatabase"
-            v-model="selectedDatabase"
-            :options="databases"
-            :state="!!selectedDatabase"
-            :value="null"
-            required
-            class="w-100"
+  <b-card no-body class="mt-5">
+    <b-card-header>
+      <h3><b-icon-server /> Configure Database for new Metrics</h3>
+    </b-card-header>
+    <b-card-body>
+      <b-row>
+        <b-col cols="8">
+          <b-input-group prepend="Database">
+            <b-form-select
+              id="selectDatabase"
+              v-model="selectedDatabase"
+              :options="databases"
+              :state="!!selectedDatabase"
+              :value="null"
+              required
+            >
+              <template #first>
+                <b-form-select-option :value="null" disabled>
+                  Choose...
+                </b-form-select-option>
+              </template>
+            </b-form-select>
+          </b-input-group>
+        </b-col>
+        <b-col>
+          <b-form-group
+            label="Items per page"
+            label-cols="8"
+            label-align="right"
+            label-for="selectPageSize"
           >
-            <template #first>
-              <b-form-select-option :value="null" disabled>
-                Choose...
-              </b-form-select-option>
-            </template>
-          </b-form-select>
-        </b-form-group>
-      </b-col>
-      <b-col />
-      <b-col cols="3">
-        <b-form-group
-          label="Items per page"
-          label-cols="8"
-          label-align="right"
-          label-for="selectPageSize"
-        >
-          <b-form-select
-            id="selectPageSize"
-            v-model="perPage"
-            :options="[10, 20, 50, 100, 500]"
-          />
-        </b-form-group>
-      </b-col>
-    </b-row>
-    <b-row>
-      <b-col>
-        <b-form ref="databaseForm">
-          <b-table
-            ref="metricListTable"
-            v-model="currentTableItems"
-            :items="selected"
-            :fields="fields"
+            <b-form-select
+              id="selectPageSize"
+              v-model="perPage"
+              :options="[10, 20, 50, 100, 500]"
+            />
+          </b-form-group>
+        </b-col>
+      </b-row>
+    </b-card-body>
+    <b-card-text>
+      <b-row>
+        <b-col>
+          <b-form ref="databaseForm">
+            <b-table
+              ref="metricListTable"
+              v-model="currentTableItems"
+              :items="selected"
+              :fields="fields"
+              :per-page="perPage"
+              :current-page="currentPage"
+              small
+              primary-key="id"
+              responsive="true"
+              sort-icon-left
+              striped
+              hover
+              show-empty
+            >
+              <template #cell(intervalMin)="data">
+                <b-form-input
+                  :id="'input-interval-min-' + data.item.id"
+                  :ref="'input-interval-min-' + data.item.id"
+                  v-model="data.item.intervalMin"
+                  :state="
+                    verifyInterval(
+                      'input-interval-min-' + data.item.id,
+                      data.item.intervalMin
+                    )
+                  "
+                  :disabled="data.item.historic"
+                  required
+                  size="sm"
+                  placeholder="duration, e.g. 10s"
+                />
+              </template>
+              <template #cell(intervalMax)="data">
+                <b-form-input
+                  :id="'input-interval-max-' + data.item.id"
+                  :ref="'input-interval-max-' + data.item.id"
+                  v-model="data.item.intervalMax"
+                  :state="
+                    verifyInterval(
+                      'input-interval-max-' + data.item.id,
+                      data.item.intervalMax
+                    )
+                  "
+                  :disabled="data.item.historic"
+                  required
+                  size="sm"
+                  placeholder="duration, e.g. 10s"
+                />
+              </template>
+              <template #cell(intervalFactor)="data">
+                <b-form-input
+                  :id="'input-interval-factor-' + data.item.id"
+                  ref="intervalMinFormField"
+                  v-model="data.item.intervalFactor"
+                  :state="verifyIntervalFactor(data.item.intervalFactor)"
+                  :disabled="data.item.historic"
+                  type="number"
+                  required
+                  size="sm"
+                  placeholder="10"
+                />
+              </template>
+            </b-table>
+          </b-form>
+        </b-col>
+      </b-row>
+    </b-card-text>
+    <b-card-footer>
+      <b-row class="mb-2">
+        <b-col>
+          <b-button
+            :to="{
+              name: 'metric-configure',
+            }"
+            variant="danger"
+          >
+            Cancel
+          </b-button>
+        </b-col>
+        <b-col>
+          <b-pagination
+            v-model="currentPage"
+            :total-rows="rows"
             :per-page="perPage"
-            :current-page="currentPage"
-            small
-            primary-key="id"
-            responsive="true"
-            sort-icon-left
-            striped
-            hover
-            show-empty
+            align="center"
+            first-number
+            last-number
+          />
+        </b-col>
+        <b-col>
+          <b-button
+            variant="primary"
+            :disabled="saveInProgress || !selectedDatabase"
+            class="float-right"
+            @click="saveAll"
           >
-            <template #cell(intervalMin)="data">
-              <b-form-input
-                :id="'input-interval-min-' + data.item.id"
-                :ref="'input-interval-min-' + data.item.id"
-                v-model="data.item.intervalMin"
-                :state="
-                  verifyInterval(
-                    'input-interval-min-' + data.item.id,
-                    data.item.intervalMin
-                  )
-                "
-                :disabled="data.item.historic"
-                required
-                size="sm"
-                placeholder="duration, e.g. 10s"
-              />
-            </template>
-            <template #cell(intervalMax)="data">
-              <b-form-input
-                :id="'input-interval-max-' + data.item.id"
-                :ref="'input-interval-max-' + data.item.id"
-                v-model="data.item.intervalMax"
-                :state="
-                  verifyInterval(
-                    'input-interval-max-' + data.item.id,
-                    data.item.intervalMax
-                  )
-                "
-                :disabled="data.item.historic"
-                required
-                size="sm"
-                placeholder="duration, e.g. 10s"
-              />
-            </template>
-            <template #cell(intervalFactor)="data">
-              <b-form-input
-                :id="'input-interval-factor-' + data.item.id"
-                ref="intervalMinFormField"
-                v-model="data.item.intervalFactor"
-                :state="verifyIntervalFactor(data.item.intervalFactor)"
-                :disabled="data.item.historic"
-                type="number"
-                required
-                size="sm"
-                placeholder="10"
-              />
-            </template>
-          </b-table>
-        </b-form>
-      </b-col>
-    </b-row>
-    <b-row class="mb-2">
-      <b-col>
-        <b-button
-          :to="{
-            name: 'metric-configure',
-          }"
-          variant="danger"
-        >
-          Cancel
-        </b-button>
-      </b-col>
-      <b-col>
-        <b-pagination
-          v-model="currentPage"
-          :total-rows="rows"
-          :per-page="perPage"
-          align="center"
-          first-number
-          last-number
-        />
-      </b-col>
-      <b-col>
-        <b-button
-          variant="primary"
-          :disabled="saveInProgress || !selectedDatabase"
-          class="float-right"
-          @click="saveAll"
-        >
-          <b-spinner v-if="saveInProgress" class="ml-auto" small />
-          Save database settings for all metrics
-        </b-button>
-      </b-col>
-    </b-row>
-  </div>
+            <b-spinner v-if="saveInProgress" class="ml-auto" small />
+            Save database settings for all metrics
+          </b-button>
+        </b-col>
+      </b-row>
+    </b-card-footer>
+  </b-card>
 </template>
 
 <script>
