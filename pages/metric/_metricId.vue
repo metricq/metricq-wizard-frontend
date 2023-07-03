@@ -23,6 +23,7 @@
                 placeholder="Enter metric name"
                 debounce="500"
                 type="search"
+                :trim="true"
                 :state="metricValidationState()"
                 :autofocus="true"
                 @click="onSearchClick()"
@@ -54,7 +55,16 @@
             class="d-flex flex-column"
           >
             <b-card-group deck>
-              <b-card no-body class="h-100" header="Metadata">
+              <b-card no-body class="h-100">
+                <b-card-header>
+                  Details
+                  <MetricActions
+                    v-if="selectedMetric"
+                    :metric="selectedMetric"
+                    :show-details="false"
+                    class="float-right"
+                  />
+                </b-card-header>
                 <b-card-text>
                   <JsonTree :data="selectedMetricMetadata" />
                 </b-card-text>
@@ -121,13 +131,14 @@
 import MetricQLive from '@metricq/live'
 
 import ClientActions from '~/components/ClientActions.vue'
+import MetricActions from '~/components/MetricActions.vue'
 import Metric from '~/models/Metric'
 import Client from '~/models/Client'
 
 const MAX_DATA_POINTS = 100
 
 export default {
-  components: { ClientActions },
+  components: { ClientActions, MetricActions },
   asyncComputed: {
     matchingMetrics: {
       async get() {
@@ -201,7 +212,9 @@ export default {
       }
     },
     selectedMetric() {
-      return this.hasSelectedMetric() ? this.matchingMetrics[0] : undefined
+      if (!this.hasSelectedMetric()) return null
+
+      return this.matchingMetrics[0]
     },
   },
   watch: {

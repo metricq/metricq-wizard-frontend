@@ -60,7 +60,7 @@
       v-if="hasSubNodes"
       :id="'subnodes-collapse-' + id"
       class="w-100"
-      :visible="!(type === 'throttle')"
+      :visible="true"
     >
       <b-list-group class="w-100">
         <combined-metric-node

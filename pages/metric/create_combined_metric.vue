@@ -78,14 +78,7 @@
     <b-card-footer>
       <b-row class="mt-2">
         <b-col>
-          <b-button
-            :to="{
-              name: 'metric-configure',
-            }"
-            variant="danger"
-          >
-            Cancel
-          </b-button>
+          <b-button variant="danger" @click="$router.go(-1)">Cancel</b-button>
         </b-col>
         <b-col />
         <b-col>
