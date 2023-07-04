@@ -50,10 +50,10 @@
                 ref="issueTable"
                 :items="issues"
                 :fields="[
-                  { key: 'scope', sortable: true },
-                  { key: 'type', sortable: true },
-                  { key: 'date', sortable: true },
                   { key: 'severity', sortable: true },
+                  { key: 'scope', sortable: true },
+                  { key: 'issue', sortable: true },
+                  { key: 'date', sortable: true },
                   { key: 'actions' },
                 ]"
                 small
@@ -83,6 +83,10 @@
                     {{ data.item.scope }}
                   </b-link>
                 </template>
+                <template #head(date)>Detected</template>
+                <template #cell(date)="data">
+                  {{ data.item.date | momentAgo }}
+                </template>
                 <template #cell(actions)="data">
                   <metric-actions
                     v-if="data.item.scope_type === 'metric'"
@@ -92,6 +96,35 @@
                       historic: true,
                     }"
                   />
+                </template>
+                <template #cell(severity)="data">
+                  <template v-if="data.item.severity === 'warning'">
+                    ⚠️ Warning
+                  </template>
+                  <template v-else-if="data.item.severity === 'error'">
+                    🔥 Critical
+                  </template>
+                  <template v-else-if="data.item.severity === 'info'">
+                    ℹ️ Info
+                  </template>
+                  <template v-else>
+                    {{ data.item.label }}
+                  </template>
+                </template>
+                <template #cell(issue)="data">
+                  <template v-if="data.item.type === 'dead'">
+                    Missing data points since
+                    {{ data.item.last_timestamp | momentAgo }}
+                  </template>
+                  <template v-else-if="data.item.type === 'timeout'">
+                    Timed out during scan
+                  </template>
+                  <template v-else-if="data.item.type === 'no_value'">
+                    No value stored in any database
+                  </template>
+                  <template v-else>
+                    {{ data.item.type }}
+                  </template>
                 </template>
               </b-table>
             </b-card-text>
@@ -118,7 +151,7 @@
                   />
                 </b-col>
                 <b-col class="text-right">
-                  Clients per page
+                  Issues per page
                   <b-form-select
                     v-model="perPage"
                     :options="[10, 20, 50, 100, 200, 500]"
