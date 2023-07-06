@@ -66,6 +66,9 @@
             <b-badge v-if="data.item.historic">
               <b-icon-server v-b-tooltip.hover title="Saved in DB" />
             </b-badge>
+            <b-badge v-if="data.item.additionalMetadata.archived">
+              <b-icon-archive-fill v-b-tooltip.hover title="Archived Metric" />
+            </b-badge>
           </template>
           <template #cell(actions)="data">
             <b-button

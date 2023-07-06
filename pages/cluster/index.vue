@@ -11,7 +11,7 @@
 
     <b-row>
       <b-col>
-        <b-overlay :show="showReScanOverlay" rounded="sm">
+        <loading-overlay ref="loadingOverlay" :duration="60" rounded="sm">
           <b-card no-body class="mb-3">
             <b-card-header>
               <b-row>
@@ -53,6 +53,7 @@
                   { key: 'severity', sortable: true },
                   { key: 'scope', sortable: true },
                   { key: 'issue', sortable: true },
+                  { key: 'first_detection_date', sortable: true },
                   { key: 'date', sortable: true },
                   { key: 'actions' },
                 ]"
@@ -65,7 +66,7 @@
                 responsive="true"
                 sort-by="id"
                 sort-icon-left
-                sort-null-last="true"
+                :sort-null-last="true"
                 striped
                 hover
                 class="mb-0"
@@ -83,17 +84,40 @@
                     {{ data.item.scope }}
                   </b-link>
                 </template>
-                <template #head(date)>Detected</template>
+                <template #head(first_detection_date)>First Detected</template>
+                <template #cell(first_detection_date)="data">
+                  {{ data.item.first_detection_date | momentAgo }}
+                </template>
+                <template #head(date)>Last Detected</template>
                 <template #cell(date)="data">
                   {{ data.item.date | momentAgo }}
                 </template>
                 <template #cell(actions)="data">
+                  <b-button-group size="sm">
+                    <b-button
+                      v-b-tooltip.hover.noninteractive
+                      variant="success"
+                      title="Mark as solved"
+                      @click="onSolvedClick(data.item._id)"
+                    >
+                      <b-icon-check scale="1.3" />
+                    </b-button>
+                    <b-button
+                      v-b-tooltip.hover.noninteractive
+                      variant="warning"
+                      title="Ignore for 24 hours"
+                      @click="onIgnoreClick(data.item._id)"
+                    >
+                      <b-icon-skip-forward scale="1.3" />
+                    </b-button>
+                  </b-button-group>
                   <metric-actions
                     v-if="data.item.scope_type === 'metric'"
                     :metric="{
                       id: data.item.scope,
                       source: data.item.source,
                       historic: true,
+                      archived: data.item.archived,
                     }"
                   />
                 </template>
@@ -114,13 +138,37 @@
                 <template #cell(issue)="data">
                   <template v-if="data.item.type === 'dead'">
                     Missing data points since
-                    {{ data.item.last_timestamp | momentAgo }}
+                    <span
+                      v-b-tooltip.hover.noninteractive
+                      :title="data.item.last_timestamp"
+                    >
+                      {{ data.item.last_timestamp | momentFromNow }}
+                    </span>
                   </template>
                   <template v-else-if="data.item.type === 'timeout'">
-                    Timed out during scan
+                    Timed out during scan, check bindings
                   </template>
                   <template v-else-if="data.item.type === 'no_value'">
                     No value stored in any database
+                  </template>
+                  <template v-else-if="data.item.type === 'infinite'">
+                    Found non-finite value(s) stored in the database
+                  </template>
+                  <template v-else-if="data.item.type === 'undead'">
+                    Metric was archived
+                    <span
+                      v-b-tooltip.hover.noninteractive
+                      :title="data.item.archived"
+                    >
+                      {{ data.item.archived | momentAgo }}
+                    </span>
+                    , but received new data points
+                    <span
+                      v-b-tooltip.hover.noninteractive
+                      :title="data.item.last_timestamp"
+                    >
+                      {{ data.item.last_timestamp | momentAgo }}
+                    </span>
                   </template>
                   <template v-else>
                     {{ data.item.type }}
@@ -162,7 +210,7 @@
               </b-row>
             </b-card-footer>
           </b-card>
-        </b-overlay>
+        </loading-overlay>
       </b-col>
     </b-row>
   </div>
@@ -170,11 +218,10 @@
 
 <script>
 import MetricActions from '~/components/MetricActions.vue'
-
-const SCAN_WAIT_TIME = 10
+import LoadingOverlay from '~/components/LoadingOverlay.vue'
 
 export default {
-  components: { MetricActions },
+  components: { MetricActions, LoadingOverlay },
   data() {
     return {
       filter: null,
@@ -196,14 +243,17 @@ export default {
       this.totalRows = filteredItemsCount
       this.currentPage = 1
     },
+    async onSolvedClick(issue) {
+      await this.$axios.delete(`/cluster/issues/${issue}`)
+      this.issues = this.issues.filter((item) => item._id !== issue)
+    },
     async clusterHealthScan() {
       this.showReScanOverlay = true
       await this.$axios.post(`/cluster/health_scan`)
 
-      await this.$sleep(SCAN_WAIT_TIME)
+      await this.$refs.loadingOverlay.showOverlay()
 
       this.$nuxt.refresh()
-      this.showReScanOverlay = false
     },
     filterFunction(data, filter) {
       return data.scope.includes(filter) || data.type.includes(filter)

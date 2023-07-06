@@ -267,13 +267,37 @@
             />
           </b-col>
           <b-col class="text-right">
+            <span id="archive-tooltip-target">
+              <b-button
+                :disabled="selected.length === 0 || numSelectedArchived > 0"
+                @click="onArchiveClicked"
+              >
+                <b-icon-archive />
+              </b-button>
+            </span>
+            <b-tooltip
+              v-if="numSelectedArchived > 0"
+              target="archive-tooltip-target"
+              triggers="hover"
+              variant="warning"
+            >
+              You have selected one ore more metrics that are already archived.
+              These metrics cannot be archived again.
+            </b-tooltip>
+            <b-tooltip
+              v-else
+              target="archive-tooltip-target"
+              triggers="hover"
+              variant="dark"
+            >
+              Archive selected metrics
+            </b-tooltip>
             <span id="delete-tooltip-target">
               <b-button
                 :disabled="selected.length === 0 || numSelectedHistoric > 0"
                 @click="onDeleteClicked"
               >
                 <b-icon-trash />
-                Delete selected
               </b-button>
             </span>
             <b-tooltip
@@ -283,8 +307,7 @@
               variant="warning"
             >
               You have selected one ore more metrics that are saved to a
-              database. <br />
-              Such metrics cannot be deleted.
+              database. Such metrics cannot be deleted.
             </b-tooltip>
             <b-dropdown
               split
@@ -397,6 +420,16 @@ export default {
         .with('database')
         .where('selected', true)
         .where('historic', true)
+        .count()
+    },
+    numSelectedArchived() {
+      return Metric.query()
+        .with('database')
+        .where('selected', true)
+        .where(
+          'additionalMetadata',
+          (value) => value !== undefined && value.archived !== undefined
+        )
         .count()
     },
     metricCount() {
@@ -587,6 +620,76 @@ export default {
               // Unless response.status === 500, this case would be a bug
               // in the frontend, as it would indicate an invalid request.
               this.$toast.error(`Failed to delete metrics!`)
+            }
+          }
+        }
+      }
+    },
+    async onArchiveClicked() {
+      if (this.numSelectedArchived > 0) {
+        this.$toast.error(
+          'Cannot archive metrics that are saved to any database!'
+        )
+      } else {
+        // You think this is ugly? Yes it is, but it's the only way to get an
+        // awaitable modal box with HTML in it.
+        // https://bootstrap-vue.org/docs/components/modal#message-box-notes
+        // "The Message Box message currently does not support HTML strings,
+        // however, you can pass an array of VNodes [...]"
+
+        // make a list of the first 10 metrics to be deleted
+        const metricList = this.selected
+          .slice(0, 10)
+          .map((metric) => this.$createElement('li', metric.id))
+
+        // if there are more than 10 metrics to be deleted, add "and x more ..."
+        if (this.selected.length > 10) {
+          metricList.push(
+            this.$createElement(
+              'li',
+              `and ${this.selected.length - 10} more ...`
+            )
+          )
+        }
+
+        const confirmed = await this.$bvModal.msgBoxConfirm(
+          [this.$createElement('ul', metricList)],
+          {
+            titleHtml: `Are you sure you want to archive <b>${this.selected.length}</b> metrics?`,
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            okTitle: 'Yes, archive',
+            cancelTitle: 'No, cancel',
+            footerClass: 'p-2',
+            hideHeaderClose: false,
+            centered: true,
+          }
+        )
+
+        if (confirmed) {
+          try {
+            // I know what you think: why don't you use the fancy Vuex-ORM instead?
+            // Because it is Vuex-orm. I'm done with that and I wish I hadn't to deal
+            // with it
+            await this.$axios.post('/metrics/archive', {
+              metrics: this.selected.map((metric) => metric.id),
+            })
+
+            // TODO Update Metrics. Can I just reload? Please? (╥_╥)
+
+            this.$toast.success('Successfully archived metrics!')
+          } catch ({ response }) {
+            const { data } = response
+            if (data.status === 'partial') {
+              this.$toast.error(
+                `Failed to archive ${data.failed.length} of ${
+                  data.failed.length + data.deleted.length
+                } metrics!`
+              )
+            } else {
+              // Unless response.status === 500, this case would be a bug
+              // in the frontend, as it would indicate an invalid request.
+              this.$toast.error(`Failed to archive metrics!`)
             }
           }
         }

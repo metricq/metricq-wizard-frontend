@@ -62,6 +62,7 @@
                     v-if="selectedMetric"
                     :metric="selectedMetric"
                     :show-details="false"
+                    :show-state="true"
                     class="float-right"
                   />
                 </b-card-header>
