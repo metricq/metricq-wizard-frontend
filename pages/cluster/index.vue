@@ -146,13 +146,17 @@
                     </span>
                   </template>
                   <template v-else-if="data.item.type === 'timeout'">
-                    Timed out during scan, check bindings
+                    Timed out during scan, check database and bindings
                   </template>
                   <template v-else-if="data.item.type === 'no_value'">
                     No value stored in any database
                   </template>
                   <template v-else-if="data.item.type === 'infinite'">
                     Found non-finite value(s) stored in the database
+                  </template>
+                  <template v-else-if="data.item.type === 'missing_metadata'">
+                    Invalid required metadata entries:
+                    {{ data.item.missing_metadata.join(', ') }}
                   </template>
                   <template v-else-if="data.item.type === 'undead'">
                     Metric was archived
