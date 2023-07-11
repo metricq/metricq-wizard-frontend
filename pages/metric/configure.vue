@@ -358,7 +358,7 @@
               }"
               :disabled="selected.length === 0"
             >
-              <b-icon-server />
+              <b-icon-cloud />
               Add to database
             </b-button>
           </b-col>
@@ -393,9 +393,10 @@ export default {
       filterString: '',
       filterHistoric: null,
       filterHistoricOptions: [
-        { value: null, text: '--' },
+        { value: undefined, text: '--' },
         { value: true, text: 'Saved in DB' },
-        { value: false, text: 'Not in DB' },
+        { value: null, text: 'Not saved nor live' },
+        { value: false, text: 'Live only' },
       ],
       filterUnits: null,
       filterRate: null,
@@ -739,16 +740,7 @@ export default {
           source: this.loadSelectedTransformer,
         },
         {
-          dataTransformer: (response) => {
-            return Metric.convertMetricListResponse(response).map(
-              (currentValue) => {
-                return {
-                  ...currentValue,
-                  sourceType: 'transformer',
-                }
-              }
-            )
-          },
+          dataTransformer: Metric.convertMetricListResponse,
         }
       )
       Metric.commit((state) => {

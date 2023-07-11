@@ -41,7 +41,7 @@
         </b-nav-item>
         <b-nav-item
           :to="{
-            name: 'cluster',
+            name: 'cluster-health',
           }"
           active-class="active"
         >

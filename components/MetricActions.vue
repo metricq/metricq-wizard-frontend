@@ -70,16 +70,18 @@
         <b-icon-trash scale="1.2" />
       </b-button>
     </b-button-group>
-    <b-button-group v-if="showState" size="sm" class="shadow-sm">
+    <b-button-group v-if="showState && archived" size="sm" class="shadow-sm">
       <span id="archive-tooltip-target">
-        <b-button v-if="archived" size="sm" variant="secondary" disabled>
+        <b-button size="sm" variant="secondary" disabled>
           <b-icon-archive-fill scale="1.2" />
         </b-button>
       </span>
       <b-tooltip target="archive-tooltip-target" noninteractive>
         Archived {{ archived | momentAgo }}
       </b-tooltip>
-      <span v-if="archived" id="live-only-tooltip-target">
+    </b-button-group>
+    <b-button-group v-if="showState && liveOnly" size="sm" class="shadow-sm">
+      <span id="live-only-tooltip-target">
         <b-button size="sm" variant="secondary" disabled>
           <b-icon-cloud-slash-fill scale="1.2" />
         </b-button>
@@ -126,10 +128,21 @@ export default {
         ? this.metric.additionalMetadata.archived
         : undefined
     },
+    liveOnly() {
+      return this.metric.historic === false
+    },
   },
   methods: {
-    loadMetric() {
-      Metric.insert({ data: this.metric })
+    async loadMetric() {
+      await Metric.api().post(
+        '/metrics',
+        {
+          requested_metrics: [this.metric.id],
+        },
+        {
+          dataTransformer: Metric.convertMetricListResponse,
+        }
+      )
     },
     unloadMetric() {
       Metric.delete(this.metric.id)

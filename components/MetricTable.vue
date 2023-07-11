@@ -64,7 +64,10 @@
               <b-icon-calculator v-b-tooltip.hover title="Combined Metric" />
             </b-badge>
             <b-badge v-if="data.item.historic">
-              <b-icon-server v-b-tooltip.hover title="Saved in DB" />
+              <b-icon-cloud-fill v-b-tooltip.hover title="Saved in DB" />
+            </b-badge>
+            <b-badge v-if="data.item.historic === false">
+              <b-icon-cloud-slash-fill v-b-tooltip.hover title="Live Only" />
             </b-badge>
             <b-badge v-if="data.item.additionalMetadata.archived">
               <b-icon-archive-fill v-b-tooltip.hover title="Archived Metric" />
@@ -72,12 +75,15 @@
           </template>
           <template #cell(actions)="data">
             <b-button
+              v-b-tooltip.hover.noninteractive
               size="sm"
               class="mr-2"
               variant="info"
+              title="Show Metadata"
               @click="data.toggleDetails"
             >
-              <b-icon-clipboard-data /> Metadata
+              <b-icon-clipboard v-if="data.detailsShowing" />
+              <b-icon-clipboard-data v-else />
             </b-button>
             <MetricActions :metric="data.item" :show-delete="false" />
           </template>
@@ -141,7 +147,7 @@ export default {
     },
     items() {
       let metricQuery = Metric.query().with('sourceRef')
-      if (this.historic != null) {
+      if (this.historic !== undefined) {
         metricQuery = metricQuery.where('historic', this.historic)
       }
       if (this.unit != null) {

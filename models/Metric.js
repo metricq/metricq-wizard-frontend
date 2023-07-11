@@ -19,7 +19,7 @@ export default class Metric extends Model {
       source: this.string().nullable(),
       sourceType: this.string('source').nullable(),
       sourceRef: this.morphTo('source', 'sourceType'),
-      historic: this.boolean(false),
+      historic: this.boolean().nullable(),
       lastMetadataUpdateStr: this.string().nullable(),
       additionalMetadata: this.attr().nullable(),
       // Database settings
@@ -66,7 +66,7 @@ export default class Metric extends Model {
     return response
   }
 
-  static convertMetricListResponse({ data, headers }) {
+  static convertMetricListResponse({ data }) {
     return data.map((currentValue) => {
       const {
         id,
@@ -84,12 +84,20 @@ export default class Metric extends Model {
           obj[key] = unfilteredAdditionalMetadata[key]
           return obj
         }, {})
+
+      const fuckYouESlint = historic === undefined ? null : historic
+
+      const sourceType = source.startsWith('transformer')
+        ? 'transformer'
+        : 'source'
+
       return {
         id,
         description,
         unit,
         source,
-        historic,
+        sourceType,
+        historic: fuckYouESlint,
         rate,
         lastMetadataUpdateStr: date,
         additionalMetadata,

@@ -158,6 +158,9 @@
                     Invalid required metadata entries:
                     {{ data.item.missing_metadata.join(', ') }}
                   </template>
+                  <template v-else-if="data.item.type === 'invalid_name'">
+                    Metric name invalid, renaming advised
+                  </template>
                   <template v-else-if="data.item.type === 'undead'">
                     Metric was archived
                     <span
