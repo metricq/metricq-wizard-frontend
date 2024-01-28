@@ -393,9 +393,9 @@ export default {
       filterString: '',
       filterHistoric: null,
       filterHistoricOptions: [
-        { value: undefined, text: '--' },
+        { value: null, text: '--' },
         { value: true, text: 'Saved in DB' },
-        { value: null, text: 'Not saved nor live' },
+        { value: 'undefined', text: 'Not saved nor live' },
         { value: false, text: 'Live only' },
       ],
       filterUnits: null,

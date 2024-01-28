@@ -147,8 +147,11 @@ export default {
     },
     items() {
       let metricQuery = Metric.query().with('sourceRef')
-      if (this.historic !== undefined) {
-        metricQuery = metricQuery.where('historic', this.historic)
+      if (this.historic !== null) {
+        metricQuery = metricQuery.where(
+          'historic',
+          this.historic !== 'undefined' ? this.historic : undefined
+        )
       }
       if (this.unit != null) {
         metricQuery = metricQuery.where('unit', this.unit)

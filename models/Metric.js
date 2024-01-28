@@ -85,8 +85,6 @@ export default class Metric extends Model {
           return obj
         }, {})
 
-      const fuckYouESlint = historic === undefined ? null : historic
-
       const sourceType = source.startsWith('transformer')
         ? 'transformer'
         : 'source'
@@ -97,7 +95,7 @@ export default class Metric extends Model {
         unit,
         source,
         sourceType,
-        historic: fuckYouESlint,
+        historic,
         rate,
         lastMetadataUpdateStr: date,
         additionalMetadata,
