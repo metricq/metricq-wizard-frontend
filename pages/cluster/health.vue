@@ -48,13 +48,13 @@
             <b-card-text>
               <b-table
                 ref="issueTable"
-                :items="issues"
+                :items="issuesProvider"
                 :fields="[
                   { key: 'severity', sortable: true },
                   { key: 'scope', sortable: true },
                   { key: 'issue', sortable: true },
-                  { key: 'first_detection_date', sortable: true },
-                  { key: 'date', sortable: true },
+                  { key: 'first_detection_date' },
+                  { key: 'date' },
                   { key: 'actions' },
                 ]"
                 small
@@ -68,6 +68,8 @@
                 sort-icon-left
                 :sort-null-last="true"
                 striped
+                :no-provider-sorting="false"
+                :no-provider-filtering="true"
                 hover
                 class="mb-0"
                 show-empty
@@ -102,14 +104,14 @@
                     >
                       <b-icon-check scale="1.3" />
                     </b-button>
-                    <b-button
+                    <!---<b-button
                       v-b-tooltip.hover.noninteractive
                       variant="warning"
                       title="Ignore for 24 hours"
                       @click="onIgnoreClick(data.item._id)"
                     >
                       <b-icon-skip-forward scale="1.3" />
-                    </b-button>
+                    </b-button>--->
                   </b-button-group>
                   <metric-actions
                     v-if="data.item.scope_type === 'metric'"
@@ -188,17 +190,16 @@
               <b-row align-v="center">
                 <b-col>
                   <span>
-                    Total issues: {{ issues.length }}
+                    Total issues: {{ totalRows }}
                     <template v-if="filter">
-                      ({{ totalRows }} matching)
+                      ({{ matchingRows }} matching)
                     </template>
                   </span>
                 </b-col>
                 <b-col>
                   <b-pagination
-                    v-if="issues.length > perPage"
                     v-model="currentPage"
-                    :total-rows="totalRows"
+                    :total-rows="matchingRows"
                     :per-page="perPage"
                     first-number
                     last-number
@@ -236,23 +237,18 @@ export default {
       perPage: 20,
       currentPage: 1,
       totalRows: 0,
-      issues: [],
+      matchingRows: 0,
     }
-  },
-  async fetch() {
-    const { data } = await this.$axios.get(`/cluster/issues`)
-    this.issues = data
-    this.totalRows = this.issues.length
   },
   methods: {
     onFiltered(_filteredItems, filteredItemsCount) {
       // Trigger pagination to update the number of buttons/pages due to filtering
-      this.totalRows = filteredItemsCount
+      this.matchingRows = filteredItemsCount
       this.currentPage = 1
     },
     async onSolvedClick(issue) {
       await this.$axios.delete(`/cluster/issues/${issue}`)
-      this.issues = this.issues.filter((item) => item._id !== issue)
+      this.$refs.issueTable.refresh()
     },
     async clusterHealthScan() {
       this.showReScanOverlay = true
@@ -264,6 +260,16 @@ export default {
     },
     filterFunction(data, filter) {
       return data.scope.includes(filter) || data.type.includes(filter)
+    },
+    async issuesProvider(ctx) {
+      try {
+        const { data } = await this.$axios.post(`/cluster/issues`, ctx)
+        this.totalRows = data.totalRows
+        this.matchingRows = data.totalRows
+        return data.rows
+      } catch (error) {
+        return []
+      }
     },
   },
 }
