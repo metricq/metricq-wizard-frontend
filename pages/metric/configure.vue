@@ -352,15 +352,22 @@
                 Add max metric from selected
               </b-dropdown-item>
             </b-dropdown>
-            <b-button
-              :to="{
+            <b-dropdown
+              split
+              :split-to="{
                 name: 'metric-database_configuration',
               }"
-              :disabled="selected.length === 0"
+              :disabled="!hasSelected"
             >
-              <b-icon-cloud />
-              Add to database
-            </b-button>
+              <template #button-content>
+                <b-icon-cloud />
+                Add to database
+              </template>
+              <b-dropdown-item :disabled="numSelectedHistoric > 0">
+                <b-icon-cloud-slash />
+                Mark as Live-only
+              </b-dropdown-item>
+            </b-dropdown>
           </b-col>
         </b-row>
       </b-card-footer>
@@ -432,6 +439,11 @@ export default {
           (value) => value !== undefined && value.archived !== undefined
         )
         .count()
+    },
+    hasSelected() {
+      return (
+        Metric.query().with('database').where('selected', true).count() !== 0
+      )
     },
     metricCount() {
       return Metric.query().count()
