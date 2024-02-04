@@ -75,7 +75,7 @@
               responsive="true"
               sort-by="id"
               sort-icon-left
-              sort-null-last="true"
+              :sort-null-last="true"
               striped
               hover
               class="mb-0"

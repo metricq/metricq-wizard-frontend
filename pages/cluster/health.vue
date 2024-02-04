@@ -37,8 +37,13 @@
                   </b-input-group>
                 </b-col>
                 <b-col align="right">
-                  <b-button variant="info" @click="clusterHealthScan">
-                    <b-icon-arrow-repeat />
+                  <b-button
+                    :variant="scanRunning ? 'danger' : 'info'"
+                    :disabled="scanRunning"
+                    @click="clusterHealthScan"
+                  >
+                    <b-spinner v-if="scanRunning" small />
+                    <b-icon-arrow-repeat v-else />
                     Re-scan Cluster for issues
                   </b-button>
                 </b-col>
@@ -48,6 +53,7 @@
             <b-card-text>
               <b-table
                 ref="issueTable"
+                :busy.sync="isBusy"
                 :items="issuesProvider"
                 :fields="[
                   { key: 'severity', sortable: true },
@@ -160,6 +166,9 @@
                     Invalid required metadata entries:
                     {{ data.item.missing_metadata.join(', ') }}
                   </template>
+                  <template v-else-if="data.item.type === 'missing_historic'">
+                    Metric neither stored in DB nor set Live-Only
+                  </template>
                   <template v-else-if="data.item.type === 'invalid_name'">
                     Metric name invalid, renaming advised
                   </template>
@@ -201,9 +210,11 @@
                     v-model="currentPage"
                     :total-rows="matchingRows"
                     :per-page="perPage"
+                    :disabled="isBusy"
                     first-number
                     last-number
                     class="justify-content-center"
+                    @input="onPageChanged"
                   />
                 </b-col>
                 <b-col class="text-right">
@@ -211,6 +222,7 @@
                   <b-form-select
                     v-model="perPage"
                     :options="[10, 20, 50, 100, 200, 500]"
+                    :disabled="isBusy"
                     size="sm"
                     class="w-25"
                   />
@@ -233,12 +245,20 @@ export default {
   data() {
     return {
       filter: null,
-      showReScanOverlay: false,
       perPage: 20,
       currentPage: 1,
       totalRows: 0,
       matchingRows: 0,
+      scannerPolling: null,
+      scanRunning: false,
+      isBusy: false,
     }
+  },
+  beforeDestroy() {
+    clearInterval(this.scannerPolling)
+  },
+  created() {
+    this.pollScannerEndpoint()
   },
   methods: {
     onFiltered(_filteredItems, filteredItemsCount) {
@@ -251,12 +271,7 @@ export default {
       this.$refs.issueTable.refresh()
     },
     async clusterHealthScan() {
-      this.showReScanOverlay = true
       await this.$axios.post(`/cluster/health_scan`)
-
-      await this.$refs.loadingOverlay.showOverlay()
-
-      this.$nuxt.refresh()
     },
     filterFunction(data, filter) {
       return data.scope.includes(filter) || data.type.includes(filter)
@@ -270,6 +285,17 @@ export default {
       } catch (error) {
         return []
       }
+    },
+    pollScannerEndpoint() {
+      this.scannerPolling = setInterval(() => {
+        this.updateScannerState()
+      }, 1000)
+    },
+    async updateScannerState() {
+      const { data } = await this.$axios.get('/cluster/health_scan', {
+        progress: false,
+      })
+      this.scanRunning = data.status === 'running'
     },
   },
 }

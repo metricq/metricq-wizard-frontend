@@ -204,11 +204,11 @@ export default {
       const metric = this.matchingMetrics[0]
       const { description, unit, source, historic, rate } = metric
       return {
-        ...(description && { description }),
-        ...(unit && { unit }),
-        ...(source && { source }),
-        ...(historic && { historic }),
-        ...(rate && { rate }),
+        ...(description !== undefined && { description }),
+        ...(unit !== undefined && { unit }),
+        ...(source !== undefined && { source }),
+        ...(historic !== undefined && { historic }),
+        ...(rate !== undefined && { rate }),
         ...metric.additionalMetadata,
       }
     },

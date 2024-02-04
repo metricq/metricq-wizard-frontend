@@ -363,7 +363,10 @@
                 <b-icon-cloud />
                 Add to database
               </template>
-              <b-dropdown-item :disabled="numSelectedHistoric > 0">
+              <b-dropdown-item
+                :disabled="numSelectedHistoric > 0"
+                @click="onSetLiveOnlyClicked"
+              >
                 <b-icon-cloud-slash />
                 Mark as Live-only
               </b-dropdown-item>
@@ -703,6 +706,71 @@ export default {
               // Unless response.status === 500, this case would be a bug
               // in the frontend, as it would indicate an invalid request.
               this.$toast.error(`Failed to archive metrics!`)
+            }
+          }
+        }
+      }
+    },
+    async onSetLiveOnlyClicked() {
+      if (this.numSelectedHistoric > 0) {
+        this.$toast.error(
+          'Cannot set metrics to Live-Only that are saved to any database!'
+        )
+      } else {
+        // You think this is ugly? Yes it is, but it's the only way to get an
+        // awaitable modal box with HTML in it.
+        // https://bootstrap-vue.org/docs/components/modal#message-box-notes
+        // "The Message Box message currently does not support HTML strings,
+        // however, you can pass an array of VNodes [...]"
+
+        // make a list of the first 10 metrics to be deleted
+        const metricList = this.selected
+          .slice(0, 10)
+          .map((metric) => this.$createElement('li', metric.id))
+
+        // if there are more than 10 metrics to be deleted, add "and x more ..."
+        if (this.selected.length > 10) {
+          metricList.push(
+            this.$createElement(
+              'li',
+              `and ${this.selected.length - 10} more ...`
+            )
+          )
+        }
+
+        const confirmed = await this.$bvModal.msgBoxConfirm(
+          [this.$createElement('ul', metricList)],
+          {
+            titleHtml: `Are you sure you want to set <b>${this.selected.length}</b> metrics to Live-Only?`,
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            okTitle: "Yes, I don't want to store them",
+            cancelTitle: 'No, cancel',
+            footerClass: 'p-2',
+            hideHeaderClose: false,
+            centered: true,
+          }
+        )
+
+        if (confirmed) {
+          const response = await Metric.setLiveOnly(
+            this.selected.map((metric) => metric.id)
+          )
+
+          if (response.status === 200) {
+            this.$toast.success('Successfully updated all metrics!')
+          } else {
+            const { data } = response
+            if (data.status === 'partial') {
+              this.$toast.error(
+                `Failed to update ${data.failed.length} out of ${
+                  data.failed.length + data.deleted.length
+                } metrics!`
+              )
+            } else {
+              // Unless response.status === 500, this case would be a bug
+              // in the frontend, as it would indicate an invalid request.
+              this.$toast.error(`Failed to update metrics!`)
             }
           }
         }

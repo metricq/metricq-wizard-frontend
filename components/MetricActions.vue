@@ -61,7 +61,7 @@
         <b-icon-archive scale="1.2" />
       </b-button>
       <b-button
-        v-if="showDelete && !metric.historic"
+        v-if="showDelete && metric.historic === undefined"
         v-b-tooltip.hover.noninteractive
         variant="danger"
         title="Delete the metric"
