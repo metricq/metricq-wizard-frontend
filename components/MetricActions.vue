@@ -201,7 +201,7 @@ export default {
         titleHtml: `Are you sure you want to archive the metric?`,
         buttonSize: 'sm',
         okVariant: 'danger',
-        okTitle: 'Yes, delete',
+        okTitle: 'Yes, archive',
         cancelTitle: 'No, cancel',
         footerClass: 'p-2',
         hideHeaderClose: false,
