@@ -52,7 +52,7 @@
         <b-icon-broadcast-pin scale="1.2" />
       </b-button>
       <b-button
-        v-if="archived === false"
+        v-if="showArchive && !archived"
         v-b-tooltip.hover.noninteractive
         variant="warning"
         title="Archive the metric"
@@ -107,6 +107,7 @@ export default {
     metric: { type: Object, required: true },
     showDetails: { type: Boolean, default: true },
     showDelete: { type: Boolean, default: true },
+    showArchive: { type: Boolean, default: true },
     showState: { type: Boolean, default: false },
   },
   computed: {

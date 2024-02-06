@@ -127,6 +127,7 @@
                       historic: true,
                       archived: data.item.archived,
                     }"
+                    :show-archive="false"
                   />
                 </template>
                 <template #cell(severity)="data">
