@@ -52,7 +52,7 @@
         <b-icon-broadcast-pin scale="1.2" />
       </b-button>
       <b-button
-        v-if="!archived"
+        v-if="archived === false"
         v-b-tooltip.hover.noninteractive
         variant="warning"
         title="Archive the metric"
