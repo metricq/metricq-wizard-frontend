@@ -14,27 +14,9 @@
         <loading-overlay ref="loadingOverlay" :duration="60" rounded="sm">
           <b-card no-body class="mb-3">
             <b-card-header>
-              <b-row>
+              <b-row align-v="center">
                 <b-col>
-                  <b-input-group size="sm" prepend="Filter">
-                    <b-form-input
-                      id="filter-input"
-                      v-model="filter"
-                      type="search"
-                      debounce="200"
-                      :autofocus="true"
-                      placeholder="Type to Search"
-                    />
-                    <b-input-group-append>
-                      <b-button
-                        :disabled="!filter"
-                        :variant="filter ? 'primary' : 'secondary'"
-                        @click=";(filter = ''), (filterList = null)"
-                      >
-                        Clear
-                      </b-button>
-                    </b-input-group-append>
-                  </b-input-group>
+                  <span> Total issues: {{ totalRows }} </span>
                 </b-col>
                 <b-col align="right">
                   <b-button
@@ -66,8 +48,6 @@
                 small
                 :per-page="perPage"
                 :current-page="currentPage"
-                :filter="filter"
-                :filter-function="filterFunction"
                 primary-key="id"
                 responsive="true"
                 sort-by="id"
@@ -79,7 +59,6 @@
                 hover
                 class="mb-0"
                 show-empty
-                @filtered="onFiltered"
               >
                 <template #cell(scope)="data">
                   <b-link
@@ -198,14 +177,23 @@
 
             <b-card-footer>
               <b-row align-v="center">
-                <b-col>
-                  <span>
-                    Total issues: {{ totalRows }}
-                    <template v-if="filter">
-                      ({{ matchingRows }} matching)
-                    </template>
-                  </span>
+                <b-col cols="2">
+                  <b-input-group size="sm" prepend="Go to page">
+                    <b-form-input
+                      ref="pageInput"
+                      type="number"
+                      min="1"
+                      :max="Math.ceil(matchingRows / perPage)"
+                      :value="Math.ceil(matchingRows / perPage) / 2"
+                    />
+                    <b-input-group-append>
+                      <b-button variant="primary" @click="jumpPage()">
+                        Jump
+                      </b-button>
+                    </b-input-group-append>
+                  </b-input-group>
                 </b-col>
+                <b-col cols="2"></b-col>
                 <b-col>
                   <b-pagination
                     v-model="currentPage"
@@ -215,7 +203,6 @@
                     first-number
                     last-number
                     class="justify-content-center"
-                    @input="onPageChanged"
                   />
                 </b-col>
                 <b-col class="text-right">
@@ -243,11 +230,10 @@ import LoadingOverlay from '~/components/LoadingOverlay.vue'
 
 export default {
   components: { MetricActions, LoadingOverlay },
-  data() {
+  asyncData({ params }) {
     return {
-      filter: null,
       perPage: 20,
-      currentPage: 1,
+      currentPage: params.page !== undefined ? params.page : 1,
       totalRows: 0,
       matchingRows: 0,
       scannerPolling: null,
@@ -262,20 +248,15 @@ export default {
     this.pollScannerEndpoint()
   },
   methods: {
-    onFiltered(_filteredItems, filteredItemsCount) {
-      // Trigger pagination to update the number of buttons/pages due to filtering
-      this.matchingRows = filteredItemsCount
-      this.currentPage = 1
-    },
     async onSolvedClick(issue) {
       await this.$axios.delete(`/cluster/issues/${issue}`)
       this.$refs.issueTable.refresh()
     },
+    jumpPage() {
+      this.currentPage = this.$refs.pageInput.localValue
+    },
     async clusterHealthScan() {
       await this.$axios.post(`/cluster/health_scan`)
-    },
-    filterFunction(data, filter) {
-      return data.scope.includes(filter) || data.type.includes(filter)
     },
     async issuesProvider(ctx) {
       try {
