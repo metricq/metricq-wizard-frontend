@@ -73,11 +73,21 @@
                 </template>
                 <template #head(first_detection_date)>First Detected</template>
                 <template #cell(first_detection_date)="data">
-                  {{ data.item.first_detection_date | momentAgo }}
+                  <span
+                    v-b-tooltip.hover.noninteractive
+                    :title="data.item.first_detection_date"
+                  >
+                    {{ data.item.first_detection_date | momentAgo }}
+                  </span>
                 </template>
                 <template #head(date)>Last Detected</template>
                 <template #cell(date)="data">
-                  {{ data.item.date | momentAgo }}
+                  <span
+                    v-b-tooltip.hover.noninteractive
+                    :title="data.item.date"
+                  >
+                    {{ data.item.date | momentAgo }}
+                  </span>
                 </template>
                 <template #cell(actions)="data">
                   <b-button-group size="sm">

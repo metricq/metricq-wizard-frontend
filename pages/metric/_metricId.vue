@@ -185,9 +185,9 @@
                         v-b-tooltip.hover.noninteractive
                         :title="issue.archived"
                       >
-                        {{ issue.archived | momentAgo }}
+                        {{ issue.archived | momentAgo }},
                       </span>
-                      , but received new data points
+                      but received new data points
                       <span
                         v-b-tooltip.hover.noninteractive
                         :title="issue.last_timestamp"
