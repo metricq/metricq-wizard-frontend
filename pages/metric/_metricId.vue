@@ -131,8 +131,8 @@
                 no-body
                 header="Associated Issues"
                 class="mt-4 w-25 h-100 text-white"
-                header-bg-variant="danger"
-                border-variant="danger"
+                :header-bg-variant="severityVariant"
+                :border-variant="severityVariant"
               >
                 <b-list-group flush class="h-100 text-body">
                   <b-list-group-item
@@ -309,6 +309,21 @@ export default {
       if (!this.hasSelectedMetric()) return null
 
       return this.matchingMetrics[0]
+    },
+    severityVariant() {
+      if (
+        this.selectedMetricIssues.some((issue) => issue.severity === 'error')
+      ) {
+        return 'danger'
+      }
+
+      if (
+        this.selectedMetricIssues.some((issue) => issue.severity === 'warning')
+      ) {
+        return 'warning'
+      }
+
+      return 'info'
     },
   },
   watch: {
