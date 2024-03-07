@@ -241,9 +241,9 @@ import LoadingOverlay from '~/components/LoadingOverlay.vue'
 
 export default {
   components: { MetricActions, LoadingOverlay },
-  asyncData({ params }) {
+  asyncData({ params, query }) {
     return {
-      perPage: 20,
+      perPage: query.p !== undefined ? query.p : 20,
       currentPage: params.page !== undefined ? params.page : 1,
       totalRows: 99999999,
       /* It look stupid, and it is even dumber. If totalRows is initialized
@@ -258,12 +258,10 @@ export default {
   },
   watch: {
     currentPage(newPage) {
-      const resolved = this.$router.resolve({
-        name: 'cluster-health-page',
-        params: { page: newPage },
-      })
-
-      history.pushState({}, null, resolved.href)
+      this.updateLocation(newPage, this.perPage)
+    },
+    perPage(newPerPage) {
+      this.updateLocation(this.currentPage, newPerPage)
     },
   },
   beforeDestroy() {
@@ -302,6 +300,22 @@ export default {
         progress: false,
       })
       this.scanRunning = data.status === 'running'
+    },
+    updateLocation(newPage, newPerPage) {
+      const query = {}
+
+      if (newPerPage != 20) { // eslint-disable-line
+        // Yes, I want to match both 20 and "20", shut up eslint.
+        query.p = newPerPage
+      }
+
+      const resolved = this.$router.resolve({
+        name: 'cluster-health-page',
+        params: { page: newPage },
+        query,
+      })
+
+      history.pushState({}, null, resolved.href)
     },
   },
 }
