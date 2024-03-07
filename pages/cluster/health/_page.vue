@@ -183,8 +183,8 @@
                       ref="pageInput"
                       type="number"
                       min="1"
-                      :max="Math.ceil(matchingRows / perPage)"
-                      :value="Math.ceil(matchingRows / perPage / 2)"
+                      :max="Math.ceil(totalRows / perPage)"
+                      :value="Math.ceil(totalRows / perPage / 2)"
                     />
                     <b-input-group-append>
                       <b-button variant="primary" @click="jumpPage()">
@@ -197,7 +197,7 @@
                 <b-col>
                   <b-pagination
                     v-model="currentPage"
-                    :total-rows="matchingRows"
+                    :total-rows="totalRows"
                     :per-page="perPage"
                     :disabled="isBusy"
                     limit="9"
@@ -235,9 +235,8 @@ export default {
     return {
       perPage: 20,
       currentPage: params.page !== undefined ? params.page : 1,
-      totalRows: 0,
-      matchingRows: 99999999,
-      /* It look stupid, and it is even dumber. If matchingRows is initialized
+      totalRows: 99999999,
+      /* It look stupid, and it is even dumber. If totalRows is initialized
          with 0, null or undefined, the b-pagination will take in the
          currentPage, realize that this is out of bounds and update it 1. So
          effectively preventing me from setting the currentPage to anything.
@@ -278,7 +277,6 @@ export default {
       try {
         const { data } = await this.$axios.post(`/cluster/issues`, ctx)
         this.totalRows = data.totalRows
-        this.matchingRows = data.totalRows
         return data.rows
       } catch (error) {
         return []
