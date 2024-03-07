@@ -85,14 +85,24 @@
               <template #head(discoverTime)> Last seen </template>
               <template #cell(discoverTime)="data">
                 <template v-if="data.item.discoverTime">
-                  {{ data.item.discoverTime | momentAgo }}
+                  <span
+                    v-b-tooltip.hover.noninteractive
+                    :title="data.item.discoverTime"
+                  >
+                    {{ data.item.discoverTime | momentAgo }}
+                  </span>
                 </template>
                 <template v-else>never seen</template>
               </template>
               <template #head(startingTime)> Started </template>
               <template #cell(startingTime)="data">
                 <template v-if="data.item.startingTime">
-                  {{ data.item.startingTime | momentAgo }}
+                  <span
+                    v-b-tooltip.hover.noninteractive
+                    :title="data.item.startingTime"
+                  >
+                    {{ data.item.startingTime | momentAgo }}
+                  </span>
                 </template>
               </template>
               <template #head(actions)="data">
@@ -179,14 +189,14 @@ const DISCOVER_WAIT_TIME = 10
 
 export default {
   components: { ClientActions },
-  data() {
+  asyncData({ params }) {
     return {
-      filter: null,
+      filter: params.filter !== undefined ? params.filter : null,
       showReScanOverlay: false,
       perPage: 20,
       currentPage: 1,
       totalRows: 0,
-      dependencies: null,
+      dependencies: [],
       clientFilterList: null,
     }
   },
@@ -232,6 +242,20 @@ export default {
           },
         ],
       }
+    },
+  },
+  watch: {
+    filter(value) {
+      if (value.startsWith('$')) {
+        value = null
+      }
+
+      const resolved = this.$router.resolve({
+        name: 'client-list-filter',
+        params: { filter: value },
+      })
+
+      history.pushState({}, null, resolved.href)
     },
   },
   methods: {
