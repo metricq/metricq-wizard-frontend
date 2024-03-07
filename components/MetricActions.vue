@@ -77,7 +77,7 @@
         </b-button>
       </span>
       <b-tooltip target="archive-tooltip-target" noninteractive>
-        Archived {{ archived | momentAgo }}
+        Archived {{ archived | momentAgo }}: {{ archived }}
       </b-tooltip>
     </b-button-group>
     <b-button-group v-if="showState && liveOnly" size="sm" class="shadow-sm">
@@ -100,6 +100,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import Metric from '~/models/Metric'
 
 export default {
@@ -215,12 +216,18 @@ export default {
             metrics: [this.metric.id],
           })
 
-          this.$toast.success(`Successfully deleted ${this.metric.id}!`)
+          this.$toast.success(`Successfully archived ${this.metric.id}!`)
 
-          // remove the metric from the vuex store
-          Metric.delete(this.metric.id)
+          Metric.update({
+            where: this.metric.id,
+            data: {
+              archived: moment().toISOString(),
+            },
+          })
+
+          this.$emit('archived', moment().toISOString())
         } catch (error) {
-          this.$toast.error(`Failed to delete the metric!`)
+          this.$toast.error(`Failed to archive the metric!`)
         }
       }
     },

@@ -51,11 +51,12 @@
             {{ data.item.rate | humanizeRate }}
           </template>
           <template #cell(lastMetadataUpdate)="data">
-            {{
-              data.item.lastMetadataUpdate
-                ? data.item.lastMetadataUpdate.toLocaleString()
-                : ''
-            }}
+            <span
+              v-b-tooltip.hover.noninteractive
+              :title="data.item.lastMetadataUpdateStr"
+            >
+              {{ data.item.lastMetadataUpdate | momentAgo }}
+            </span>
           </template>
           <template #cell(state)="data">
             <b-badge

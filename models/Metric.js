@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { Model } from '@vuex-orm/core'
 import Database from '~/models/Database'
 
@@ -35,7 +36,7 @@ export default class Metric extends Model {
   }
 
   get lastMetadataUpdate() {
-    return new Date(this.lastMetadataUpdateStr)
+    return moment(this.lastMetadataUpdateStr)
   }
 
   static async deleteMetadata(metrics) {

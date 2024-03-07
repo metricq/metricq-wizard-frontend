@@ -64,6 +64,7 @@
                     :show-details="false"
                     :show-state="true"
                     class="float-right"
+                    @archived="onMetricArchived"
                   />
                 </b-card-header>
                 <b-card-text>
@@ -352,6 +353,9 @@ export default {
     },
     onSearchClick() {
       this.$refs.metricInput.select()
+    },
+    onMetricArchived(archived) {
+      this.$asyncComputed.matchingMetrics.update()
     },
     metricValidationState() {
       if (this.hasSelectedMetric()) return true
