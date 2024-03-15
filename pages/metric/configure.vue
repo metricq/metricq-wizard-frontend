@@ -437,10 +437,7 @@ export default {
       return Metric.query()
         .with('database')
         .where('selected', true)
-        .where(
-          'additionalMetadata',
-          (value) => value !== undefined && value.archived !== undefined
-        )
+        .where('archived', (value) => value !== undefined)
         .count()
     },
     hasSelected() {

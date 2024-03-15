@@ -296,13 +296,14 @@ export default {
       if (!this.hasSelectedMetric()) return {}
 
       const metric = this.matchingMetrics[0]
-      const { description, unit, source, historic, rate } = metric
+      const { description, unit, source, historic, rate, archived } = metric
       return {
         ...(description !== undefined && { description }),
         ...(unit !== undefined && { unit }),
         ...(source !== undefined && { source }),
         ...(historic !== undefined && { historic }),
         ...(rate !== undefined && { rate }),
+        ...(archived !== undefined && { archived }),
         ...metric.additionalMetadata,
       }
     },

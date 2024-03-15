@@ -70,7 +70,7 @@
             <b-badge v-if="data.item.historic === false">
               <b-icon-cloud-slash-fill v-b-tooltip.hover title="Live Only" />
             </b-badge>
-            <b-badge v-if="data.item.additionalMetadata.archived">
+            <b-badge v-if="data.item.archived">
               <b-icon-archive-fill v-b-tooltip.hover title="Archived Metric" />
             </b-badge>
           </template>
@@ -90,7 +90,6 @@
           </template>
 
           <template #row-details="data">
-            <!--              v-model="row.item.additionalMetadata"-->
             <pre>{{
               JSON.stringify(data.item.additionalMetadata, null, 2)
             }}</pre>

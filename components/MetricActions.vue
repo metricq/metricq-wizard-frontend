@@ -6,7 +6,7 @@
         v-b-tooltip.hover.noninteractive
         title="Unload from Metric Workshop"
         variant="dark"
-        @click="unloadMetric"
+        @click="onUnloadMetricClick()"
       >
         <b-icon-bookmark-dash-fill scale="1.2" />
       </b-button>
@@ -15,7 +15,7 @@
         v-b-tooltip.hover.noninteractive
         title="Load into Metric Workshop"
         variant="dark"
-        @click="loadMetric()"
+        @click="onLoadMetricClick()"
       >
         <b-icon-bookmark-plus scale="1.2" />
       </b-button>
@@ -125,17 +125,14 @@ export default {
       return Metric.query().where('id', this.metric.id).exists()
     },
     archived() {
-      if (this.metric.archived !== undefined) return this.metric.archived
-      return this.metric.additionalMetadata !== undefined
-        ? this.metric.additionalMetadata.archived
-        : undefined
+      return this.metric.archived
     },
     liveOnly() {
       return this.metric.historic === false
     },
   },
   methods: {
-    async loadMetric() {
+    async onLoadMetricClick() {
       await Metric.api().post(
         '/metrics',
         {
@@ -146,7 +143,7 @@ export default {
         }
       )
     },
-    unloadMetric() {
+    onUnloadMetricClick() {
       Metric.delete(this.metric.id)
     },
     async editCombinedMetric({ source, id }) {
