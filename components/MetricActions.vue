@@ -80,7 +80,7 @@
         Archived {{ archived | momentAgo }}: {{ archived }}
       </b-tooltip>
     </b-button-group>
-    <b-button-group v-if="showState && liveOnly" size="sm" class="shadow-sm">
+    <b-button-group v-if="showState && isLiveOnly" size="sm" class="shadow-sm">
       <span id="live-only-tooltip-target">
         <b-button size="sm" variant="secondary" disabled>
           <b-icon-cloud-slash-fill scale="1.2" />
@@ -127,7 +127,7 @@ export default {
     archived() {
       return this.metric.archived
     },
-    liveOnly() {
+    isLiveOnly() {
       return this.metric.historic === false
     },
   },
@@ -215,6 +215,10 @@ export default {
 
           this.$toast.success(`Successfully archived ${this.metric.id}!`)
 
+          // we update the metric with a slightly wrong time point for
+          // archived, but it doesn't really matter. The user just clicked
+          // the button, so he knows it was archived just a jiffy ago.
+          // We'll fetch the actual time point sooner or later anyways.
           Metric.update({
             where: this.metric.id,
             data: {

@@ -150,7 +150,7 @@ export default {
       if (this.historic !== null) {
         metricQuery = metricQuery.where(
           'historic',
-          this.historic !== 'undefined' ? this.historic : undefined
+          this.historic !== 'not_set' ? this.historic : undefined
         )
       }
       if (this.unit != null) {

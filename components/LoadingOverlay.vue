@@ -4,11 +4,7 @@
       <template #overlay>
         <div>
           <h3>Scanning...</h3>
-          <b-progress
-            :value="progress"
-            :max="duration * 1000"
-            animated
-          ></b-progress>
+          <b-progress :value="progress" animated />
         </div>
       </template>
       <slot />
@@ -43,7 +39,7 @@ export default {
 
       while (moment().diff(startTime) < this.duration * 1000) {
         await this.$sleep(1)
-        this.progress = moment().diff(startTime)
+        this.progress = moment().diff(startTime) / (this.duration * 10)
       }
     },
   },

@@ -99,14 +99,6 @@
                     >
                       <b-icon-check scale="1.3" />
                     </b-button>
-                    <!---<b-button
-                      v-b-tooltip.hover.noninteractive
-                      variant="warning"
-                      title="Ignore for 24 hours"
-                      @click="onIgnoreClick(data.item._id)"
-                    >
-                      <b-icon-skip-forward scale="1.3" />
-                    </b-button>--->
                   </b-button-group>
                   <metric-actions
                     v-if="data.item.scope_type === 'metric'"
@@ -237,10 +229,9 @@
 
 <script>
 import MetricActions from '~/components/MetricActions.vue'
-import LoadingOverlay from '~/components/LoadingOverlay.vue'
 
 export default {
-  components: { MetricActions, LoadingOverlay },
+  components: { MetricActions },
   asyncData({ params, query }) {
     return {
       perPage: query.p !== undefined ? query.p : 20,
@@ -257,6 +248,8 @@ export default {
     }
   },
   watch: {
+    // we need these watchers to update the browser URL with the
+    // correct page and perPage info.
     currentPage(newPage) {
       this.updateLocation(newPage, this.perPage)
     },

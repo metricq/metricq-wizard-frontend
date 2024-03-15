@@ -19,7 +19,7 @@
 
     <b-row>
       <b-col>
-        <b-overlay :show="showReScanOverlay" rounded="sm">
+        <LoadingOverlay ref="overlay" :duration="10">
           <b-card no-body class="mb-3">
             <b-card-header>
               <b-row>
@@ -75,7 +75,7 @@
               responsive="true"
               sort-by="id"
               sort-icon-left
-              :sort-null-last="true"
+              sort-null-last
               striped
               hover
               class="mb-0"
@@ -164,7 +164,7 @@
               </b-row>
             </b-card-footer>
           </b-card>
-        </b-overlay>
+        </LoadingOverlay>
       </b-col>
     </b-row>
     <b-modal
@@ -184,15 +184,13 @@
 <script>
 import ClientActions from '~/components/ClientActions.vue'
 import Client from '~/models/Client'
-
-const DISCOVER_WAIT_TIME = 10
+import LoadingOverlay from '~/components/LoadingOverlay.vue'
 
 export default {
-  components: { ClientActions },
+  components: { ClientActions, LoadingOverlay },
   asyncData({ params }) {
     return {
       filter: params.filter !== undefined ? params.filter : null,
-      showReScanOverlay: false,
       perPage: 20,
       currentPage: 1,
       totalRows: 0,
@@ -349,13 +347,11 @@ export default {
       )
     },
     async updateTopology() {
-      this.showReScanOverlay = true
       await this.$axios.post(`/discover`)
 
-      await this.$sleep(DISCOVER_WAIT_TIME)
+      await this.$refs.overlay.showOverlay()
 
       this.$nuxt.refresh()
-      this.showReScanOverlay = false
     },
     async createClient() {
       await this.$axios.put(`/client/${this.filter}`)

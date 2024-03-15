@@ -405,7 +405,7 @@ export default {
       filterHistoricOptions: [
         { value: null, text: '--' },
         { value: true, text: 'Saved in DB' },
-        { value: 'undefined', text: 'Not saved nor live' },
+        { value: 'not_set', text: 'Not saved nor live' },
         { value: false, text: 'Live only' },
       ],
       filterUnits: null,
