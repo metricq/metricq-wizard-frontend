@@ -244,15 +244,29 @@ export default {
   },
   watch: {
     filter(value) {
+      // This watcher embeds the filter value into the URL, so when users browse
+      // forth and back, the filter will be set to the old value.
+
+      // However, when you click in the fancy sankey-circle, we apply special
+      // filters directly from information only available in the thing.
+      // I'm to stupid to replicate these fancy filters in code. If you want to
+      // give it a try, look at the `onChartClick()` method down below.
+      // So instead, we pretend there was no filter set. These fancy filters
+      // start with $something, but no client token will ever do that.
+      // Hence this:
       if (value.startsWith('$')) {
         value = null
       }
 
+      // now we use the router to generate the url...
       const resolved = this.$router.resolve({
         name: 'client-list-filter',
         params: { filter: value },
       })
 
+      // and push that into the history. What the first two parameters do?
+      // Why there isn't a simply method in the router to achieve this? Idk.
+      // I guess the answer is: "because javascript".
       history.pushState({}, null, resolved.href)
     },
   },

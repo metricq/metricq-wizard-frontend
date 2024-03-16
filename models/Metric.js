@@ -123,12 +123,15 @@ export default class Metric extends Model {
           return obj
         }, {})
 
-      const sourceType =
-        source !== undefined
-          ? source.startsWith('transformer')
-            ? 'transformer'
-            : 'source'
-          : undefined
+      let sourceType
+
+      if (source !== undefined) {
+        if (source.startsWith('transformer')) {
+          sourceType = 'transformer'
+        } else {
+          sourceType = 'source'
+        }
+      }
 
       return {
         id,

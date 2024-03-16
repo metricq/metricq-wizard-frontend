@@ -387,6 +387,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 import MetricTable from '~/components/MetricTable'
 import Metric from '~/models/Metric'
 import Database from '~/models/Database'
@@ -684,19 +686,33 @@ export default {
             // I know what you think: why don't you use the fancy Vuex-ORM instead?
             // Because it is Vuex-orm. I'm done with that and I wish I hadn't to deal
             // with it
-            await this.$axios.post('/metrics/archive', {
+            const { data } = await this.$axios.post('/metrics/archive', {
               metrics: this.selected.map((metric) => metric.id),
             })
 
-            // TODO Update Metrics. Can I just reload? Please? (╥_╥)
+            // We are updating with slightly wrong timestamps, but who cares?
+            Metric.update({
+              data: data.archived.map((metric) => ({
+                id: metric,
+                archived: moment().toISOString(),
+              })),
+            })
 
             this.$toast.success('Successfully archived metrics!')
           } catch ({ response }) {
             const { data } = response
             if (data.status === 'partial') {
+              // We are updating with slightly wrong timestamps, but who cares?
+              Metric.update({
+                data: data.archived.map((metric) => ({
+                  id: metric,
+                  archived: moment().toISOString(),
+                })),
+              })
+
               this.$toast.error(
                 `Failed to archive ${data.failed.length} of ${
-                  data.failed.length + data.deleted.length
+                  data.failed.length + data.archived.length
                 } metrics!`
               )
             } else {

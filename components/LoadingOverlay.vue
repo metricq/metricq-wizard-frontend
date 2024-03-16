@@ -39,7 +39,8 @@ export default {
 
       while (moment().diff(startTime) < this.duration * 1000) {
         await this.$sleep(1)
-        this.progress = moment().diff(startTime) / (this.duration * 10)
+        this.progress =
+          (100 * moment().diff(startTime)) / (this.duration * 1000)
       }
     },
   },

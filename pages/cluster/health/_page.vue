@@ -52,13 +52,13 @@
                 responsive="true"
                 sort-by="id"
                 sort-icon-left
-                :sort-null-last="true"
+                sort-null-last
                 striped
                 :no-provider-sorting="false"
                 :no-provider-filtering="true"
                 hover
-                class="mb-0"
                 show-empty
+                class="mb-0"
               >
                 <template #cell(scope)="data">
                   <b-link
@@ -160,9 +160,9 @@
                       v-b-tooltip.hover.noninteractive
                       :title="data.item.archived"
                     >
-                      {{ data.item.archived | momentAgo }}
+                      {{ data.item.archived | momentAgo }},
                     </span>
-                    , but received new data points
+                    but received new data points
                     <span
                       v-b-tooltip.hover.noninteractive
                       :title="data.item.last_timestamp"
@@ -237,7 +237,7 @@ export default {
       perPage: query.p !== undefined ? query.p : 20,
       currentPage: params.page !== undefined ? params.page : 1,
       totalRows: 99999999,
-      /* It look stupid, and it is even dumber. If totalRows is initialized
+      /* It looks stupid, and it is even dumber. If totalRows is initialized
          with 0, null or undefined, the b-pagination will take in the
          currentPage, realize that this is out of bounds and update it 1. So
          effectively preventing me from setting the currentPage to anything.
