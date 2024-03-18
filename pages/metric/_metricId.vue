@@ -62,7 +62,9 @@
                     v-if="selectedMetric"
                     :metric="selectedMetric"
                     :show-details="false"
+                    :show-state="true"
                     class="float-right"
+                    @archived="onMetricArchived"
                   />
                 </b-card-header>
                 <b-card-text>
@@ -109,17 +111,98 @@
               </b-card>
             </b-card-group>
 
-            <b-card no-body header="Live Data Points" class="mt-4 flex-grow-1">
-              <b-card-body>
-                <line-chart
-                  :ytitle="selectedMetricMetadata.unit"
-                  :data="metricLiveData"
-                  :label="selectedMetric.id"
-                  :messages="{ empty: 'No data received yet' }"
-                  :curve="false"
-                />
-              </b-card-body>
-            </b-card>
+            <b-card-group columns class="d-flex">
+              <b-card
+                no-body
+                header="Live Data Points"
+                class="mt-4 flex-grow-1 h-100"
+              >
+                <b-card-body>
+                  <line-chart
+                    :ytitle="selectedMetricMetadata.unit"
+                    :data="metricLiveData"
+                    :label="selectedMetric.id"
+                    :messages="{ empty: 'No data received yet' }"
+                    :curve="false"
+                  />
+                </b-card-body>
+              </b-card>
+              <b-card
+                v-if="selectedMetricIssues.length > 0"
+                no-body
+                header="Associated Issues"
+                class="mt-4 w-25 h-100 text-white"
+                :header-bg-variant="severityVariant"
+                :border-variant="severityVariant"
+              >
+                <b-list-group flush class="h-100 text-body">
+                  <b-list-group-item
+                    v-for="issue in selectedMetricIssues"
+                    :key="issue._id"
+                  >
+                    <template v-if="issue.severity === 'warning'">
+                      ⚠️
+                    </template>
+                    <template v-else-if="issue.severity === 'error'">
+                      🔥
+                    </template>
+                    <template v-else-if="issue.severity === 'info'">
+                      ℹ️
+                    </template>
+                    <template v-else>
+                      {{ issue.label }}
+                    </template>
+                    <template v-if="issue.type === 'dead'">
+                      Missing data points since
+                      <span
+                        v-b-tooltip.hover.noninteractive
+                        :title="issue.last_timestamp"
+                      >
+                        {{ issue.last_timestamp | momentFromNow }}
+                      </span>
+                    </template>
+                    <template v-else-if="issue.type === 'timeout'">
+                      Timed out during scan, check database and bindings
+                    </template>
+                    <template v-else-if="issue.type === 'no_value'">
+                      No value stored in any database
+                    </template>
+                    <template v-else-if="issue.type === 'infinite'">
+                      Found non-finite value(s) stored in the database
+                    </template>
+                    <template v-else-if="issue.type === 'missing_metadata'">
+                      Invalid required metadata entries:
+                      {{ issue.missing_metadata.join(', ') }}
+                    </template>
+                    <template v-else-if="issue.type === 'missing_historic'">
+                      Metric neither stored in DB nor set Live-Only
+                    </template>
+                    <template v-else-if="issue.type === 'invalid_name'">
+                      Metric name invalid, renaming advised
+                    </template>
+                    <template v-else-if="issue.type === 'undead'">
+                      Metric was archived
+                      <span
+                        v-b-tooltip.hover.noninteractive
+                        :title="issue.archived"
+                      >
+                        {{ issue.archived | momentAgo }},
+                      </span>
+                      but received new data points
+                      <span
+                        v-b-tooltip.hover.noninteractive
+                        :title="issue.last_timestamp"
+                      >
+                        {{ issue.last_timestamp | momentAgo }}
+                      </span>
+                    </template>
+                    <template v-else>
+                      {{ issue.type }}
+                    </template>
+                  </b-list-group-item>
+                </b-list-group>
+              </b-card>
+            </b-card-group>
           </b-card-body>
         </b-card>
       </b-col>
@@ -168,6 +251,18 @@ export default {
       },
       default: [],
     },
+    selectedMetricIssues: {
+      async get() {
+        if (!this.hasSelectedMetric()) return []
+
+        if (this.$fetchState.pending) return []
+
+        const { data } = await this.$axios.get(`/metric/${this.metric}/issues`)
+
+        return data.issues
+      },
+      default: [],
+    },
   },
   asyncData({ params }) {
     return {
@@ -201,13 +296,14 @@ export default {
       if (!this.hasSelectedMetric()) return {}
 
       const metric = this.matchingMetrics[0]
-      const { description, unit, source, historic, rate } = metric
+      const { description, unit, source, historic, rate, archived } = metric
       return {
-        ...(description && { description }),
-        ...(unit && { unit }),
-        ...(source && { source }),
-        ...(historic && { historic }),
-        ...(rate && { rate }),
+        ...(description !== undefined && { description }),
+        ...(unit !== undefined && { unit }),
+        ...(source !== undefined && { source }),
+        ...(historic !== undefined && { historic }),
+        ...(rate !== undefined && { rate }),
+        ...(archived !== undefined && { archived }),
         ...metric.additionalMetadata,
       }
     },
@@ -215,6 +311,21 @@ export default {
       if (!this.hasSelectedMetric()) return null
 
       return this.matchingMetrics[0]
+    },
+    severityVariant() {
+      if (
+        this.selectedMetricIssues.some((issue) => issue.severity === 'error')
+      ) {
+        return 'danger'
+      }
+
+      if (
+        this.selectedMetricIssues.some((issue) => issue.severity === 'warning')
+      ) {
+        return 'warning'
+      }
+
+      return 'info'
     },
   },
   watch: {
@@ -243,6 +354,9 @@ export default {
     },
     onSearchClick() {
       this.$refs.metricInput.select()
+    },
+    onMetricArchived(archived) {
+      this.$asyncComputed.matchingMetrics.update()
     },
     metricValidationState() {
       if (this.hasSelectedMetric()) return true

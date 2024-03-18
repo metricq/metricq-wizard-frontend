@@ -267,13 +267,37 @@
             />
           </b-col>
           <b-col class="text-right">
+            <span id="archive-tooltip-target">
+              <b-button
+                :disabled="selected.length === 0 || numSelectedArchived > 0"
+                @click="onArchiveClicked"
+              >
+                <b-icon-archive />
+              </b-button>
+            </span>
+            <b-tooltip
+              v-if="numSelectedArchived > 0"
+              target="archive-tooltip-target"
+              triggers="hover"
+              variant="warning"
+            >
+              You have selected one ore more metrics that are already archived.
+              These metrics cannot be archived again.
+            </b-tooltip>
+            <b-tooltip
+              v-else
+              target="archive-tooltip-target"
+              triggers="hover"
+              variant="dark"
+            >
+              Archive selected metrics
+            </b-tooltip>
             <span id="delete-tooltip-target">
               <b-button
                 :disabled="selected.length === 0 || numSelectedHistoric > 0"
                 @click="onDeleteClicked"
               >
                 <b-icon-trash />
-                Delete selected
               </b-button>
             </span>
             <b-tooltip
@@ -283,8 +307,7 @@
               variant="warning"
             >
               You have selected one ore more metrics that are saved to a
-              database. <br />
-              Such metrics cannot be deleted.
+              database. Such metrics cannot be deleted.
             </b-tooltip>
             <b-dropdown
               split
@@ -329,15 +352,25 @@
                 Add max metric from selected
               </b-dropdown-item>
             </b-dropdown>
-            <b-button
-              :to="{
+            <b-dropdown
+              split
+              :split-to="{
                 name: 'metric-database_configuration',
               }"
-              :disabled="selected.length === 0"
+              :disabled="!hasSelected"
             >
-              <b-icon-server />
-              Add to database
-            </b-button>
+              <template #button-content>
+                <b-icon-cloud />
+                Add to database
+              </template>
+              <b-dropdown-item
+                :disabled="numSelectedHistoric > 0"
+                @click="onSetLiveOnlyClicked"
+              >
+                <b-icon-cloud-slash />
+                Mark as Live-only
+              </b-dropdown-item>
+            </b-dropdown>
           </b-col>
         </b-row>
       </b-card-footer>
@@ -354,6 +387,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 import MetricTable from '~/components/MetricTable'
 import Metric from '~/models/Metric'
 import Database from '~/models/Database'
@@ -372,7 +407,8 @@ export default {
       filterHistoricOptions: [
         { value: null, text: '--' },
         { value: true, text: 'Saved in DB' },
-        { value: false, text: 'Not in DB' },
+        { value: 'not_set', text: 'Not saved nor live' },
+        { value: false, text: 'Live only' },
       ],
       filterUnits: null,
       filterRate: null,
@@ -398,6 +434,18 @@ export default {
         .where('selected', true)
         .where('historic', true)
         .count()
+    },
+    numSelectedArchived() {
+      return Metric.query()
+        .with('database')
+        .where('selected', true)
+        .where('archived', (value) => value !== undefined)
+        .count()
+    },
+    hasSelected() {
+      return (
+        Metric.query().with('database').where('selected', true).count() !== 0
+      )
     },
     metricCount() {
       return Metric.query().count()
@@ -592,6 +640,155 @@ export default {
         }
       }
     },
+    async onArchiveClicked() {
+      if (this.numSelectedArchived > 0) {
+        this.$toast.error(
+          'Cannot archive metrics that are saved to any database!'
+        )
+      } else {
+        // You think this is ugly? Yes it is, but it's the only way to get an
+        // awaitable modal box with HTML in it.
+        // https://bootstrap-vue.org/docs/components/modal#message-box-notes
+        // "The Message Box message currently does not support HTML strings,
+        // however, you can pass an array of VNodes [...]"
+
+        // make a list of the first 10 metrics to be deleted
+        const metricList = this.selected
+          .slice(0, 10)
+          .map((metric) => this.$createElement('li', metric.id))
+
+        // if there are more than 10 metrics to be deleted, add "and x more ..."
+        if (this.selected.length > 10) {
+          metricList.push(
+            this.$createElement(
+              'li',
+              `and ${this.selected.length - 10} more ...`
+            )
+          )
+        }
+
+        const confirmed = await this.$bvModal.msgBoxConfirm(
+          [this.$createElement('ul', metricList)],
+          {
+            titleHtml: `Are you sure you want to archive <b>${this.selected.length}</b> metrics?`,
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            okTitle: 'Yes, archive',
+            cancelTitle: 'No, cancel',
+            footerClass: 'p-2',
+            hideHeaderClose: false,
+            centered: true,
+          }
+        )
+
+        if (confirmed) {
+          try {
+            // I know what you think: why don't you use the fancy Vuex-ORM instead?
+            // Because it is Vuex-orm. I'm done with that and I wish I hadn't to deal
+            // with it
+            const { data } = await this.$axios.post('/metrics/archive', {
+              metrics: this.selected.map((metric) => metric.id),
+            })
+
+            // We are updating with slightly wrong timestamps, but who cares?
+            Metric.update({
+              data: data.archived.map((metric) => ({
+                id: metric,
+                archived: moment().toISOString(),
+              })),
+            })
+
+            this.$toast.success('Successfully archived metrics!')
+          } catch ({ response }) {
+            const { data } = response
+            if (data.status === 'partial') {
+              // We are updating with slightly wrong timestamps, but who cares?
+              Metric.update({
+                data: data.archived.map((metric) => ({
+                  id: metric,
+                  archived: moment().toISOString(),
+                })),
+              })
+
+              this.$toast.error(
+                `Failed to archive ${data.failed.length} of ${
+                  data.failed.length + data.archived.length
+                } metrics!`
+              )
+            } else {
+              // Unless response.status === 500, this case would be a bug
+              // in the frontend, as it would indicate an invalid request.
+              this.$toast.error(`Failed to archive metrics!`)
+            }
+          }
+        }
+      }
+    },
+    async onSetLiveOnlyClicked() {
+      if (this.numSelectedHistoric > 0) {
+        this.$toast.error(
+          'Cannot set metrics to Live-Only that are saved to any database!'
+        )
+      } else {
+        // You think this is ugly? Yes it is, but it's the only way to get an
+        // awaitable modal box with HTML in it.
+        // https://bootstrap-vue.org/docs/components/modal#message-box-notes
+        // "The Message Box message currently does not support HTML strings,
+        // however, you can pass an array of VNodes [...]"
+
+        // make a list of the first 10 metrics to be deleted
+        const metricList = this.selected
+          .slice(0, 10)
+          .map((metric) => this.$createElement('li', metric.id))
+
+        // if there are more than 10 metrics to be deleted, add "and x more ..."
+        if (this.selected.length > 10) {
+          metricList.push(
+            this.$createElement(
+              'li',
+              `and ${this.selected.length - 10} more ...`
+            )
+          )
+        }
+
+        const confirmed = await this.$bvModal.msgBoxConfirm(
+          [this.$createElement('ul', metricList)],
+          {
+            titleHtml: `Are you sure you want to set <b>${this.selected.length}</b> metrics to Live-Only?`,
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            okTitle: "Yes, I don't want to store them",
+            cancelTitle: 'No, cancel',
+            footerClass: 'p-2',
+            hideHeaderClose: false,
+            centered: true,
+          }
+        )
+
+        if (confirmed) {
+          const response = await Metric.setLiveOnly(
+            this.selected.map((metric) => metric.id)
+          )
+
+          if (response.status === 200) {
+            this.$toast.success('Successfully updated all metrics!')
+          } else {
+            const { data } = response
+            if (data.status === 'partial') {
+              this.$toast.error(
+                `Failed to update ${data.failed.length} out of ${
+                  data.failed.length + data.deleted.length
+                } metrics!`
+              )
+            } else {
+              // Unless response.status === 500, this case would be a bug
+              // in the frontend, as it would indicate an invalid request.
+              this.$toast.error(`Failed to update metrics!`)
+            }
+          }
+        }
+      }
+    },
     async loadByDatabase() {
       Metric.commit((state) => {
         state.fetching = true
@@ -636,16 +833,7 @@ export default {
           source: this.loadSelectedTransformer,
         },
         {
-          dataTransformer: (response) => {
-            return Metric.convertMetricListResponse(response).map(
-              (currentValue) => {
-                return {
-                  ...currentValue,
-                  sourceType: 'transformer',
-                }
-              }
-            )
-          },
+          dataTransformer: Metric.convertMetricListResponse,
         }
       )
       Metric.commit((state) => {

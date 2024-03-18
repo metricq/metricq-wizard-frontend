@@ -33,11 +33,19 @@
         </b-nav-item>
         <b-nav-item
           :to="{
-            name: 'client-list',
+            name: 'client-list-filter',
           }"
           active-class="active"
         >
           Client Overview
+        </b-nav-item>
+        <b-nav-item
+          :to="{
+            name: 'cluster-health-page',
+          }"
+          active-class="active"
+        >
+          Cluster Health
         </b-nav-item>
       </b-navbar-nav>
 

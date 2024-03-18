@@ -6,6 +6,10 @@ Vue.filter('momentAgo', function (date) {
   return moment(date).fromNow()
 })
 
+Vue.filter('momentFromNow', function (date) {
+  return moment(date).fromNow(true)
+})
+
 Vue.filter('momentDuration', function (duration) {
   // If duration is an integer that is reasonably larger than
   // the time since unix epoch in nanoseconds, we assume the

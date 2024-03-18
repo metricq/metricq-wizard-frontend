@@ -19,7 +19,7 @@
 
     <b-row>
       <b-col>
-        <b-overlay :show="showReScanOverlay" rounded="sm">
+        <LoadingOverlay ref="overlay" :duration="10">
           <b-card no-body class="mb-3">
             <b-card-header>
               <b-row>
@@ -75,7 +75,7 @@
               responsive="true"
               sort-by="id"
               sort-icon-left
-              sort-null-last="true"
+              sort-null-last
               striped
               hover
               class="mb-0"
@@ -85,14 +85,24 @@
               <template #head(discoverTime)> Last seen </template>
               <template #cell(discoverTime)="data">
                 <template v-if="data.item.discoverTime">
-                  {{ data.item.discoverTime | momentAgo }}
+                  <span
+                    v-b-tooltip.hover.noninteractive
+                    :title="data.item.discoverTime"
+                  >
+                    {{ data.item.discoverTime | momentAgo }}
+                  </span>
                 </template>
                 <template v-else>never seen</template>
               </template>
               <template #head(startingTime)> Started </template>
               <template #cell(startingTime)="data">
                 <template v-if="data.item.startingTime">
-                  {{ data.item.startingTime | momentAgo }}
+                  <span
+                    v-b-tooltip.hover.noninteractive
+                    :title="data.item.startingTime"
+                  >
+                    {{ data.item.startingTime | momentAgo }}
+                  </span>
                 </template>
               </template>
               <template #head(actions)="data">
@@ -154,7 +164,7 @@
               </b-row>
             </b-card-footer>
           </b-card>
-        </b-overlay>
+        </LoadingOverlay>
       </b-col>
     </b-row>
     <b-modal
@@ -174,19 +184,17 @@
 <script>
 import ClientActions from '~/components/ClientActions.vue'
 import Client from '~/models/Client'
-
-const DISCOVER_WAIT_TIME = 10
+import LoadingOverlay from '~/components/LoadingOverlay.vue'
 
 export default {
-  components: { ClientActions },
-  data() {
+  components: { ClientActions, LoadingOverlay },
+  asyncData({ params }) {
     return {
-      filter: null,
-      showReScanOverlay: false,
+      filter: params.filter !== undefined ? params.filter : null,
       perPage: 20,
       currentPage: 1,
       totalRows: 0,
-      dependencies: null,
+      dependencies: [],
       clientFilterList: null,
     }
   },
@@ -232,6 +240,34 @@ export default {
           },
         ],
       }
+    },
+  },
+  watch: {
+    filter(value) {
+      // This watcher embeds the filter value into the URL, so when users browse
+      // forth and back, the filter will be set to the old value.
+
+      // However, when you click in the fancy sankey-circle, we apply special
+      // filters directly from information only available in the thing.
+      // I'm to stupid to replicate these fancy filters in code. If you want to
+      // give it a try, look at the `onChartClick()` method down below.
+      // So instead, we pretend there was no filter set. These fancy filters
+      // start with $something, but no client token will ever do that.
+      // Hence this:
+      if (value.startsWith('$')) {
+        value = null
+      }
+
+      // now we use the router to generate the url...
+      const resolved = this.$router.resolve({
+        name: 'client-list-filter',
+        params: { filter: value },
+      })
+
+      // and push that into the history. What the first two parameters do?
+      // Why there isn't a simply method in the router to achieve this? Idk.
+      // I guess the answer is: "because javascript".
+      history.pushState({}, null, resolved.href)
     },
   },
   methods: {
@@ -325,13 +361,11 @@ export default {
       )
     },
     async updateTopology() {
-      this.showReScanOverlay = true
       await this.$axios.post(`/discover`)
 
-      await this.$sleep(DISCOVER_WAIT_TIME)
+      await this.$refs.overlay.showOverlay()
 
       this.$nuxt.refresh()
-      this.showReScanOverlay = false
     },
     async createClient() {
       await this.$axios.put(`/client/${this.filter}`)

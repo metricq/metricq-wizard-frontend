@@ -51,11 +51,12 @@
             {{ data.item.rate | humanizeRate }}
           </template>
           <template #cell(lastMetadataUpdate)="data">
-            {{
-              data.item.lastMetadataUpdate
-                ? data.item.lastMetadataUpdate.toLocaleString()
-                : ''
-            }}
+            <span
+              v-b-tooltip.hover.noninteractive
+              :title="data.item.lastMetadataUpdateStr"
+            >
+              {{ data.item.lastMetadataUpdate | momentAgo }}
+            </span>
           </template>
           <template #cell(state)="data">
             <b-badge
@@ -64,23 +65,31 @@
               <b-icon-calculator v-b-tooltip.hover title="Combined Metric" />
             </b-badge>
             <b-badge v-if="data.item.historic">
-              <b-icon-server v-b-tooltip.hover title="Saved in DB" />
+              <b-icon-cloud-fill v-b-tooltip.hover title="Saved in DB" />
+            </b-badge>
+            <b-badge v-if="data.item.historic === false">
+              <b-icon-cloud-slash-fill v-b-tooltip.hover title="Live Only" />
+            </b-badge>
+            <b-badge v-if="data.item.archived">
+              <b-icon-archive-fill v-b-tooltip.hover title="Archived Metric" />
             </b-badge>
           </template>
           <template #cell(actions)="data">
             <b-button
+              v-b-tooltip.hover.noninteractive
               size="sm"
               class="mr-2"
               variant="info"
+              title="Show Metadata"
               @click="data.toggleDetails"
             >
-              <b-icon-clipboard-data /> Metadata
+              <b-icon-clipboard v-if="data.detailsShowing" />
+              <b-icon-clipboard-data v-else />
             </b-button>
             <MetricActions :metric="data.item" :show-delete="false" />
           </template>
 
           <template #row-details="data">
-            <!--              v-model="row.item.additionalMetadata"-->
             <pre>{{
               JSON.stringify(data.item.additionalMetadata, null, 2)
             }}</pre>
@@ -138,8 +147,11 @@ export default {
     },
     items() {
       let metricQuery = Metric.query().with('sourceRef')
-      if (this.historic != null) {
-        metricQuery = metricQuery.where('historic', this.historic)
+      if (this.historic !== null) {
+        metricQuery = metricQuery.where(
+          'historic',
+          this.historic !== 'not_set' ? this.historic : undefined
+        )
       }
       if (this.unit != null) {
         metricQuery = metricQuery.where('unit', this.unit)
