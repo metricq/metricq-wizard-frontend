@@ -114,18 +114,16 @@
             <b-card-group columns class="d-flex">
               <b-card
                 no-body
-                header="Live Data Points"
                 class="mt-4 flex-grow-1 h-100"
+                header="Live Data Points"
               >
-                <b-card-body>
-                  <line-chart
-                    :ytitle="selectedMetricMetadata.unit"
-                    :data="metricLiveData"
-                    :label="selectedMetric.id"
-                    :messages="{ empty: 'No data received yet' }"
-                    :curve="false"
-                  />
-                </b-card-body>
+                <line-chart
+                  :ytitle="selectedMetricMetadata.unit"
+                  :data="metricLiveData"
+                  :label="selectedMetric.id"
+                  :messages="{ empty: 'No data received yet' }"
+                  :curve="false"
+                />
               </b-card>
               <b-card
                 v-if="selectedMetricIssues.length > 0"

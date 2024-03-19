@@ -1,5 +1,5 @@
 FROM node:19 AS builder
-LABEL maintainer="franz.hoepfner@tu-dresden.de"
+LABEL maintainer="mario.bielert@tu-dresden.de"
 
 WORKDIR /wizard-frontend
 
@@ -13,6 +13,10 @@ ENV API_URL=$api_url
 
 ARG metricq_websocket_url
 ENV METRICQ_WEBSOCKET_URL=$metricq_websocket_url
+
+ARG metricq_webview_url
+ENV METRICQ_WEBVIEW_URL=$metricq_webview_url
+
 
 ARG node_env=production
 ENV NODE_ENV=$node_env

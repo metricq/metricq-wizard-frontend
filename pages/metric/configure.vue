@@ -267,6 +267,31 @@
             />
           </b-col>
           <b-col class="text-right">
+            <span id="webview-tooltip-target">
+              <b-button
+                v-b-tooltip.hover.noninteractive
+                :disabled="
+                  selected.length === 0 ||
+                  numSelectedHistoric !== selected.length
+                "
+                :href="webviewLink"
+                target="_blank"
+                variant="outline-info"
+                title="Open selected metrics in WebView"
+              >
+                <b-icon-graph-up />
+              </b-button>
+            </span>
+            <b-tooltip
+              v-if="numSelectedHistoric != selected.length"
+              target="webview-tooltip-target"
+              triggers="hover"
+              variant="warning"
+            >
+              You have selected one or more metrics that are not saved to a
+              database. <br />
+              Such metrics cannot be opened in WebView.
+            </b-tooltip>
             <span id="archive-tooltip-target">
               <b-button
                 :disabled="selected.length === 0 || numSelectedArchived > 0"
@@ -335,7 +360,7 @@
                 }"
                 :disabled="selected.length === 0"
               >
-                Add min metric from selected
+                Add min metric
               </b-dropdown-item>
               <b-dropdown-item
                 :to="{
@@ -349,7 +374,7 @@
                 }"
                 :disabled="selected.length === 0"
               >
-                Add max metric from selected
+                Add max metric
               </b-dropdown-item>
             </b-dropdown>
             <b-dropdown
@@ -542,7 +567,7 @@ export default {
         },
       }
       const sumMetricButton = {
-        text: 'Add sum metric from selected',
+        text: 'Add sum metric',
         to: {
           name: 'metric-create_combined_metric',
           params: {
@@ -559,6 +584,13 @@ export default {
         firstButton:
           this.selected.length === 0 ? sumMetricButton : emptyMetricButton,
       }
+    },
+    webviewLink() {
+      return this.$webview.link(
+        this.selected
+          .filter((metric) => metric.historic === true)
+          .map((metric) => metric.id)
+      )
     },
   },
   methods: {

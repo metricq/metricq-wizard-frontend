@@ -70,6 +70,18 @@
         <b-icon-trash scale="1.2" />
       </b-button>
     </b-button-group>
+    <b-button-group size="sm" class="shadow-sm">
+      <b-button
+        v-b-tooltip.hover.noninteractive
+        size="sm"
+        variant="outline-info"
+        title="Open in WebView"
+        :href="webviewLink()"
+        target="_blank"
+      >
+        <b-icon-graph-up />
+      </b-button>
+    </b-button-group>
     <b-button-group v-if="showState && archived" size="sm" class="shadow-sm">
       <span id="archive-tooltip-target">
         <b-button size="sm" variant="secondary" disabled>
@@ -231,6 +243,9 @@ export default {
           this.$toast.error(`Failed to archive the metric!`)
         }
       }
+    },
+    webviewLink() {
+      return this.$webview.link([this.metric.id])
     },
   },
 }
