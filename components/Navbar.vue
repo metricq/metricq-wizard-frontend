@@ -47,7 +47,7 @@
         >
           Cluster Health
         </b-nav-item>
-        <b-nav-item :href="$config.metricq.webviewURL" target="_blank">
+        <b-nav-item :href="$webview.link()" target="_blank">
           Webview<sup><b-icon-box-arrow-up-right scale="0.6" /></sup>
         </b-nav-item>
       </b-navbar-nav>

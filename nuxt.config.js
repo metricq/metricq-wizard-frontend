@@ -38,6 +38,7 @@ export default {
     '@/plugins/async-computed',
     '@/plugins/chartkick',
     '@/plugins/sleep',
+    '@/plugins/webview',
   ],
   /*
    ** Nuxt.js dev-modules

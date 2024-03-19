@@ -76,7 +76,7 @@
         size="sm"
         variant="outline-info"
         title="Open in WebView"
-        :href="$config.metricq.webviewURL + '#.now-1h*now*' + metric.id"
+        :href="webviewLink()"
         target="_blank"
       >
         <b-icon-graph-up />
@@ -243,6 +243,9 @@ export default {
           this.$toast.error(`Failed to archive the metric!`)
         }
       }
+    },
+    webviewLink() {
+      return this.$webview.link([this.metric.id])
     },
   },
 }

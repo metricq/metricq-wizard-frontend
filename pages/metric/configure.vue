@@ -586,13 +586,10 @@ export default {
       }
     },
     webviewLink() {
-      return (
-        this.$config.metricq.webviewURL +
-        '#.now-1h*now*' +
+      return this.$webview.link(
         this.selected
           .filter((metric) => metric.historic === true)
           .map((metric) => metric.id)
-          .join('*')
       )
     },
   },
