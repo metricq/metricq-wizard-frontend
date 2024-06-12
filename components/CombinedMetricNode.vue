@@ -16,7 +16,16 @@
       <span v-if="type === 'empty'">
         <em class="text-danger">Missing input!</em>
       </span>
-      <span v-else-if="type === 'metric'">{{ expression }}</span>
+      <span v-else-if="type === 'metric'">
+        <b-link
+          :to="{
+            name: 'metric-metricId',
+            params: { metricId: expression },
+          }"
+        >
+          {{ expression }}
+        </b-link>
+      </span>
       <span v-else-if="type === 'number'">{{ expression }}</span>
       <span v-else-if="type === 'throttle'">
         throttle ({{ expression.cooldown_period }})
