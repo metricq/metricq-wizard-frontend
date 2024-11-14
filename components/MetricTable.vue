@@ -73,6 +73,9 @@
             <b-badge v-if="data.item.archived">
               <b-icon-archive-fill v-b-tooltip.hover title="Archived Metric" />
             </b-badge>
+            <b-badge v-if="data.item.hidden">
+              <b-icon-eye-slash-fill v-b-tooltip.hover title="Hidden Metric" />
+            </b-badge>
           </template>
           <template #cell(actions)="data">
             <b-button

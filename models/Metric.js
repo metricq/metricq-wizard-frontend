@@ -22,6 +22,7 @@ export default class Metric extends Model {
       sourceType: this.string('source').nullable(),
       sourceRef: this.morphTo('source', 'sourceType'),
       historic: this.boolean().nullable(),
+      hidden: this.boolean().nullable(),
       lastMetadataUpdateStr: this.string().nullable(),
       additionalMetadata: this.attr().nullable(),
       // Database settings
@@ -113,6 +114,7 @@ export default class Metric extends Model {
         rate,
         historic,
         archived,
+        hidden,
         date,
         ...unfilteredAdditionalMetadata
       } = currentValue
@@ -141,6 +143,7 @@ export default class Metric extends Model {
         sourceType,
         historic,
         archived,
+        hidden,
         rate,
         lastMetadataUpdateStr: date,
         additionalMetadata,

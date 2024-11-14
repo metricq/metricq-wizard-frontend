@@ -61,6 +61,24 @@
         <b-icon-archive scale="1.2" />
       </b-button>
       <b-button
+        v-if="showHide && !isHidden"
+        v-b-tooltip.hover.noninteractive
+        variant="warning"
+        title="Hide the metric"
+        @click="hideMetric(true)"
+      >
+        <b-icon-eye-slash scale="1.2" />
+      </b-button>
+      <b-button
+        v-if="showHide && isHidden"
+        v-b-tooltip.hover.noninteractive
+        variant="warning"
+        title="Unhide the metric"
+        @click="hideMetric(false)"
+      >
+        <b-icon-eye scale="1.2" />
+      </b-button>
+      <b-button
         v-if="showDelete && metric.historic === undefined"
         v-b-tooltip.hover.noninteractive
         variant="danger"
@@ -92,6 +110,16 @@
         Archived {{ archived | momentAgo }}: {{ archived }}
       </b-tooltip>
     </b-button-group>
+    <b-button-group v-if="showState && isHidden" size="sm" class="shadow-sm">
+      <span id="hidden-tooltip-target">
+        <b-button size="sm" variant="secondary" disabled>
+          <b-icon-eye-slash-fill scale="1.2" />
+        </b-button>
+      </span>
+      <b-tooltip target="hidden-tooltip-target" noninteractive>
+        Hidden
+      </b-tooltip>
+    </b-button-group>
     <b-button-group v-if="showState && isLiveOnly" size="sm" class="shadow-sm">
       <span id="live-only-tooltip-target">
         <b-button size="sm" variant="secondary" disabled>
@@ -121,6 +149,7 @@ export default {
     showDetails: { type: Boolean, default: true },
     showDelete: { type: Boolean, default: true },
     showArchive: { type: Boolean, default: true },
+    showHide: { type: Boolean, default: true },
     showState: { type: Boolean, default: false },
   },
   computed: {
@@ -141,6 +170,9 @@ export default {
     },
     isLiveOnly() {
       return this.metric.historic === false
+    },
+    isHidden() {
+      return this.metric.hidden === true
     },
   },
   methods: {
@@ -241,6 +273,44 @@ export default {
           this.$emit('archived', moment().toISOString())
         } catch (error) {
           this.$toast.error(`Failed to archive the metric!`)
+        }
+      }
+    },
+    async hideMetric(hidden) {
+      const confirmed = await this.$bvModal.msgBoxConfirm(this.metric.id, {
+        titleHtml: `Are you sure you want to ${
+          !hidden ? 'un' : ''
+        }hide the metric?`,
+        buttonSize: 'sm',
+        okVariant: 'danger',
+        okTitle: `Yes, ${!hidden ? 'un' : ''}hide it`,
+        cancelTitle: 'No, cancel',
+        footerClass: 'p-2',
+        hideHeaderClose: false,
+        centered: true,
+      })
+
+      if (confirmed) {
+        try {
+          const metrics = {}
+          metrics[this.metric.id] = hidden
+
+          await this.$axios.post(`/metrics/hide`, {
+            metrics,
+          })
+
+          this.$toast.success(`Successfully changed ${this.metric.id}!`)
+
+          Metric.update({
+            where: this.metric.id,
+            data: {
+              hidden,
+            },
+          })
+
+          this.$emit('hidden', hidden)
+        } catch (error) {
+          this.$toast.error(`Failed to update the metric!`)
         }
       }
     },

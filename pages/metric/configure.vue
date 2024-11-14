@@ -135,7 +135,7 @@
             <b-col>
               <b-input-group prepend="Units">
                 <b-form-select
-                  id="unitFilter"
+                  id="unitFiltecr"
                   v-model="filterUnits"
                   :options="metricUnits"
                   :value="null"
@@ -317,6 +317,14 @@
             >
               Archive selected metrics
             </b-tooltip>
+            <b-button
+              v-b-tooltip.hover.noninteractive
+              :disabled="selected.length === 0"
+              title="Toggle metric visibility"
+              @click="onHideClicked"
+            >
+              <b-icon-eye-slash />
+            </b-button>
             <span id="delete-tooltip-target">
               <b-button
                 :disabled="selected.length === 0 || numSelectedHistoric > 0"
@@ -458,6 +466,13 @@ export default {
         .with('database')
         .where('selected', true)
         .where('historic', true)
+        .count()
+    },
+    numSelectedHidden() {
+      return Metric.query()
+        .with('database')
+        .where('selected', true)
+        .where('hidden', true)
         .count()
     },
     numSelectedArchived() {
