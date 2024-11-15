@@ -323,7 +323,8 @@
               title="Toggle metric visibility"
               @click="onHideClicked"
             >
-              <b-icon-eye-slash />
+              <b-icon-eye v-if="numSelectedHidden === selected.length" />
+              <b-icon-eye-slash v-else />
             </b-button>
             <span id="delete-tooltip-target">
               <b-button
@@ -767,6 +768,104 @@ export default {
               // in the frontend, as it would indicate an invalid request.
               this.$toast.error(`Failed to archive metrics!`)
             }
+          }
+        }
+      }
+    },
+    async onHideClicked() {
+      // in mixed selection, hide all
+      // else toggle all metrics in one step
+      let metrics
+      let hidden
+
+      if (
+        this.numSelectedHidden === 0 ||
+        this.numSelectedHidden === this.selected.length
+      ) {
+        metrics = this.selected
+      } else {
+        metrics = Metric.query()
+          .with('database')
+          .where('selected', true)
+          .where((metric) => metric.hidden !== true)
+          .get()
+        hidden = true
+      }
+
+      // You think this is ugly? Yes it is, but it's the only way to get an
+      // awaitable modal box with HTML in it.
+      // https://bootstrap-vue.org/docs/components/modal#message-box-notes
+      // "The Message Box message currently does not support HTML strings,
+      // however, you can pass an array of VNodes [...]"
+
+      // make a list of the first 10 metrics to be deleted
+      const metricList = this.selected
+        .slice(0, 10)
+        .map((metric) => this.$createElement('li', metric.id))
+
+      // if there are more than 10 metrics to be deleted, add "and x more ..."
+      if (this.selected.length > 10) {
+        metricList.push(
+          this.$createElement('li', `and ${this.selected.length - 10} more ...`)
+        )
+      }
+
+      const confirmed = await this.$bvModal.msgBoxConfirm(
+        [this.$createElement('ul', metricList)],
+        {
+          titleHtml: `Are you sure you want to change visibility for <b>${this.selected.length}</b> metrics?`,
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          okTitle: 'Yes, change it',
+          cancelTitle: 'No, cancel',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true,
+        }
+      )
+
+      if (confirmed) {
+        try {
+          // I know what you think: why don't you use the fancy Vuex-ORM instead?
+          // Because it is Vuex-orm. I'm done with that and I wish I hadn't to deal
+          // with it
+          const payload = {}
+
+          for (const metric of metrics) {
+            payload[metric.id] = hidden ? true : !metric.hidden
+          }
+
+          const { data } = await this.$axios.post('/metrics/hide', {
+            metrics: payload,
+          })
+
+          Metric.update({
+            data: data.hidden.map((metric) => ({
+              id: metric,
+              hidden: this.numSelectedHidden !== this.selected.length,
+            })),
+          })
+
+          this.$toast.success('Successfully updated metrics!')
+        } catch ({ response }) {
+          const { data } = response
+          if (data.status === 'partial') {
+            Metric.update({
+              data: data.hidden.map((metric) => ({
+                id: metric,
+                hidden: this.numSelectedHidden !== this.selected.length,
+              })),
+            })
+
+            this.$toast.error(
+              `Failed to change ${data.failed.length} of ${
+                data.failed.length + data.hidden.length
+              } metrics!`
+            )
+          } else {
+            // Unless response.status === 500, this case would be a bug
+            // in the frontend, as it would indicate an invalid request.
+            this.$toast.error(`Failed to update metrics!`)
           }
         }
       }
